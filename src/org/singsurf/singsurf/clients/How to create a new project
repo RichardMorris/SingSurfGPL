@@ -1,0 +1,14 @@
+How to create a new project
+
+1) Define a new Definition type 
+in org.singsurf.singsurf.definitions.DefType
+
+2) Define properties in
+org.singsurf.singsurf.messages.properties
+
+3) Create a new set of definitions in
+ /SingSurf app/defs
+ 
+ 4) Create main client class 
+ 
+ 5) Create IP panel
