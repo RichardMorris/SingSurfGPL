@@ -1,0 +1,122 @@
+<definition name="Gaussian Curvature parameterised" type="genColour" opType="psurf">
+posStep * [1,1-K/Kmax,0]+
+negStep * [0,1-K/Kmin,1];
+posStep = if(K>0,1,0);
+negStep = if(K>0,0,1);
+
+K = ( l n - m^2 ) / ( E G - F^2 );
+H = ( G l + E n - 2 F m ) / ( 2 E G - 2 F^2);
+
+l = Sxx . N;
+m = Sxy . N;
+n = Syy . N;
+N = N1 / sqrt(N1.N1);
+N1 = Sx ^^ Sy;
+E = Sx . Sx;
+F = Sx . Sy;
+G = Sy . Sy;
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+Sx = diff(S,x);
+Sy = diff(S,y);
+<variable name="S" dim="3" type="psurf">
+<variable name="x">
+<variable name="y">
+<parameter name="Kmax" value="1">
+<parameter name="Kmin" value="-1">
+</definition>
+
+<definition name="Mean Curvature parameterised" type="genColour" opType="psurf">
+posStep * [1,1-H/Hmax,0]+
+negStep * [0,1-H/Hmin,1];
+posStep = if(H>0,1,0);
+negStep = if(H>0,0,1);
+
+K = ( l n - m^2 ) / ( E G - F^2 );
+H = ( G l + E n - 2 F m ) / ( 2 E G - 2 F^2);
+
+l = Sxx . N;
+m = Sxy . N;
+n = Syy . N;
+N = N1 / sqrt(N1.N1);
+N1 = Sx ^^ Sy;
+E = Sx . Sx;
+F = Sx . Sy;
+G = Sy . Sy;
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+Sx = diff(S,x);
+Sy = diff(S,y);
+<variable name="x">
+<variable name="y">
+<variable name="S" dim="3" type="psurf">
+<parameter name="Hmax" value="1">
+<parameter name="Hmin" value="-1">
+</definition>
+
+<definition name="Gaussian Curvature implicit" type="genColour" opType="asurf">
+posStep * [1,1-K/Kmax,0]+
+negStep * [0,1-K/Kmin,1];
+posStep = if(K>0,1,0);
+negStep = if(K>0,0,1);
+
+K = numer/denom;
+numer = +(fzz fyy - fyz fyz) fx^2
++(fxx fzz - fxz fxz) fy^2
++(fxx fyy - fxy fxy) fz^2
++2(fxy fxz - fxx fyz) fy fz
++2(fxy fyz - fyy fxz) fx fz
++2(fxz fyz - fzz fxy) fx fy;
+denom = (fx^2+fy^2+fz^2)^2;
+
+fxx = diff(fx,x);
+fxy = diff(fx,y);
+fxz = diff(fx,z);
+fyy = diff(fy,y);
+fyz = diff(fy,z);
+fzz = diff(fz,z);
+fx = diff(S,x);
+fy = diff(S,y);
+fz = diff(S,z);
+
+<variable name="S" min="0.0" max="0.0" type="asurf">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<variable name="z" min="0.0" max="0.0" type="none">
+
+<parameter name="Kmax" value="1">
+<parameter name="Kmin" value="-1">
+</definition>
+
+<definition name="Mean Curvature implicit" type="genColour" opType="asurf">
+posStep * [1,1-H/Hmax,0]+
+negStep * [0,1-H/Hmin,1];
+posStep = if(H>0,1,0);
+negStep = if(H>0,0,1);
+
+H = numer/denom;
+numer = fxx (fy^2+fz^2) + fyy (fx^2+fz^2) + fzz (fx^2+fy^2)
+- 2 fxy fx fy - 2 fxz fx fz - 2 fyz fy fz; 
+denom = 2 (fx^2+fy^2+fz^2)^(3/2);
+
+fxx = diff(fx,x);
+fxy = diff(fx,y);
+fxz = diff(fx,z);
+fyy = diff(fy,y);
+fyz = diff(fy,z);
+fzz = diff(fz,z);
+fx = diff(S,x);
+fy = diff(S,y);
+fz = diff(S,z);
+
+<variable name="S" min="0.0" max="0.0" type="asurf">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<variable name="z" min="0.0" max="0.0" type="none">
+
+<parameter name="Hmax" value="1">
+<parameter name="Hmin" value="-1">
+</definition>
+

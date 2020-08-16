@@ -1,0 +1,73 @@
+<definition name="Identity" type="mapping">
+[x,y,z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+</definition>
+<definition name="Translate" type="mapping">
+[x+dx,y+dy,z+dz];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<parameter name="dx" value="1">
+<parameter name="dy" value="0">
+<parameter name="dz" value="0">
+</definition>
+<definition name="Reflect YZ" type="mapping">
+[-x,y,z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+</definition>
+<definition name="Reflect XZ" type="mapping">
+[x,-y,z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+</definition>
+<definition name="Reflect XY" type="mapping">
+[x,y,-z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+</definition>
+<definition name="Rotate X" type="mapping">
+[x,cos(pi th) y - sin(pi th) z,sin(pi th) y + cos(pi th) z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<parameter name="th" value="0.5">
+</definition>
+<definition name="Rotate Y" type="mapping">
+[cos(pi th) x - sin(pi th) z,y,sin(pi th) x + cos(pi th) z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<parameter name="th" value="0.5">
+</definition>
+<definition name="Rotate Z" type="mapping">
+[cos(pi th) x - sin(pi th) y,sin(pi th) x + cos(pi th) y,z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<parameter name="th" value="0.5">
+</definition>
+<definition name="Inversion in a sphere" type="mapping">
+O + P2;
+P2 = l2 P1;
+l2 = r^2 / l1;
+l1 = P1 . P1;
+P1 = V - O;
+O = [a,b,c];
+V = [x,y,z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<parameter name="a" value="0">
+<parameter name="b" value="0">
+<parameter name="c" value="0">
+<parameter name="r" value="1">
+</definition>
+
+
+

@@ -6,4 +6,8 @@ public class EvaluationException extends Exception {
 		super(string);
 	}
 
+	public EvaluationException(Exception e) {
+		// TODO Auto-generated constructor stub
+	}
+
 }

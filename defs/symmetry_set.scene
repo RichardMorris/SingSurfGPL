@@ -1,0 +1,62 @@
+<definitions>
+<definition name="Bean" type="pcurve" opType="none">
+[a * cos(2 pi t) + cos(pi t),
+b * sin(2 pi t+phi) +  sin(pi t),0]+[x0,y0,0];
+
+
+<variable name="t" min="-1.0" max="1.0" steps="60" type="none">
+<parameter name="a" value="0.5">
+<parameter name="b" value="0.30000000000000004">
+<parameter name="phi" value="1.0">
+<parameter name="x0" value="2.0">
+<parameter name="y0" value="0.0">
+</definition>
+<definition name="Triangular domain" type="psurf" opType="none">
+h*[x,x,0]+(1-h)*[-1,1,0];
+h=2.0-2.0/(1.0+y)
+
+
+<variable name="x" min="-1.0" max="1.0" steps="40" type="none">
+<variable name="y" min="0.01" max="0.99" steps="40" type="none">
+</definition>
+<definition name="preSS" type="biInt" opType="pcurve">
+// Simple formulation using Giblin-Basset formulation
+(S1 - S2) . (TT1 - TT2);
+TT1 = T1 / sqrt(T1.T1);
+TT2 = T2 / sqrt(T2.T2);
+T1 = diff(S1,s);
+T2 = diff(S2,t);
+
+
+
+<variable name="S1" min="0.0" max="0.0" type="pcurve">
+<variable name="S2" min="0.0" max="0.0" type="pcurve">
+<variable name="s" min="0.0" max="0.0" type="none">
+<variable name="t" min="0.0" max="0.0" type="none">
+</definition>
+<definition name="SSmul" type="biMap" opType="pcurve">
+cdiv( cmul(S1,T2) - cmul(S2,T1) ,  T2 - T1 ); 
+T1 = TT1 / sqrt( TT1 . TT1);
+T2 = TT2 / sqrt( TT2 . TT2);
+TT1 = diff(S1,x); 
+TT2 = diff(S2,y);
+
+
+<variable name="S1" min="0.0" max="0.0" type="pcurve">
+<variable name="S2" min="0.0" max="0.0" type="pcurve">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+</definition>
+</definitions>
+<dependancies>
+<projectComponents name="preSS">
+  <input name="Triangular domain" />
+  <ingredient name="Bean" />
+  <ingredient name="Bean" />
+</projectComponents>
+<projectComponents name="SSmul">
+  <input name="preSS(Bean,Bean,Triangular domain)" />
+  <ingredient name="Bean" />
+  <ingredient name="Bean" />
+</projectComponents>
+</dependancies>

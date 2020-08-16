@@ -1,0 +1,195 @@
+<definition name="Red-Ridge" type="ridgeInt" opType="psurf" >
+Vppp;
+
+Vppp = (-kappa Sppp . N + 3 Spp . P)/(Plen^3);
+
+kappa = (P . P) / (Spp . N);
+
+N = P ^^ Q;
+
+Plen = sqrt(P.P);
+P = px * Sx + py * Sy;
+Q = qx * Sx + qy * Sy;
+
+Sppp = Sxxx px px px 
++ 3 Sxxy px px py  
++ 3 Sxyy px py py 
++ Syyy py py py;
+
+Spp = Sxx * px * px + 2 Sxy px py + Syy py py;
+
+px = p . [1,0,0];
+py = p . [0,1,0];
+qx = q . [1,0,0];
+qy = q . [0,1,0];
+
+Sxxx = diff(Sxx,x);
+Sxxy = diff(Sxx,y);
+Sxyy = diff(Sxy,y);
+Syyy = diff(Syy,y);
+
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+<variable name="S" type="psurf" />
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<variable name="p" type="vfield" />
+<variable name="q" type="vfield" />
+<option name="colour" value="Red"/>
+
+</definition>
+
+<definition name="Blue-Ridge" type="ridgeInt" opType="psurf" >
+Vqqq;
+
+Vqqq = (-kappa Sqqq . N + 3 Sqq . Q)/(Qlen^3);
+
+kappa = (Q . Q) / (Sqq . N);
+
+N = P ^^ Q;
+Qlen = sqrt(Q.Q);
+P = px * Sx + py * Sy;
+Q = qx * Sx + qy * Sy;
+
+Sqqq = Sxxx qx qx qx 
++ 3 Sxxy qx qx qy 
++ 3 Sxyy qx qy qy 
++ Syyy qy qy qy;
+
+Sqq = Sxx * qx * qx + 2 Sxy qx qy + Syy qy qy;
+
+px = p . [1,0,0];
+py = p . [0,1,0];
+qx = q . [1,0,0];
+qy = q . [0,1,0];
+
+Sxxx = diff(Sxx,x);
+Sxxy = diff(Sxx,y);
+Sxyy = diff(Sxy,y);
+Syyy = diff(Syy,y);
+
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+<variable name="S" type="psurf" />
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<variable name="p" type="vfield" />
+<variable name="q" type="vfield" />
+<option name="colour" value="Blue"/>
+
+</definition>
+
+<definition name="Green-Subpar" type="ridgeInt" opType="psurf" >
+
+Vpqq - 2 Vqq ( Spq . Q)/(lenp lenq^2);
+
+Vpqq = (-kappa Spqq . N + Spq . Q + 2 Sqq . P)/(lenq^2 lenp);
+Vqq =  (-kappa Sqq . N  + Q . Q)/(lenq^2);
+
+kappa = (P . P) / (Spp . N);
+
+Spqq = Sxxx px qx qx 
++ Sxxy px qx qy + Sxxy px qy qx + Sxxy py qx qx 
++ Sxyy px qy qy + Sxyy py qx qy + Sxyy py qy qx 
++ Syyy py qy qy;
+
+Spp = Sxx * px * px + 2 Sxy px py + Syy py py;
+Spq = Sxx * px * qx + Sxy px qy + Sxy py qx + Syy py qy;
+Sqq = Sxx * qx * qx + 2 Sxy qx qy + Syy qy qy;
+
+N = P ^^ Q;
+lenp = sqrt(P.P);
+lenq = sqrt(Q.Q);
+
+P = px * Sx + py * Sy;
+Q = qx * Sx + qy * Sy;
+
+px = p . [1,0,0];
+py = p . [0,1,0];
+qx = q . [1,0,0];
+qy = q . [0,1,0];
+
+Sxxx = diff(Sxx,x);
+Sxxy = diff(Sxx,y);
+Sxyy = diff(Sxy,y);
+Syyy = diff(Syy,y);
+
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+<variable name="S" type="psurf" />
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<variable name="p" type="vfield" />
+<variable name="q" type="vfield" />
+<option name="colour" value="Green"/>
+
+</definition>
+
+<definition name="Yellow-Subpar" type="ridgeInt" opType="psurf" >
+
+Vppq - 2 Vpp ( Spq . P)/(lenp^2 lenq); 
+
+Vppq = (-kappa Sppq . N + Spq . P + 2 Spp . Q )/(lenp^2 lenq);
+Vpp =  (-kappa Spp .N + P . P)/(lenp^2);
+
+kappa = (Q . Q) / (Sqq . N);
+
+Sppq = Sxxx px px qx 
++ Sxxy px px qy + Sxxy px py qx + Sxxy py px qx 
++ Sxyy px py qy + Sxyy py px qy + Sxyy py py qx 
++ Syyy py py qy;
+
+Spp = Sxx * px * px + 2 Sxy px py + Syy py py;
+Spq = Sxx * px * qx + Sxy px qy + Sxy py qx + Syy py qy;
+Sqq = Sxx * qx * qx + 2 Sxy qx qy + Syy qy qy;
+
+N = P ^^ Q;
+lenp = sqrt(P.P);
+lenq = sqrt(Q.Q);
+P = px * Sx + py * Sy;
+Q = qx * Sx + qy * Sy;
+
+px = p . [1,0,0];
+py = p . [0,1,0];
+qx = q . [1,0,0];
+qy = q . [0,1,0];
+
+Sxxx = diff(Sxx,x);
+Sxxy = diff(Sxx,y);
+Sxyy = diff(Sxy,y);
+Syyy = diff(Syy,y);
+
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+<variable name="S" type="psurf" />
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<variable name="p" type="vfield" />
+<variable name="q" type="vfield" />
+<option name="colour" value="Yellow"/>
+
+</definition>

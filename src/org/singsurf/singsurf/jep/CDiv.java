@@ -1,30 +1,23 @@
 package org.singsurf.singsurf.jep;
 
-import com.singularsys.extensions.djep.DiffRulesI;
-import com.singularsys.extensions.matrix.Dimensions;
-import com.singularsys.extensions.matrix.MatrixFactoryI;
-import com.singularsys.extensions.matrix.MatrixFunctionI;
-import com.singularsys.extensions.matrix.VectorI;
-import com.singularsys.extensions.xjep.XJep;
+import org.lsmp.djep.djep.DiffRulesI;
+import org.lsmp.djep.xjep.NodeFactory;
+import org.lsmp.djep.xjep.XJep;
+import org.nfunk.jep.ASTFunNode;
+import org.nfunk.jep.Node;
+import org.nfunk.jep.OperatorSet;
+import org.singsurf.singsurf.jepwrapper.BinaryFunction;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
-import com.singularsys.jep.Jep;
-import com.singularsys.jep.JepComponent;
-import com.singularsys.jep.JepException;
-import com.singularsys.jep.NodeFactory;
-import com.singularsys.jep.Operator;
-import com.singularsys.jep.OperatorTableI;
-import com.singularsys.jep.ParseException;
-import com.singularsys.jep.functions.BinaryFunction;
-import com.singularsys.jep.parser.ASTFunNode;
-import com.singularsys.jep.parser.Node;
+import org.singsurf.singsurf.jepwrapper.MatrixFactoryI;
+import org.singsurf.singsurf.jepwrapper.MatrixFunctionI;
+import org.singsurf.singsurf.jepwrapper.OperatorTableI;
 
-
-public class CDiv  extends BinaryFunction  implements DiffRulesI,MatrixFunctionI {
+public class CDiv  extends BinaryFunction  implements DiffRulesI {
     private static final long serialVersionUID = 350L;
     CMul cmul;
     MatrixFactoryI mfac;
     NodeFactory nf;
-    OperatorTableI ot;
+    OperatorSet ot;
     XJep djep;
 
     
@@ -33,7 +26,7 @@ public class CDiv  extends BinaryFunction  implements DiffRulesI,MatrixFunctionI
         this.mfac = mfac;
         this.cmul = cmul;
         nf = djep.getNodeFactory();
-        ot = djep.getOperatorTable();
+        ot = djep.getOperatorSet();
     }
     
     @Override

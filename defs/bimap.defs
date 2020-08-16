@@ -1,0 +1,95 @@
+<definition name="midpoints" type="biMap" opType="pcurve">
+lambda R + (1-lambda) S; 
+<parameter name="lambda" value="0.5">
+<variable name="R" type="pcurve">
+<variable name="S" type="pcurve">
+<variable name="x">
+<variable name="y">
+</definition>
+
+<definition name="SS" type="biMap" opType="pcurve">
+( S1 * T2 - S2*T1) / ( T2 - T1 ); 
+T1 = TT1 / sqrt( TT1 . TT1);
+T2 = TT2 / sqrt( TT2 . TT2);
+TT1 = diff(S1,x); 
+TT2 = diff(S2,y);
+<variable name="S1" type="pcurve">
+<variable name="S2" type="pcurve">
+<variable name="x">
+<variable name="y">
+</definition>
+
+<definition name="SSmul" type="biMap" opType="pcurve">
+cdiv( cmul(S1,T2) - cmul(S2,T1) ,  T2 - T1 ); 
+T1 = TT1 / sqrt( TT1 . TT1);
+T2 = TT2 / sqrt( TT2 . TT2);
+TT1 = diff(S1,x); 
+TT2 = diff(S2,y);
+<variable name="S1" type="pcurve">
+<variable name="S2" type="pcurve">
+<variable name="x">
+<variable name="y">
+</definition>
+
+<definition name="ADSS" type="biMap" opType="pcurve">
+T + lam2 an2;
+lam2 =  (an1 ^^ (T-S)) . [0,0,1] / del;
+del = (an2 ^^ an1) . [0,0,1];
+
+an1 = (k1^(-2/3)) ddS - diff(k1,s) (k1^(-5/3)) dS / 3;
+k1 = ( dS ^^ ddS ) . [0,0,1];
+ddS = diff(dS,s);
+dS = diff(S,s);
+
+an2 = (k2^(-2/3) ) ddT - diff(k2,t) (k2^(-5/3)) dT / 3;
+k2 = ( dT ^^ ddT ) . [0,0,1];
+ddT = diff(dT,t);
+dT = diff(T,t);
+
+<variable name="S" type="pcurve">
+<variable name="T" type="pcurve">
+<variable name="s">
+<variable name="t">
+</definition>
+
+<definition name="AESS" type="intersect" opType="pcurve">
+S + lam1 ( T - S - br gg1);
+lam1 = 1 / ( 2 - nu * br );
+nu = top / bot;
+top = (gg1+gg2)  . [1,0,0];
+bot =  (T-S) . [1,0,0];
+br = (gg1 ^^ gg2) . [0,0,1]; 
+
+gg1 = k1^(-1/3)  dS;
+k1 = ( dS ^^ ddS ) . [0,0,1];
+ddS = diff(dS,s);
+dS = diff(S,s);
+
+gg2 = k2^(-1/3)  dT;
+k2 = ( dT ^^ ddT ) . [0,0,1];
+ddT = diff(dT,t);
+dT = diff(T,t);
+
+<variable name="S" type="pcurve">
+<variable name="T" type="pcurve">
+<variable name="s">
+<variable name="t">
+</definition>
+<definition name="Surface of revolution" type="biMap" opType="pcurve">
+M S;
+M = [[1,0,0],[0,cos(pi t),-sin(pi t)],[0,sin(pi t),cos(pi t)]];
+
+<variable name="s" type="none">
+<variable name="t" type="none">
+<variable name="S" type="pcurve">
+<variable name="T" type="pcurve">
+</definition>
+
+<definition name="Tangent developable" type="biMap" opType="pcurve">
+S + t diff(S,s);
+
+<variable name="s" type="none">
+<variable name="t" type="none">
+<variable name="S" type="pcurve">
+<variable name="T" type="pcurve">
+</definition>

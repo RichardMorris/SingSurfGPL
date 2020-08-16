@@ -1,0 +1,13 @@
+<definition name="Color by position" type="colour">
+[(x-xlow)/(xhigh-xlow),(y-ylow)/(yhigh-ylow),(z-zlow)/(zhigh-zlow)];
+<parameter name="xlow" value="-1.0">
+<parameter name="xhigh" value="1.0">
+<parameter name="ylow" value="-1.0">
+<parameter name="yhigh" value="1.0">
+<parameter name="zlow" value="-1.0">
+<parameter name="zhigh" value="1.0">
+
+<variable name="x">
+<variable name="y">
+<variable name="z">
+</definition>

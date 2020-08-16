@@ -4,23 +4,25 @@ Created 17 Sep 2006 - Richard Morris
 package org.singsurf.singsurf.calculators;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
+import org.lsmp.djep.djep.DSymbolTable;
+import org.lsmp.djep.matrixJep.MatrixJep;
+import org.lsmp.djep.matrixJep.MatrixPartialDerivative;
+import org.lsmp.djep.matrixJep.MatrixVariableFactory;
+import org.lsmp.djep.matrixJep.MatrixVariableI;
+import org.lsmp.djep.mrpe.MRpCommandList;
+import org.lsmp.djep.mrpe.MRpEval;
+import org.lsmp.djep.mrpe.MRpRes;
+import org.nfunk.jep.ParseException;
+import org.nfunk.jep.Variable;
 import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.jep.ExternalPartialDerivative;
 import org.singsurf.singsurf.jep.ExternalVariable;
-
-import com.singularsys.extensions.djep.DVariableFactory;
-import com.singularsys.extensions.djep.PartialDerivative;
-import com.singularsys.extensions.fastmatrix.MrpVarRef;
-import com.singularsys.extensions.matrix.DimensionVisitor;
-import com.singularsys.extensions.matrix.Dimensions;
-import com.singularsys.extensions.xjep.XVariable;
-import com.singularsys.jep.ParseException;
-import com.singularsys.jep.Variable;
-
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 /**
  * A calculator which depends on two ingredients.
@@ -35,19 +37,26 @@ public class BiChainedCalculator extends Calculator {
     DefVariable dependentVariable2 = null;
     ExternalVariable jepVar1 = null;
     ExternalVariable jepVar2 = null;
-    MrpVarRef jepVarRef1;
-    MrpVarRef jepVarRef2;
+    int jepVarRef1;
+    int jepVarRef2;
 
     public BiChainedCalculator(Definition def, int nderiv) {
         super(def, nderiv);
-        mj.setComponent(new BiChainedVariableFactory());
-        mj.reinitializeComponents();
+        mj = (MatrixJep) mj.newInstance(new DSymbolTable(
+                new BiChainedVariableFactory()));
+        mj.setAllowAssignment(true);
+        mj.setAllowUndeclared(true);
+        mj.setImplicitMul(true);
+        mj.addComplex();
+        mj.addStandardConstants();
+        mj.addStandardFunctions();
+        mj.addStandardDiffRules();
+        mrpe = new MRpEval(mj);
     }
 
-    List<MrpVarRef> derivMrpeRefs1 = null;
-    List<MrpVarRef> derivMrpeRefs2 = null;
-    MrpVarRef jepNormVarRef1;
-    MrpVarRef jepNormVarRef2;
+    List<Integer> derivMrpeRefs1 = null;
+    List<Integer> derivMrpeRefs2 = null;
+    int jepNormVarRef1, jepNormVarRef2;
 
     @Override
     public void build() {
@@ -62,8 +71,8 @@ public class BiChainedCalculator extends Calculator {
         }
         dependentVariable1 = var.get(0);
         dependentVariable2 = var.get(1);
-        jepVar1 = new ExternalVariable(this, dependentVariable1.getName(), optype.getOutputDimensions());
-        jepVar2 = new ExternalVariable(this, dependentVariable2.getName(), optype.getOutputDimensions());
+        jepVar1 = new ExternalVariable(this, dependentVariable1.getName(), 3);
+        jepVar2 = new ExternalVariable(this, dependentVariable2.getName(), 3);
         super.build();
         if (!good)
             return;
@@ -71,41 +80,52 @@ public class BiChainedCalculator extends Calculator {
             List<DefVariable> normalVars = this.definition
                     .getVariablesByType(DefType.none);
 
-            XVariable normVar1 = (XVariable) mj.addVariable(normalVars.get(0).getName());
-            normVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.SCALER);
-            jepNormVarRef1 = mrpe.getVarRef(normVar1);//,Dimensions.ONE);
-            XVariable normVar2 = (XVariable) mj.addVariable(normalVars.get(1).getName());
-            normVar2.setHook(DimensionVisitor.DIM_KEY,Dimensions.SCALER);
+            Variable normVar1 = mj.getVar(normalVars.get(0).getName());
+            if (normVar1 == null) {
+                jepNormVarRef1 = -1;
+                // mj.addVariable(normalVars.get(0).getName(), 0.0);
+            } else
+                jepNormVarRef1 = mrpe.getVarRef(normVar1);
+            Variable normVar2 = mj.getVar(normalVars.get(1).getName());
+            if (normVar2 == null)
+                jepNormVarRef2 = -1;
+            else
                 jepNormVarRef2 = mrpe.getVarRef(normVar2);
-            jepVarRef1 = mrpe.getVarRef(jepVar1);
-            jepVarRef2 = mrpe.getVarRef(jepVar2);
-            derivMrpeRefs1 = new ArrayList<>();
-            derivMrpeRefs2 = new ArrayList<>();
-            
+            jepVarRef1 = mrpe.getVarRef((MatrixVariableI) jepVar1);
+            jepVarRef2 = mrpe.getVarRef((MatrixVariableI) jepVar2);
+            derivMrpeRefs1 = new ArrayList<Integer>();
+            derivMrpeRefs2 = new ArrayList<Integer>();
             int dnum1 = 0;
-            for(PartialDerivative pd:jepVar1.allDerivatives()) {
-                ExternalPartialDerivative diff = (ExternalPartialDerivative) pd;
-                MrpVarRef ref = mrpe.getVarRef(diff);
+            for (Enumeration<?> en = jepVar1.allDerivatives(); en
+                    .hasMoreElements();) {
+                Object o = en.nextElement();
+                ExternalPartialDerivative diff = (ExternalPartialDerivative) o;
+                int ref = mrpe.getVarRef((MatrixVariableI) diff);
                 derivMrpeRefs1.add(dnum1, ref);
                 ++dnum1;
             }
             int dnum2 = 0;
-            for(PartialDerivative pd:jepVar2.allDerivatives()) {
-                ExternalPartialDerivative diff = (ExternalPartialDerivative) pd;
-                MrpVarRef ref = mrpe.getVarRef(diff);
+            for (Enumeration<?> en = jepVar2.allDerivatives(); en
+                    .hasMoreElements();) {
+                Object o = en.nextElement();
+                ExternalPartialDerivative diff = (ExternalPartialDerivative) o;
+                int ref = mrpe.getVarRef((MatrixVariableI) diff);
                 derivMrpeRefs2.add(dnum2, ref);
                 ++dnum2;
             }
-            if (ingredient1 != null)
-                buildIngr1();
-            if (ingredient2 != null)
-                buildIngr2();
         } catch (ParseException e) {
             this.good = false;
             this.msg = e.getMessage();
         }
+        if (ingredient1 != null)
+            buildIngr1();
+        if (ingredient2 != null)
+            buildIngr2();
 
     }
+
+    // private Calculator getIngredient() { throw new RuntimeException("Fail");
+    // }
 
     public Calculator getIngredient1() {
         return ingredient1;
@@ -119,11 +139,13 @@ public class BiChainedCalculator extends Calculator {
     List<Integer> derivTrans1;
     List<Integer> derivTrans2;
 
-    public void buildIngr1() throws ParseException {
-        derivTrans1 = new ArrayList<>();
+    public void buildIngr1() {
+        derivTrans1 = new ArrayList<Integer>();
         int dnum = 0;
-        for(PartialDerivative pd:jepVar1.allDerivatives()) {
-            ExternalPartialDerivative diff = (ExternalPartialDerivative) pd;
+        Enumeration<?> e1 = jepVar1.allDerivatives();
+        while (e1.hasMoreElements()) { /* for each derivative ... */
+            Object o = e1.nextElement();
+            MatrixPartialDerivative diff = (MatrixPartialDerivative) o;
             String dnames[] = diff.getDnames();
             String ingrNames[] = new String[dnames.length];
             List<DefVariable> normalVars = this.definition
@@ -143,12 +165,14 @@ public class BiChainedCalculator extends Calculator {
         }
     }
 
-    public void buildIngr2() throws ParseException {
+    public void buildIngr2() {
 
-        derivTrans2 = new ArrayList<>();
+        derivTrans2 = new ArrayList<Integer>();
         int dnum = 0;
-        for(PartialDerivative pd:jepVar2.allDerivatives()) {
-            ExternalPartialDerivative diff = (ExternalPartialDerivative) pd;
+        Enumeration<?> e2 = jepVar2.allDerivatives();
+        while (e2.hasMoreElements()) { /* for each derivative ... */
+            Object o = e2.nextElement();
+            MatrixPartialDerivative diff = (MatrixPartialDerivative) o;
             String dnames[] = diff.getDnames();
             String ingrNames[] = new String[dnames.length];
             List<DefVariable> normalVars = this.definition
@@ -170,18 +194,15 @@ public class BiChainedCalculator extends Calculator {
 
     public void setIngredient1(Calculator ingredient) {
         this.ingredient1 = ingredient;
-        reset();
         build();
     }
 
     public void setIngredient2(Calculator ingredient) {
         this.ingredient2 = ingredient;
-        reset();
         build();
     }
 
-    class BiChainedVariableFactory extends DVariableFactory {
-        private static final long serialVersionUID = 350L;
+    class BiChainedVariableFactory extends MatrixVariableFactory {
 
         @Override
         public Variable createVariable(String name, Object value) {
@@ -191,7 +212,8 @@ public class BiChainedCalculator extends Calculator {
             if (dependentVariable2 != null
                     && name.equals(dependentVariable2.getName()))
                 return jepVar2;
-			return super.createVariable(name, value);
+            else
+                return super.createVariable(name, value);
         }
 
         @Override
@@ -202,12 +224,54 @@ public class BiChainedCalculator extends Calculator {
             if (dependentVariable2 != null
                     && name.equals(dependentVariable2.getName()))
                 return jepVar2;
-			return super.createVariable(name);
+            else
+                return super.createVariable(name);
         }
 
     }
 
+    double igr1in[] = new double[1];
+    double igr2in[] = new double[2];
 
+    @Override
+    public double[] evalTop(double[] in) throws EvaluationException {
+        try {
+            igr1in[0] = in[0];
+            igr2in[0] = in[1];
+            if (jepNormVarRef1 >= 0)
+                mrpe.setVarValue(jepNormVarRef1, in[0]);
+            if (jepNormVarRef2 >= 0)
+                mrpe.setVarValue(jepNormVarRef2, in[1]);
+            double[] ingrRes1 = ingredient1.evalTop(igr1in);
+            mrpe.setVarValue(jepVarRef1, ingrRes1);
+            for (int i = 0; i < this.derivMrpeRefs1.size(); ++i) {
+                double[] derivRes = ingredient1.evalDerivative(this.derivTrans1
+                        .get(i));
+                mrpe.setVarValue(this.derivMrpeRefs1.get(i), derivRes);
+            }
+
+            double[] ingrRes2 = ingredient2.evalTop(igr2in);
+            mrpe.setVarValue(jepVarRef2, ingrRes2);
+            for (int i = 0; i < this.derivMrpeRefs2.size(); ++i) {
+                double[] derivRes = ingredient2.evalDerivative(this.derivTrans2
+                        .get(i));
+                mrpe.setVarValue(this.derivMrpeRefs2.get(i), derivRes);
+            }
+
+            for (MRpCommandList com : allComs)
+                mrpe.evaluate(com);
+
+            MRpRes res = mrpe.evaluate(topCom);
+            double v[] = (double[]) res.toArray();
+            return v;
+
+        } catch (EvaluationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new EvaluationException(e);
+        }
+
+    }
 
     public boolean goodIngredients() {
         boolean g0 = super.isGood();
@@ -215,28 +279,7 @@ public class BiChainedCalculator extends Calculator {
                 .isGood();
         boolean g2 = this.ingredient2 == null ? false : this.ingredient2
                 .isGood();
-//        System.out.println("BiCh " + g0 + " " + g1 + " " + g2);
+        System.out.println("BiCh " + g0 + " " + g1 + " " + g2);
         return g0 && g1 && g2;
     }
-        
-	public Evaluator createEvaluator() {
-		List<MrpVarRef> drefs1 = new ArrayList<>();
-		derivMrpeRefs1.forEach(ref -> drefs1.add(ref.duplicate()));
-		List<Integer> dt1 = new ArrayList<Integer>(derivTrans1);
-
-		List<MrpVarRef> drefs2 = new ArrayList<>();
-		derivMrpeRefs2.forEach(ref -> drefs2.add(ref.duplicate()));
-		List<Integer> dt2 = new ArrayList<Integer>(derivTrans2);
-
-		return new BiChainedEvaluator(
-				super.createEvaluator(),
-				ingredient1.createEvaluator(), 
-				ingredient2.createEvaluator(),
-				jepVarRef1.duplicate(), jepNormVarRef1.duplicate(),
-				drefs1, dt1,
-				jepVarRef2.duplicate(), jepNormVarRef2.duplicate(),
-				drefs2, dt2);
-	}
-
-    
 }

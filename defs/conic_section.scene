@@ -1,0 +1,61 @@
+<definitions>
+<definition name="A1 (cone)" type="asurf" opType="none">
+x^2 - y^2 - z^2;
+
+<variable name="x" min="-1.04" max="1.03" type="none">
+<variable name="y" min="-1.13" max="1.04" type="none">
+<variable name="z" min="-1.12" max="1.05" type="none">
+<option name="coarse" value="32">
+<option name="fine" value="64">
+<option name="face" value="128">
+<option name="edge" value="4096">
+<option name="showFace" value="true">
+<option name="showEdge" value="false">
+<option name="showVert" value="false">
+<option name="showCurve" value="true">
+<option name="showPoint" value="true">
+</definition>
+<definition name="A Plane" type="asurf" opType="none">
+a x + b y + c z - d;
+
+
+<variable name="x" min="-1.14" max="1.03" type="none">
+<variable name="y" min="-1.13" max="1.04" type="none">
+<variable name="z" min="-1.12" max="1.05" type="none">
+<parameter name="a" value="1.0">
+<parameter name="b" value="0.0">
+<parameter name="c" value="0.9999999999999992">
+<parameter name="d" value="0.5">
+<option name="coarse" value="32">
+<option name="fine" value="64">
+<option name="face" value="128">
+<option name="edge" value="4096">
+<option name="showFace" value="true">
+<option name="showEdge" value="false">
+<option name="showVert" value="false">
+<option name="showCurve" value="true">
+<option name="showPoint" value="true">
+</definition>
+<definition name="Intersect by surface" type="genInt" opType="asurf">
+// Calculate the intersection with an implicit surface
+S;
+
+<variable name="S" min="0.0" max="0.0" type="asurf">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<variable name="z" min="0.0" max="0.0" type="none">
+<option name="showFace" value="true">
+<option name="showEdge" value="false">
+<option name="showVert" value="false">
+<option name="showCurve" value="true">
+<option name="colour" value="Black">
+<option name="numItts" value="5">
+<option name="project" value="false">
+</definition>
+</definitions>
+<dependancies>
+<projectComponents name="Intersect by surface">
+  <input name="A1 (cone)" />
+  <ingredient name="A Plane" />
+</projectComponents>
+</dependancies>

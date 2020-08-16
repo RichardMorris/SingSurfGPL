@@ -1,0 +1,36 @@
+<definition name="Sphere" type="intersect">
+(x-x0)^2+(y-y0)^2+(z-z0)^2 - r^2;
+<parameter name="x0" value="0.0">
+<parameter name="y0" value="0.0">
+<parameter name="z0" value="0.0">
+<parameter name="r" value="1.0">
+<variable name="x" type="Normal">
+<variable name="y" type="Normal">
+<variable name="z" type="Normal">
+</definition>
+
+<definition name="Plane" type="intersect">
+// A plane
+a x + b y + c z - d;
+<parameter name="a" value="1.0">
+<parameter name="b" value="0.0">
+<parameter name="c" value="0.0">
+<parameter name="d" value="0.0">
+<variable name="x" type="Normal">
+<variable name="y" type="Normal">
+<variable name="z" type="Normal">
+</definition>
+
+<definition name="Box" type="intersect">
+min(min(min(xh-x,x-xl),min(yh-y,y-yl)),min(zh-z,z-zl));
+<parameter name="xh" value="2.0">
+<parameter name="xl" value="-2.0">
+<parameter name="yh" value="2.0">
+<parameter name="yl" value="-2.0">
+<parameter name="zh" value="2.0">
+<parameter name="zl" value="-2.0">
+<variable name="x" type="Normal">
+<variable name="y" type="Normal">
+<variable name="z" type="Normal">
+</definition>
+

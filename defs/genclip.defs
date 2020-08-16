@@ -1,0 +1,8 @@
+<definition name="Clip by surface" type="genClip" opType="asurf">
+// Calculate the intersection with an implicit surface
+S;
+<variable name="S" type="asurf">
+<variable name="x">
+<variable name="y">
+<variable name="z">
+</definition>

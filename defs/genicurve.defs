@@ -1,0 +1,106 @@
+<definition name="Tangent" type="genICurve"  opType="psurf">
+a diff(S,x) + b diff(S,y);
+
+<variable name="S" type="psurf">
+<variable name="x">
+<variable name="y">
+<parameter name="a" value="1">
+<parameter name="b" value="0">
+</definition>
+
+<definition name="Normal" type="genICurve"  opType="psurf">
+len diff(S,x) ^ diff(S,y);
+
+<variable name="S" type="psurf">
+<variable name="x">
+<variable name="y">
+<parameter name="len" value="0.1">
+</definition>
+
+<definition name="Red principle curve" type="genICurve" opType="psurf">
+[a,b,c,d];
+a = G l - F m;
+b = G m - F n;
+c = -F l + E m;
+d = -F m + E n;
+
+l = Sxx . N;
+m = Sxy . N;
+n = Syy . N;
+N = Sx ^^ Sy;
+E = Sx . Sx;
+F = Sx . Sy;
+G = Sy . Sy;
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+<variable name="S" min="0.0" max="0.0" type="psurf">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<option name="colour" value="Cyan"/>
+<option name="showVector" value="false"/>
+<option name="clipping" value="100.0"/>
+<option name="project" value="true"/>
+<option name="orientation" value="Eigenvectors 1"/>
+<option name="length" value="0.01"/>
+<option name="steps" value="100"/>
+<option name="method" value="Runge-Kutta 4"/>
+<option name="StartDir" value="Inwards"/>
+</definition>
+
+<definition name="Blue principle curve" type="genICurve" opType="psurf">
+[a,b,c,d];
+a = G l - F m;
+b = G m - F n;
+c = -F l + E m;
+d = -F m + E n;
+
+l = Sxx . N;
+m = Sxy . N;
+n = Syy . N;
+N = Sx ^^ Sy;
+E = Sx . Sx;
+F = Sx . Sy;
+G = Sy . Sy;
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+<variable name="S" min="0.0" max="0.0" type="psurf">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<option name="colour" value="Magenta"/>
+<option name="showVector" value="false"/>
+<option name="clipping" value="100.0"/>
+<option name="project" value="true"/>
+<option name="orientation" value="Eigenvectors 2"/>
+<option name="length" value="0.01"/>
+<option name="steps" value="100"/>
+<option name="method" value="Runge-Kutta 4"/>
+<option name="StartDir" value="Inwards"/>
+</definition>
+
+<definition name="Implicit" type="genICurve"  opType="asurf">
+[Sxx,Sxy,Sxz,Syy,Syz,Szz, Sx,Sy,Sz];
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Sxz = diff(Sx,z);
+Syy = diff(Sy,y);
+Syz = diff(Sy,z);
+Szz = diff(Sz,z);
+Sx = diff(S,x);
+Sy = diff(S,y);
+Sz = diff(S,z);
+
+<variable name="S" type="asurf">
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<option name="colour" value="Red">
+<option name="orientation" value="Implicit">
+</definition>

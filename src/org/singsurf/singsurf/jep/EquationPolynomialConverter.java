@@ -5,14 +5,14 @@ package org.singsurf.singsurf.jep;
 
 import java.util.List;
 
+import org.lsmp.djep.djep.DJep;
+import org.lsmp.djep.sjep.PNodeI;
+import org.lsmp.djep.sjep.PolynomialCreator;
+import org.nfunk.jep.Node;
+import org.singsurf.singsurf.calculators.FieldI;
 import org.singsurf.singsurf.definitions.Parameter;
+import org.singsurf.singsurf.jepwrapper.JepException;
 
-import com.singularsys.extensions.djep.DJep;
-import com.singularsys.extensions.field.FieldI;
-import com.singularsys.extensions.polynomials.PNodeI;
-import com.singularsys.extensions.polynomials.PolynomialCreator;
-import com.singularsys.jep.JepException;
-import com.singularsys.jep.parser.Node;
 
 /**
  * Converts equations to polynomial form
@@ -27,7 +27,7 @@ public class EquationPolynomialConverter {
 	 */
 	public EquationPolynomialConverter(DJep jep,FieldI f) {
 		this.jep = jep;
-		this.pv = new PolynomialCreator(jep,f);
+		this.pv = new PolynomialCreator(jep);
 	}
 
 	public double[][] convert2D(List<Node> equations,String[] variables,List<Parameter> params) throws JepException {
@@ -35,14 +35,17 @@ public class EquationPolynomialConverter {
 		Node top = jep.deepCopy(equations.get(equations.size()-1));
 		for(int i=equations.size()-2;i>=0;--i)
 			top = jep.substitute(top,equations.get(i));
-//		String[] names = new String[params.size()];
-//		Double[] values = new Double[params.size()];
+		String[] names = new String[params.size()];
+		Double[] values = new Double[params.size()];
+		int i=0;
 		for(Parameter p :params) {
-			String name = p.getName();
-			double value = p.getVal();
-			top = jep.substitute(top, name, value);
+			names[i] = p.getName();
+			values[i] = p.getVal();
+			++i;
 		}
+
 		PNodeI poly = pv.createPoly(top).expand();
+		pv.
 		double[][] res =  pv.toDoubleArray(poly, variables[0],variables[1]);
 		return res;
 	}

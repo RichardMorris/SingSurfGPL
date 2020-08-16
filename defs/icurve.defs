@@ -1,0 +1,71 @@
+<definition name="Sink" type="icurve">
+[x,y,z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+</definition>
+
+<definition name="Source" type="icurve">
+[-x,-y,-z];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<option name="orientation" value="Oriented">
+<option name="method" value="Runge-Kutta 4">
+<option name="length" value="0.1">
+<option name="steps" value="1000">
+</definition>
+
+<definition name="Sadle" type="icurve">
+[-x,y,0];
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<option name="orientation" value="Oriented">
+<option name="method" value="Runge-Kutta 4">
+<option name="length" value="0.1">
+<option name="steps" value="1000">
+</definition>
+
+<definition name="2D Critical points" type="icurve">
+[a x + b y, c x + d y,0];
+<parameter name="a" value="1">
+<parameter name="b" value="1">
+<parameter name="c" value="-1">
+<parameter name="d" value="1">
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<option name="orientation" value="Oriented">
+<option name="method" value="Runge-Kutta 4">
+<option name="length" value="0.1">
+<option name="steps" value="1000">
+</definition>
+
+<definition name="Selkov model" type="icurve">
+[-x+a y+x^2 y, b-a y-x^2y, 0];
+<parameter name="a" value="1">
+<parameter name="b" value="0.5">
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<option name="orientation" value="Oriented">
+<option name="method" value="Runge-Kutta 4">
+<option name="length" value="0.1">
+<option name="steps" value="1000">
+</definition>
+
+<definition name="Hopf bifurcation" type="icurve">
+cmul( [x,y] , [lambda, 1] + (x^2+y^2) [alpha,beta] );
+<parameter name="alpha" value="-1">
+<parameter name="beta" value="0.5">
+<parameter name="lambda" value="0.5">
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<option name="orientation" value="Oriented">
+<option name="method" value="Runge-Kutta 4">
+<option name="length" value="0.1">
+<option name="steps" value="1000">
+</definition>
+

@@ -1,0 +1,177 @@
+<definition name="Tangent" type="genVfield"  opType="psurf">
+a diff(S,x) + b diff(S,y);
+
+<variable name="S" type="psurf">
+<variable name="x">
+<variable name="y">
+<parameter name="a" value="1">
+<parameter name="b" value="0">
+</definition>
+
+<definition name="Normal" type="genVfield"  opType="psurf">
+len diff(S,x) ^ diff(S,y);
+
+<variable name="S" type="psurf">
+<variable name="x">
+<variable name="y">
+<parameter name="len" value="0.1">
+</definition>
+
+<definition name="Principle Directions" type="genVfield"  opType="psurf">
+[a,b,c,d];
+a = G l - F m;
+b = G m - F n;
+c = -F l + E m;
+d = -F m + E n;
+
+l = Sxx . N;
+m = Sxy . N;
+n = Syy . N;
+N = Sx ^^ Sy;
+E = Sx . Sx;
+F = Sx . Sy;
+G = Sy . Sy;
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+
+<variable name="S" min="0.0" max="0.0" type="psurf">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<option name="colour" value="Cyan">
+<option name="showVector" value="false">
+<option name="clipping" value="100.0">
+<option name="project" value="false">
+<option name="orientation" value="Eigenvectors">
+</definition>
+
+<definition name="Principle Direction old" type="genVfield"  opType="psurf">
+len * P / sqrt(P.P);
+P = [u,v,0];
+u = if(cond, b, c);
+v= -if(cond, a, b);
+cond = a^2 > c^2;
+a = (l - k1 E);
+b = (m - k1 F);
+c = (n - k1 G);
+k1 = H + sign sqrt( H^2 - K );
+K = ( l n - m^2 ) / ( E G - F^2 );
+H = ( G l + E n - 2 F m ) / ( 2 E G - 2 F^2);
+
+l = Sxx . N;
+m = Sxy . N;
+n = Syy . N;
+//#N = N1 / sqrt(N1.N1);
+N = Sx ^^ Sy;
+E = Sx . Sx;
+F = Sx . Sy;
+G = Sy . Sy;
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+<variable name="S" type="psurf">
+<variable name="x">
+<variable name="y">
+<parameter name="sign" value="1">
+<parameter name="len" value="0.1">
+<option name="colour" value="Red">
+</definition>
+
+<definition name="Implicit" type="genVfield"  opType="asurf">
+[Sxx,Sxy,Sxz,Syy,Syz,Szz, Sx,Sy,Sz];
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Sxz = diff(Sx,z);
+Syy = diff(Sy,y);
+Syz = diff(Sy,z);
+Szz = diff(Sz,z);
+Sx = diff(S,x);
+Sy = diff(S,y);
+Sz = diff(S,z);
+
+<variable name="S" type="asurf">
+<variable name="x">
+<variable name="y">
+<variable name="z">
+<option name="colour" value="Red">
+<option name="orientation" value="Implicit">
+</definition>
+
+<definition name="Limiting ridge" type="genVfield"  opType="psurf">
+[Vxxx,Vxxy,Vxyy,Vyyy,Sx.Sx,Sx.Sy,Sy.Sy];
+
+Vxxx = (-kappa Sxxx . N + 3 Sxx . Sx);
+Vxxy = (-kappa Sxxy . N + 2 Sxy . Sx + Sxx . Sy);
+Vxyy = (-kappa Sxyy . N + 2 Sxy . Sy + Syy . Sx);
+Vyyy = (-kappa Syyy . N + 3 Syy . Sy);
+
+kappa = (P . P) / (Sxx . N);
+
+N = P ^^ Q;
+
+P = Sx;
+Q = Sy;
+
+Sxxx = diff(Sxx,x);
+Sxxy = diff(Sxx,y);
+Sxyy = diff(Sxy,y);
+Syyy = diff(Syy,y);
+
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+
+<variable name="S" min="0.0" max="0.0" type="psurf">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<option name="colour" value="Cyan">
+<option name="showVector" value="false">
+<option name="clipping" value="100.0">
+<option name="project" value="false">
+<option name="orientation" value="Cubic">
+</definition>
+
+<definition name="Limiting subpar" type="genVfield"  opType="psurf">
+[Vxyy, Vyyy -2 Vxxy, Vxxx-2 Vxyy, Vxxy,Sx.Sx,Sx.Sy,Sy.Sy];
+
+Vxxx = (-kappa Sxxx . N + 3 Sxx . Sx);
+Vxxy = (-kappa Sxxy . N + 2 Sxy . Sx + Sxx . Sy);
+Vxyy = (-kappa Sxyy . N + 2 Sxy . Sy + Syy . Sx);
+Vyyy = (-kappa Syyy . N + 3 Syy . Sy);
+
+kappa = (P . P) / (Sxx . N);
+
+N = P ^^ Q;
+
+P = Sx;
+Q = Sy;
+
+Sxxx = diff(Sxx,x);
+Sxxy = diff(Sxx,y);
+Sxyy = diff(Sxy,y);
+Syyy = diff(Syy,y);
+
+Sxx = diff(Sx,x);
+Sxy = diff(Sx,y);
+Syy = diff(Sy,y);
+Sx = diff(S,x);
+Sy = diff(S,y);
+
+<variable name="S" min="0.0" max="0.0" type="psurf">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<option name="colour" value="Cyan">
+<option name="showVector" value="false">
+<option name="clipping" value="100.0">
+<option name="project" value="false">
+<option name="orientation" value="Cubic">
+</definition>

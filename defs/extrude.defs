@@ -1,0 +1,7 @@
+<definition name="Surface of revolution" type="extrude">
+[x,cos(pi t) y - sin(pi t) z, sin(pi t) y + cos(pi t) z];
+<variable name="t" min="-1" max="1" steps="10"/>
+<variable name="x"/>
+<variable name="y"/>
+<variable name="z"/>
+</definition>

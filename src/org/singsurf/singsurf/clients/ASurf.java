@@ -23,6 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.SwingUtilities;
 
 import org.lsmp.djep.xjep.PrintVisitor;
+import org.nfunk.jep.ASTVarNode;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.Fractometer;
@@ -46,6 +47,7 @@ import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jep.EquationConverter;
 import org.singsurf.singsurf.jep.EquationPolynomialConverter;
 import org.singsurf.singsurf.operators.SimpleClip;
 
@@ -450,9 +452,9 @@ public class ASurf extends AbstractClient {
 			PgPolygonSet curveRes = new PgPolygonSet(3);
 			PgPointSet pointsRes = new PgPointSet(3);
 			
-			EquationPolynomialConverter ec = new EquationPolynomialConverter(calc.getJep(), calc.getField());
+			EquationConverter ec = new EquationConverter(calc.getJep());
 			try {
-				double[][][] coeffs = ec.convert3D(calc.getPreprocessedEqns(),
+				double[][][] coeffs = ec.convert3D(calc.getRawEqns(),
 						new String[] { localX.getName(), localY.getName(), localZ.getName() }, calc.getParams());
 				if (coeffs.length == 1 && coeffs[0].length == 1 && coeffs[0][0].length == 1)
 					throw new AsurfException("Equation is a constant");
@@ -477,7 +479,7 @@ public class ASurf extends AbstractClient {
 				int edgemul = edgePowerFrac.getVal();
 				
 				PrintVisitor pv = calc.getJep().getPrintVisitor();
-				calc.getJep().getOperatorTable().getMultiply().setPrintSymbol(null);
+//JepFix				calc.getJep().getOperatorTable().getMultiply().setPrintSymbol(null);
 				DecimalFormat format = new DecimalFormat();
 				format.setMaximumFractionDigits(12);
 				format.setMinimumFractionDigits(0);

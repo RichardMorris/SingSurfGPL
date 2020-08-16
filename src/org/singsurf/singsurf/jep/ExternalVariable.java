@@ -3,35 +3,25 @@ Created 17 Sep 2006 - Richard Morris
 */
 package org.singsurf.singsurf.jep;
 
+import org.lsmp.djep.djep.DJep;
+import org.lsmp.djep.djep.PartialDerivative;
+import org.lsmp.djep.matrixJep.MatrixVariable;
+import org.lsmp.djep.vectorJep.Dimensions;
+import org.lsmp.djep.vectorJep.values.MatrixValueI;
+import org.nfunk.jep.Node;
+import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.calculators.Calculator;
 
-import com.singularsys.extensions.djep.DJep;
-import com.singularsys.extensions.djep.DVariable;
-import com.singularsys.extensions.djep.PartialDerivative;
-import com.singularsys.extensions.matrix.DimensionVisitor;
-import com.singularsys.extensions.matrix.Dimensions;
-import com.singularsys.jep.ParseException;
-import com.singularsys.jep.parser.Node;
+public class ExternalVariable extends MatrixVariable {
+	Calculator calc;
 
-public class ExternalVariable extends DVariable {
-    private static final long serialVersionUID = 350L;
-    Calculator calc;
-    
-	public ExternalVariable(Calculator calc,String name,Dimensions dim) {
+	public ExternalVariable(Calculator calc,String name,int dim) {
 		super(name);
 		this.calc = calc;
-		this.setDimensions(dim);
+		this.setDimensions(Dimensions.valueOf(dim));
 	}
 
-	public void setDimensions(Dimensions dims) {
-	    this.setHook(DimensionVisitor.DIM_KEY, dims);
-    }
-
-	public Dimensions detDimensions() {
-	         return (Dimensions) this.getHook(DimensionVisitor.DIM_KEY);
-	    }
-
-    @Override
+	@Override
 	public PartialDerivative createDerivative(String[] derivnames, Node eqn) {
 		return new ExternalPartialDerivative(this,derivnames);
 	}
@@ -42,6 +32,11 @@ public class ExternalVariable extends DVariable {
 		return createDerivative(derivnames, null);
 	}
 
+	@Override
+	public MatrixValueI getMValue() {
+		// TODO Auto-generated method stub
+		return super.getMValue();
+	}
 
 	@Override
 	public boolean derivativeIsTrivallyZero() {

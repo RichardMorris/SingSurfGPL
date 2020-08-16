@@ -1,0 +1,63 @@
+<definitions>
+<definition name="Simple domain" type="psurf" opType="none">
+[x,y,0];
+
+
+
+<variable name="x" min="-0.5000000000000001" max="0.5000000000000001" steps="50" type="none">
+<variable name="y" min="-1.0" max="1.0" steps="60" type="none">
+<option name="showFace" value="false">
+<option name="showEdge" value="false">
+<option name="showVert" value="false">
+</definition>
+<definition name="Ellipsoid" type="psurf" opType="none">
+[x0,y0,z0]+ r * [l,m,n];
+l = a cos(pi th) cos(pi phi);
+m = b cos(pi th) sin(pi phi);
+n = c sin(pi th);
+
+
+
+<variable name="th" min="-0.5" max="0.5" steps="40" type="none">
+<variable name="phi" min="-1.0" max="1.0" steps="40" type="none">
+<parameter name="a" value="3.0">
+<parameter name="b" value="2.0">
+<parameter name="c" value="1.0">
+<parameter name="r" value="1.0">
+<parameter name="x0" value="0.0">
+<parameter name="y0" value="0.0">
+<parameter name="z0" value="0.0">
+<option name="showFace" value="true">
+<option name="showEdge" value="false">
+<option name="showVert" value="false">
+</definition>
+<definition name="Profile" type="genInt" opType="psurf">
+// Calculate the profile of a parametrised surface
+// wrt a particular direction (a,b,c)
+
+N . [a,b,c];
+N = diff(S,x) ^^ diff(S,y);
+
+
+
+<variable name="S" min="0.0" max="0.0" type="psurf">
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<parameter name="a" value="1.0">
+<parameter name="b" value="-0.4999999999999999">
+<parameter name="c" value="0.2">
+<option name="showFace" value="true">
+<option name="showEdge" value="false">
+<option name="showVert" value="false">
+<option name="showCurve" value="true">
+<option name="colour" value="Cyan">
+<option name="numItts" value="5">
+<option name="project" value="true">
+</definition>
+</definitions>
+<dependancies>
+<projectComponents name="Profile">
+  <input name="Simple domain" />
+  <ingredient name="Ellipsoid" />
+</projectComponents>
+</dependancies>

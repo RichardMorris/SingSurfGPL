@@ -1,0 +1,69 @@
+<definition name="co-tangent" type="biInt" opType="pcurve">
+(P^^Q) . [0,0,1];
+P = diff(S,x);
+Q = diff(T,y);
+<variable name="S" type="pcurve">
+<variable name="T" type="pcurve">
+<variable name="x">
+<variable name="y">
+</definition>
+
+<definition name="preSS" type="biInt" opType="pcurve">
+// Simple formulation using Giblin-Basset formulation
+(S1 - S2) . (TT1 - TT2);
+TT1 = T1 / sqrt(T1.T1);
+TT2 = T2 / sqrt(T2.T2);
+T1 = diff(S1,s);
+T2 = diff(S2,t);
+
+<variable name="S1" type="pcurve">
+<variable name="S2" type="pcurve">
+<variable name="s">
+<variable name="t">
+</definition>
+
+<definition name="preADSS" type="biInt" opType="pcurve">
+( (S-T) ^^ (an1-an2) ) . [0,0,1];
+
+an1 = (k1^(-2/3)) ddS - diff(k1,s) (k1^(-5/3)) dS / 3;
+k1 = ( dS ^^ ddS ) . [0,0,1];
+ddS = diff(dS,s);
+dS = diff(S,s);
+
+an2 = (k2^(-2/3) ) ddT - diff(k2,t) (k2^(-5/3)) dT / 3;
+k2 = ( dT ^^ ddT ) . [0,0,1];
+ddT = diff(dT,t);
+dT = diff(T,t);
+
+<variable name="S" type="pcurve">
+<variable name="T" type="pcurve">
+<variable name="s">
+<variable name="t">
+</definition>
+
+<definition name="preAESS" type="biInt" opType="pcurve">
+( (S-T) ^^ V  ) . [0,0,1];
+V = dS * k2^(1/3) + dT * k1^(1/3);
+
+k1 = ( dS ^^ ddS ) . [0,0,1];
+ddS = diff(dS,s);
+dS = diff(S,s);
+
+k2 = ( dT ^^ ddT ) . [0,0,1];
+ddT = diff(dT,t);
+dT = diff(T,t);
+
+<variable name="S" type="pcurve">
+<variable name="T" type="pcurve">
+<variable name="s">
+<variable name="t">
+</definition>
+
+
+<definition name="x=y" type="biInt" opType="pcurve">
+x - y;
+<variable name="S1" type="pcurve">
+<variable name="S2" type="pcurve">
+<variable name="x">
+<variable name="y">
+</definition>

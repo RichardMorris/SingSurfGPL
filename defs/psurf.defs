@@ -1,0 +1,495 @@
+<definition name="Simple domain" type="psurf">
+[x,y,0];
+<variable name="x" min="-1" max="1" steps="10"/>
+<variable name="y" min="-1" max="1" steps="10"/>
+</definition>
+
+<definition name="Triangular domain" type="psurf">
+h*[x,x,0]+(1-h)*[-1,1,0];
+h=2.0-2.0/(1.0+y)
+<variable name="x" min="-1" max="1" steps="40"/>
+<variable name="y" min="0.01" max="0.99" steps="40"/>
+</definition>
+
+<definition name="Simple domain +/-Pi" type="psurf">
+[pi*x,pi*y,0];
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Simple Surf" type="psurf">
+[x,y,A x^2];
+<parameter name="A" value="3">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Monge form surface" type="psurf">
+[x,y,(A x^2 + B y^2)/2 + (a x^3 + 3 b x^2 y + 3 c x y^2 + d y^3)/6];
+<parameter name="A" value="1">
+<parameter name="B" value="-1">
+<parameter name="a" value="0.5">
+<parameter name="b" value="-0.5">
+<parameter name="c" value="0.1">
+<parameter name="d" value="3">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Cross cap" type="psurf">
+[x,x y,y^2];
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Sphere" type="psurf">
+[x0,y0,z0]+ r * [l,m,n];
+//[l,m,n];   // This equation specifies the normal allows us to get a correct normal at poles
+l = cos(pi th) cos(pi phi);
+m = cos(pi th) sin(pi phi);
+n = sin(pi th);
+//psurf_normals = 3; // switches on eqn for normal calculation
+th = x; phi = y;
+<parameter name="r" value="1.">
+<variable name="x" min="-0.5" max="0.5">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Cylinder" type="psurf">
+r * [l,m,n];
+l = y;
+m = cos(pi th);
+n = sin(pi th);
+th = x; 
+<parameter name="r" value="1.">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-2" max="2">
+</definition>
+
+
+<definition name="Ellipsoid" type="psurf">
+[x0,y0,z0]+ r * [l,m,n];
+l = a cos(pi th) cos(pi phi);
+m = b cos(pi th) sin(pi phi);
+n = c sin(pi th);
+<parameter name="a" value="3">
+<parameter name="b" value="2">
+<parameter name="c" value="1">
+<parameter name="r" value="1">
+<parameter name="x0" value="0">
+<parameter name="y0" value="0">
+<parameter name="z0" value="0">
+<variable name="th" min="-0.5" max="0.5">
+<variable name="phi" min="-1" max="1">
+</definition>
+
+
+<definition name="Hyperboloid of one sheet" type="psurf">
+[a cos(pi th),b sin(pi th),0]+ t * [- a sin(pi th), b cos(pi th), c];
+<parameter name="a" value="1">
+<parameter name="b" value="1">
+<parameter name="c" value="2">
+<variable name="t" min="-1" max="1">
+<variable name="th" min="-1" max="1">
+
+</definition>
+
+<definition name="Hyperboloid of two sheets" type="psurf">
+[l,m,n];
+l = a sinh(th) cos(pi phi);
+m = b sinh(th) sin(pi phi);
+n = sheet c cosh(th);
+
+<parameter name="a" value="1">
+<parameter name="b" value="1">
+<parameter name="c" value="2">
+<parameter name="sheet" value="1">
+<variable name="th" min="0" max="1">
+<variable name="phi" min="-1" max="1">
+
+</definition>
+
+<definition name="Klien Bottle" type="psurf">
+[X,Y,Z];
+X = t cos(2v); 
+Y = t sin(2v);
+Z = sin(u)sin(v)+sin(2u) cos(v);
+t = 4 + sin(u) cos(v) - sin(2 u) sin(v);
+u = pi x; v = pi y;
+<variable name="x" min="-1" max="1">
+<variable name="y" min="0" max="1">
+</definition>
+
+
+<definition name="boys" type="psurf">
+# The Bryant–Kusner parametrization
+# From https://en.wikipedia.org/wiki/Boy%27s_surface
+[ g1/d, g2/d, g3/d ];
+d = g1^2 + g2^2 + g3^2;
+g1 = -3/2 im( cdiv( cmul(w, one - w4) , denom));
+g2 = -3/2 re( cdiv( cmul(w, one + w4) , denom));
+g3 = im( cdiv( one + w6, denom) ) - 0.5;
+denom = w6 + rt5 w3 - one;
+rt5 = sqrt(5);
+one = [1,0];
+w6 = cmul(w2,w4);
+w4 = cmul(w2,w2);
+w3 = cmul(w,w2);
+w2 = cmul(w,w);
+# 
+w=(2 x -1.5 x^2 + 0.5 x^3) [cos(pi y), sin(pi y)];
+
+<variable name="x" min="0.0" max="1.0" steps="40" type="none">
+<variable name="y" min="-0.9999999999999999" max="1.0" steps="100" type="none">
+<option name="showFace" value="true">
+<option name="showEdge" value="false">
+<option name="showVert" value="false">
+</definition>
+
+<definition name="Swallowtail" type="psurf">
+[3 x^4 + y x^2,-4 x^3 - 2 y x,y];
+<variable name="x" min="-0.7" max="0.7">
+<variable name="y" min="-1.2" max="0.4">
+</definition>
+
+<definition name="Torus" type="psurf">
+[r sin(th),r cos(th),r1 sin(phi)];
+r = r0 + r1 cos(phi);
+th = pi x; phi = pi y;
+<parameter name="r0" value="2">
+<parameter name="r1" value="1">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Helicoid" type="psurf">
+[v cos(u),v sin(u),b u];
+u = pi * x;
+v = y;
+<parameter name="b" value="1">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Tangent Developable" type="psurf">
+v + y * diff(v,x);
+v = [x,x^2,x^3];
+<variable name="x" min="-0.5" max="0.5">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Bohemian Dome" type="psurf">
+[X,Y,Z];
+X= a*cos(u);
+Y= b*cos(v) + a*sin(u);
+Z= c*sin(v);
+u=pi x;v= pi y;
+<parameter name="a" value="0.5">
+<parameter name="b" value="0.5">
+<parameter name="c" value="0.5">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Bohemian Star" type="psurf">
+// envelopes of families of circles.
+// The center of each circle lies on another circle 'v0'
+// in the x-y plane.
+// As 'th' increases the circle is rotated around 
+// the axis a line in the z direction through 'v0'
+// a controls the speed of rotation.
+// also try a=0; B-Dome, a=2 Torus; a=-1; a=-3; a=-4;
+
+v0 + cos(th) v1 + sin(th) v2;
+v0 = [cos(phi),sin(phi),0];
+v1 = [cos(a phi/2),sin(a phi/2),0];
+v2 = [0,0,1];
+th = pi x; phi = pi y;
+<parameter name="a" value="-2">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Knotted circle" type="psurf">
+// Anotherway to rotate a circle as its center
+// moves around a circle.
+
+r v0 + cos(th) u1 + sin(th) u2;
+u1 = cos(a phi) v0 + sin(a phi) v2;
+u2 = v1;
+v0 = [cos(phi),sin(phi),0];
+v1 = [-sin(phi),cos(phi),0];
+v2 = [0,0,1];
+th = pi x; phi = pi y;
+
+<parameter name="a" value="1.5">
+<parameter name="r" value="3">
+<variable name="x" min="0" max="2" steps="20">
+<variable name="y" min="0" max="2" steps="50">
+</definition>
+
+<group name="umbilics">
+
+<definition name="Elliptical Umbilic" type="psurf" opType="none">
+[x,y, 1/6 (a*x^3 +  b x^2 y +  c x y^2 + d y^3) 
++ A(x^2 + y^2)/2 + ee x^2 y^2 + ff x y^3 ];
+a = 2 + 6 s cos(phi);
+b = 6 s sin(phi);
+c = 6 s cos(phi) - 6;
+d = 6 s sin(phi);
+
+<variable name="x" min="-0.04500000000000004" max="0.04500000000000004" steps="100" type="none">
+<variable name="y" min="-0.04500000000000004" max="0.04500000000000004" steps="100" type="none">
+<parameter name="A" value="1.0">
+<parameter name="ee" value="0.5">
+<parameter name="ff" value="1.6">
+<parameter name="s" value="0.19000000000000014">
+<parameter name="phi" value="0.53">
+<option name="textureXmin" value="-0.04500000000000004"/>
+<option name="textureXmax" value="0.04500000000000004"/>
+<option name="textureYmin" value="-0.04500000000000004"/>
+<option name="textureYmax" value="0.04500000000000004"/>
+<option name="showFace" value="false"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="clipping" value="100.0"/>
+</definition>
+
+<definition name="Orthogonal Umbilic" type="psurf" opType="none">
+[x,y, 1/6 (a*x^3 +  b x^2 y +  c x y^2 + d y^3) 
++ A(x^2 + y^2)/2 + ee x^2 y^2 + ff x y^3 ];
+a = 2 + 6 s cos(phi);
+b = 6 s sin(phi);
+c = 6 s cos(phi) - 6;
+d = 6 s sin(phi);
+
+<variable name="x" min="-0.04500000000000004" max="0.04500000000000004" steps="100" type="none">
+<variable name="y" min="-0.04500000000000004" max="0.04500000000000004" steps="100" type="none">
+<parameter name="A" value="1.0">
+<parameter name="ee" value="0.5">
+<parameter name="ff" value="1.6">
+<parameter name="s" value="0.3330000000000002">
+<parameter name="phi" value="0.53">
+<option name="textureXmin" value="-0.04500000000000004"/>
+<option name="textureXmax" value="0.04500000000000004"/>
+<option name="textureYmin" value="-0.04500000000000004"/>
+<option name="textureYmax" value="0.04500000000000004"/>
+<option name="showFace" value="false"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="clipping" value="100.0"/>
+</definition>
+
+<definition name="Parabolic Umbilic" type="psurf" opType="none">
+[x,y, 1/6 (a*x^3 +  b x^2 y +  c x y^2 + d y^3) 
++ A(x^2 + y^2)/2 + ee x^2 y^2 + ff x y^3 ];
+a = 2 + 6 s cos(phi);
+b = 6 s sin(phi);
+c = 6 s cos(phi) - 6;
+d = 6 s sin(phi);
+
+<variable name="x" min="-0.04500000000000004" max="0.04500000000000004" steps="100" type="none">
+<variable name="y" min="-0.04500000000000004" max="0.04500000000000004" steps="100" type="none">
+<parameter name="A" value="1.0">
+<parameter name="ee" value="0.5">
+<parameter name="ff" value="1.6">
+<parameter name="s" value="0.39200000000000024">
+<parameter name="phi" value="0.53">
+<option name="textureXmin" value="-0.04500000000000004"/>
+<option name="textureXmax" value="0.04500000000000004"/>
+<option name="textureYmin" value="-0.04500000000000004"/>
+<option name="textureYmax" value="0.04500000000000004"/>
+<option name="showFace" value="false"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="clipping" value="100.0"/>
+</definition>
+
+<definition name="Birth of umbilic" type="psurf" opType="none">
+[x,y, 1/6 (a*x^3 +  b x^2 y +  c x y^2 + d y^3) 
++ (A x^2 + B y^2)/2 + ee x^2 y^2 + ff x y^3 ];
+a = 2 + 6 s cos(phi);
+b = 6 s sin(phi);
+c = 6 s cos(phi) - 6;
+d = 6 s sin(phi);
+
+<variable name="x" min="-0.04500000000000004" max="0.04500000000000004" steps="100" type="none">
+<variable name="y" min="-0.04500000000000004" max="0.04500000000000004" steps="100" type="none">
+<parameter name="A" value="1.0">
+<parameter name="B" value="1.0">
+<parameter name="ee" value="0.5">
+<parameter name="ff" value="1.6">
+<parameter name="s" value="1.0000000000000002">
+<parameter name="phi" value="0.8">
+<option name="textureXmin" value="-0.04500000000000004"/>
+<option name="textureXmax" value="0.04500000000000004"/>
+<option name="textureYmin" value="-0.04500000000000004"/>
+<option name="textureYmax" value="0.04500000000000004"/>
+<option name="showFace" value="false"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="clipping" value="100.0"/>
+</definition>
+
+
+</group>
+
+
+<definition name="Dimple" type="psurf">
+// A small patch of hyperbolic points
+// Examine the flex nodal points and asymptotic directions
+[x,y,(A x^2+ B y^2)/2
++ (a x^3 + 3 b x^2 y + 3 c x y^2+ d y^3)/6
++ e x^4 + f y^4 + g x^2 y^2];
+<parameter name="A" value="0.3">
+<parameter name="B" value="-0.5">
+<parameter name="a" value="0.2">
+<parameter name="b" value="0.4">
+<parameter name="c" value="0.2">
+<parameter name="d" value="0">
+<parameter name="e" value="-0.7">
+<parameter name="f" value="-0.2">
+<parameter name="g" value="-0.7">
+<variable name="x" min="-0.3" max="0.3">
+<variable name="y" min="-0.4" max="0.7">
+</definition>
+
+<definition name="Peno" type="psurf">
+// This function does not have a local minimum at (0,0)
+// From mathworld
+[x,y,(2 x^2 - y) ( y - x^2 )];
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="Right Conoid" type="psurf">
+// rulled surface obtained by rotating a line
+// around the x axis
+// try a = 0.5 (mobius band), 1, 1.5, ...
+// see http://xahlee.org/surface/right_conoid/right_conoid.html
+[h ,y cos(a th), y sin(a th)];
+h = cos(th);
+th = pi * x;
+<parameter name="a" value="1">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="psudosphere" type="psurf" opType="none">
+[l,m,n];
+l = X;
+m = cos(pi th) Y;
+n = sin(pi th) Y; 
+th = y; 
+X = x -tanh(x);
+Y = 1/cosh(x);
+
+<variable name="x" min="-3.0" max="3.0" steps="40" type="none">
+<variable name="y" min="-1.0" max="1.0" steps="40" type="none">
+<option name="textureXmin" value="-3.0"/>
+<option name="textureXmax" value="3.0"/>
+<option name="textureYmin" value="-1.0"/>
+<option name="textureYmax" value="1.0"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="clipping" value="100.0"/>
+</definition>
+
+<definition name="Gaussian warp" type="psurf">
+// warp a plane using a gaussian function
+[x-dx,y+dy,0];
+dx = A ee;
+dy = B ee;
+ee = exp(-((x-x0)^2+(y-y0)^2)/s^2);
+<parameter name="A" value="0.3">
+<parameter name="B" value="0.2">
+<parameter name="s" value="0.5">
+<parameter name="x0" value="0">
+<parameter name="y0" value="0">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+</definition>
+
+<definition name="oloid.psurf" type="psurf">
+// From https://www.cs.cmu.edu/~kmcrane/Projects/ModelRepository/#oloid
+// Modified to give continuous parametrisation
+(1-y) B + y A;
+A = [ax,ay,az];
+ax = sin(t1);
+ay = -cos(t1);
+az = 0.;
+
+B = [bx,by,bz];
+bx = 0.;
+by = 1./(1.+ct);
+bz =  sign sqrt(1+2 ct)/(1+ct);
+ct = cos(t1);
+
+t1 = (2.*pi/3.) * ( 3.*s1 - signum(s1) 2.*pow( abs(s1), 1.5 ) ); // reparameterize to get more uniform spacing
+
+sign = if( s > 1 || s < -1, -1, 1); 
+s1 = if( s > 1 , 2 - s, if( s < -1 , -2 - s, s ));
+
+//s1 = 4*abs((x+1)/4-rint((x+1)/4))-1;
+s=x;
+
+<variable name="x" min="-1.8999999999999995" max="2.100000000000001" steps="61" type="none">
+<variable name="y" min="-1.1102230246251565E-16" max="1.0" steps="2" type="none">
+<option name="textureXmin" value="-1.8999999999999995"/>
+<option name="textureXmax" value="2.100000000000001"/>
+<option name="textureYmin" value="-1.1102230246251565E-16"/>
+<option name="textureYmax" value="1.0"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="clipping" value="100.0"/>
+</definition>
+
+<definition name="Box" type="psurf">
+// useful for debugging asurf
+[min_x+(xl+xrel) * (max_x-min_x)/denom,
+ min_y+(yl+yrel) * (max_y-min_y)/denom,
+ min_z+(zl+zrel) * (max_z-min_z)/denom];
+xrel = if(x>3, 0,
+          if(x>2, 3-x,
+           if(x>1, 1, x )));
+yrel = if(x>3, 4-x,
+          if(x>2, 1,
+           if(x>1, x-1, 0)));
+zrel = y;
+<parameter name="min_x" value="-1.14">
+<parameter name="max_x" value="1.03">
+<parameter name="min_y" value="-1.13">
+<parameter name="max_y" value="1.04">
+<parameter name="min_z" value="-1.12">
+<parameter name="max_z" value="1.05">
+
+<parameter name="denom" value="8">
+<parameter name="xl" value="2">
+<parameter name="yl" value="5">
+<parameter name="zl" value="1">
+<variable name="x" min="0" max="4" steps="5">
+<variable name="y" min="0" max="1" steps="2">
+<option name="showFace" value="false"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+</definition>

@@ -1,0 +1,3641 @@
+<group name="Simple">
+<definition name="Plane" type="asurf">
+a x + b y + c z - d;
+<parameter name="a" value="1" />
+<parameter name="b" value="1" />
+<parameter name="c" value="0" />
+<parameter name="d" value="0" />
+
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Sphere" type="asurf">
+(x-x0)^2 + (y-y0)^2 + (z-z0)^2 - r^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+<parameter name="r" value="1" />
+</definition>
+
+<definition name="Cylinder" type="asurf">
+x^2 + y^2 - 1;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Ellipsoid" type="asurf">
+a x^2+b y^2+c z^2 - 1;
+<parameter name="a" value="1" />
+<parameter name="b" value="3" />
+<parameter name="c" value="6" />
+<variable name="x" min="-1.04" max="1.03">
+<variable name="y" min="-1.03" max="1.04">
+<variable name="z" min="-1.02" max="1.05">
+</definition>
+
+<definition name="Hyperboloid of one sheet" type="asurf">
+x^2 - y^2 - z^2 - a;
+<parameter name="a" value="-0.1" />
+<variable name="x" min="-1.12" max="1.05">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-0.94" max="0.93">
+</definition>
+
+<definition name="Hyperboloid of two sheets" type="asurf">
+x^2 - y^2 - z^2 - a;
+<parameter name="a" value="0.03" />
+<variable name="x" min="-1.12" max="1.05">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-0.94" max="0.93">
+</definition>
+
+<definition name="hyperbolic paraboloid" type="asurf">
+z = x^2/a^2 - y^2/b^2;
+<parameter name="a" value="1" />
+<parameter name="b" value="1" />
+<variable name="x" min="-1.12" max="1.05">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-0.94" max="0.93">
+</definition>
+
+<definition name="Monge form surface" type="asurf">
+z - (A x^2 + B y^2)/2 - (a x^3 + 3 b x^2 y + 3 c x y^2 + d y^3)/6;
+<parameter name="A" value="1">
+<parameter name="B" value="-1">
+<parameter name="a" value="0.5">
+<parameter name="b" value="-0.5">
+<parameter name="c" value="0.1">
+<parameter name="d" value="3">
+<variable name="x" min="-1" max="1">
+<variable name="y" min="-1" max="1">
+<variable name="z" min="-0.94" max="0.93">
+</definition>
+
+</group>
+
+<group name="non-singular">
+<definition name="Torus" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+(x^2+y^2+z^2+R^2-r^2)^2 - 4 R^2(x^2+y^2);
+
+<parameter name="R" value="0.8" />
+<parameter name="r" value="0.2" />
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Dupin Cyclides" type="asurf">
+(r1^2 - dy^2 - (dx + r0)^2) (r1^2 - dy^2 - (dx - r0)^2)*
+(x^4+y^4+z^4)+ 2((r1^2 - dy^2 - (dx + r0)^2 )*
+(r1^2 - dy^2 - (dx - r0)^2) (x^2 y^2+x^2 z^2+y^2 z^2))+
+2 ri^2 ((-dy^2-dx^2+r1^2+r0^2) (2 x dx+2 y dy-ri^2)-4 dy r0^2 y)*
+(x^2+y^2+z^2)+ 4 ri^4(dx x+dy y) (-ri^2+dy y+dx x)+
+4 ri^4 r0^2 y^2+ri^8-0;
+<variable name="x" min="-2.01" max="2.22">
+<variable name="y" min="-2.03" max="2.04">
+<variable name="z" min="-2.05" max="2.16">
+<parameter name="r0" value="2.1" />
+<parameter name="r1" value="2" />
+<parameter name="dx" value="2" />
+<parameter name="dy" value="0" />
+<parameter name="ri" value="2" />
+</definition>
+
+<definition name="Squared off Sphere" type="asurf">
+x^4 + y^4 + z^4 - 1;
+<variable name="x" min="-1.14" max="1.13">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Bumpy sphere" type="asurf">
+x^2 + y^2 + z^2 - 1 
++ 1/3 cube (x y z)
++ 1/3 orange (x^3 - 3 x y^2)
++ 1/3 tennis (x y^2)
++ 1/3 revolve (x^3);
+<variable name="x" min="-1.14" max="1.13">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+<parameter name="cube" value="0.1" />
+<parameter name="orange" value="0" />
+<parameter name="tennis" value="0" />
+<parameter name="revolve" value="0" />
+</definition>
+
+<definition name="Bumpy elipsoid" type="asurf">
+1/a x^2 + 1/b y^2 + 1/c z^2 - 1 
++ 1/3 lambda (x y z);
+<variable name="x" min="-1.14" max="1.13">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+<parameter name="a" value="1" />
+<parameter name="b" value="3" />
+<parameter name="c" value="5" />
+<parameter name="lambda" value="0.1" />
+</definition>
+
+</group>
+
+<group name="Singularities" >
+
+<definition name="A0 (dome)" type="asurf">
+x - y^2 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="A0 (saddle)" type="asurf">
+x + y^2 - z^2;
+<variable name="x" min="-1.34" max="1.23">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="A1 (cone)" type="asurf">
+x^2 - y^2 - z^2;
+<variable name="x" min="-1.04" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="A1 (point)" type="asurf">
+x^2 + y^2 + z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05"}, >
+</definition>
+
+<definition name="A2 (--)" type="asurf">
+x^3 - y^2 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="A2 (+-)" type="asurf">
+x^3 + y^2 - z^2;
+<variable name="x" min="-1.14" max="1.13">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="A3 (--)" type="asurf">
+x^4 - y^2 - z^2;
+<variable name="x" min="-0.94" max="0.93">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="A3 (+-)" type="asurf">
+x^4 + y^2 - z^2;
+<variable name="x" min="-1.14" max="1.13">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="A3 (++)" type="asurf">
+x^4 + y^2 + z^2;
+<variable name="x" min="-1.04" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.02" max="1.05"}, >
+</definition>
+
+<definition name="A4 (--)" type="asurf">
+x^5 - y^2 - z^2;
+<variable name="x" min="-1.04" max="1.03">
+<variable name="y" min="-1.13" max="1.14">
+<variable name="z" min="-1.12" max="1.15">
+</definition>
+
+<definition name="A4 (+-)" type="asurf">
+x^5 + y^2 - z^2;
+<variable name="x" min="-1.14" max="1.13">
+<variable name="y" min="-1.13" max="1.14">
+<variable name="z" min="-1.12" max="1.15">
+</definition>
+
+<definition name="A5 (--)" type="asurf">
+x^6 - y^2 - z^2;
+<variable name="x" min="-1.04" max="1.03">
+<variable name="y" min="-1.13" max="1.14">
+<variable name="z" min="-1.12" max="1.15">
+</definition>
+
+<definition name="A5 (+-)" type="asurf">
+x^6 + y^2 - z^2;
+<variable name="x" min="-1.14" max="1.13">
+<variable name="y" min="-1.13" max="1.14">
+<variable name="z" min="-1.12" max="1.15">
+</definition>
+
+
+<definition name="D4 (--)" type="asurf">
+x^2 y - y^3 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="D4 (+-)" type="asurf">
+x^2 y + y^3 - z^2;
+<variable name="x" min="-1.14" max="1.13">
+<variable name="y" min="-0.93" max="1.24">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="D5 (--)" type="asurf">
+x^2 y - y^4 - z^2;
+<variable name="x" min="-1.04" max="1.03">
+<variable name="y" min="-1.13" max="1.14">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="D5 (+-)" type="asurf">
+x^2 y + y^4 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.00" max="1.14">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="D6 (--)" type="asurf">
+x^2 y - y^5 - z^2;
+<variable name="x" min="-1.04" max="1.03">
+<variable name="y" min="-0.93" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="D6 (+-)" type="asurf">
+x^2 y + y^5 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="E6 (--)" type="asurf">
+x^3 - y^4 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="E6 (+-)" type="asurf">
+x^3 + y^4 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.03" max="1.04">
+<variable name="z" min="-1.02" max="1.05">
+</definition>
+
+<definition name="E6~" type="asurf">
+x^3 + y^3 + z^3 + 3  a x y z;
+<parameter name="a" value="-5" />
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.03" max="1.04">
+<variable name="z" min="-1.02" max="1.05">
+</definition>
+
+<definition name="E6~ (+)" type="asurf">
+x^3 + y^3 + z^3 + 3  a x y z;
+<parameter name="a" value="-5" />
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.03" max="1.04">
+<variable name="z" min="-1.02" max="1.05">
+</definition>
+
+<definition name="E7" type="asurf">
+x^3 - x y^3 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.03" max="1.04">
+<variable name="z" min="-1.02" max="1.15">
+</definition>
+
+<definition name="E8" type="asurf">
+x^3 - y^5 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.03" max="1.04">
+<variable name="z" min="-1.02" max="1.05">
+</definition>
+
+<definition name="D4-- Unfold 1" type="asurf">
+// Unfolding of a D4 singularity
+// Vary 'a' on the parameter tab
+x^2 y-y^3-z^2 - a x^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+<parameter name="a" value="0.3" />
+</definition>
+
+<definition name="D4-- Unfold 2" type="asurf">
+// Unfolding of a D4 singularity
+// Vary 'a' on the parameter tab
+x^2 y-y^3-z^2 - a (x^2-y^2);
+<parameter name="a" value="0.3" />
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="D4-- Unfold 3" type="asurf">
+// Unfolding of a D4 singularity
+// Vary 'a' on the parameter tab
+x^2 y-y^3-z^2  + a (x^2-y^2);
+<parameter name="a" value="0.3" />
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+</group>
+
+<group name="Cubics">
+
+<group name="Smooth cubics">
+<definition name="Diagonal Surface of Clebsch" type="asurf">
+//# This surface contains 27 straight lines
+
+16 x^3 + 16 y^3 - 31 z^3 + 24 x^2 z - 48 x^2 y - 48 x y^2
++24 y^2 z - 54 sqrt(3) z^2 - 72 z;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+
+<definition name="Fermat Cubic" type="asurf">
+// http://en.wikipedia.org/wiki/Fermat_cubic
+x^3+y^3+z^3+w^3;
+<parameter name="w" value="-1"/>
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+</group>
+
+<group name="Class II: one A1 singularity">
+
+<definition name="Hunt A1" type="asurf">
+//# Cubic with an A1 singularity
+x y + x z + y z + x y z - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="CayleyII" type="asurf">
+//<h3>Class II: 1 A<sub>1</sub> singularity</h3>
+//<p>In Cayley's notation: II = 12 - C2; 	
+//W(a,b,c,f,g,h|X, Y, Z)^2+2 k X Y Z;
+W (a X^2 + b Y^2 + c Z^2 + f X Y+ g X Z+h Y Z)+2 k X Y Z;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<parameter name="a" value="0.9" />
+<parameter name="b" value="-0.3" />
+<parameter name="c" value="0.8" />
+<parameter name="f" value="-0.2" />
+<parameter name="g" value="1.0" />
+<parameter name="h" value="0.8" />
+<parameter name="k" value="0.4" />
+<variable name="x" min="-3.14" max="3.03">
+<variable name="y" min="-3.13" max="3.04">
+<variable name="z" min="-3.12" max="3.05">
+</definition>
+
+</group>
+
+<group name="Multiple A1 singularities">
+
+<definition name="Cayley's Cubic" type="asurf">
+//# A cubic surface with 4 nodes
+//# all other cubics with 4 nodes are projectivly equivilent to this one
+4 (x^2+y^2+z^2) + 16 x y z - 1;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="S3" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s3.html
+// Conical surface with four double points obtained from the finite real Cayley surface by a homographic transformation or projectivity. 
+9 x^3 + 3 x^2 z - 4 z^3 - 27 y^2 x + 3 y^2 z - 4 ( 9 x^2 + 9 y^2 - 4 z^2)(2 z+1)/7;
+<variable name="x" min="-6.14" max="6.03">
+<variable name="y" min="-6.13" max="6.04">
+<variable name="z" min="-6.12" max="6.05">
+</definition>
+
+<definition name="S4" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s4.html
+// Conical surface with four double points obtained from the finite real Cayley surface by a homographic transformation or projectivity. 
+9 x^3 + 18 x^2 + 15 x^2 z - 27 x y^2 + 18 y^2 + 15 y^2 z- 4 z^3 - 8 z^2;
+<variable name="x" min="-5.01" max="5.03">
+<variable name="y" min="-5.13" max="5.14">
+<variable name="z" min="-5.07" max="5.02">
+</definition>
+
+<definition name="S5" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s5.html
+// Conical surface with four double points obtained from the finite real Cayley surface by a homographic transformation or projectivity. 
+9 x^3 - 3 x^2 z + 4 z^3 - 27 y^2 x - 3 y^2 z - 4 (9 x^2+9 y^2-4 z^2)(z+4);
+<variable name="x" min="-10.14" max="10.03">
+<variable name="y" min="-10.13" max="10.04">
+<variable name="z" min="-10.12" max="10.05">
+</definition>
+
+<definition name="S6" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s6.html
+// Conical surface with four double points obtained from the finite real Cayley surface by a homographic transformation or projectivity. 
+-x^2 + z x^2 + y^2 z - 2 z^3 + 3 z^2 - z;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-3.13" max="3.04">
+<variable name="z" min="-2.62" max="2.85">
+</definition>
+
+<definition name="S7" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s7.html
+// Three double points
+54 x^3 + 18 x^2 z + 108 x^2 - 16 z^3 - 72 z^2 + 792 z  - 162 y^2 x 
++ 18 y^2 z + 108 y^2 - 1512;
+
+<variable name="x" min="-4.01" max="4.03">
+<variable name="y" min="-4.13" max="4.14">
+<variable name="z" min="-0.85" max="5.86">
+</definition>
+
+<definition name="CayleyIV" type="asurf">
+//<h3>Class IV: 2 A1 singularity</h3>
+//<p>In Cayley's notation: IV=12 - 2C2	
+W X Z+Y^2(k Z+l W)+a X^3 +b X^2 Y+c X Y^2 + d Y^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<parameter name="a" value="1" />
+<parameter name="b" value="0" />
+<parameter name="c" value="0" />
+<parameter name="d" value="1" />
+<parameter name="k" value="1" />
+<parameter name="l" value="1" />
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="CayleyVIII" type="asurf">
+//<p>In Cayley's notation: //VIII=12-3 C2	
+Y^3+Y^2(X+Z+W)+4 a X Z W;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<parameter name="a" value="1" />
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="CayleyXVI" type="asurf">
+//<h3>XVI - 4 A1 singularities</h3>
+//<p>In Cayley's notation: //XVI=12-4C2	
+W(X Y+X Z+Y Z)+X Y Z;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+</group>
+
+<group name="A2 singularities">
+
+<definition name="Hunt A2a" type="asurf">
+//# Cubic with an A2 singularity
+x z + y^2(x+y+z) - 0;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+<definition name="Hunt A2b" type="asurf">
+//# Cubic with an A2 singularity
+x z + x y^2 + y^3 - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Hunt A2c" type="asurf">
+//# Cubic with an A2 singularity
+x^2 + x z^2 + y^3-0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Hunt A2d" type="asurf">
+//# Cubic with an A2 singularity
+x z + y^3-0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Cayley 3" type="asurf">
+//# A2
+x^2+y^2+z^3+3.2*(x^3-3*x*y^2);
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="CayleyIII" type="asurf">
+//<h3>Class III: 1 A<sub>2</sub> singularity</h3>
+//<p>In Cayley's notation: III = 12 - B3	
+2W(X+Y+Z)(l X+m Y+n Z) + 2 k X Y Z;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<parameter name="k" value="0.5" />
+<parameter name="l" value="-1" />
+<parameter name="m" value="0.2" />
+<parameter name="n" value="1" />
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="CayleyIX" type="asurf">
+//<p>In Cayley's notation: //IX=12-2B3	
+W X Z+a X^3+ b X^2 Y + c X Y^2 + d Y^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<parameter name="a" value="0.5" />
+<parameter name="b" value="0" />
+<parameter name="c" value="0" />
+<parameter name="d" value="-0.5" />
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="Cayley 1" type="asurf">
+// Three A2 singularities
+p1+(a2*z+a3)*p3+a4*z^3+a5*z^2+a6*z+a7-0;
+p1=2*x^3-6*x*y^2;
+p3=x^2+y^2;
+a3=-3*a1;
+a5=a2^2/(3.0*a1);
+a6=-a2;
+a7=a1;
+a1 = -1.0;
+a2 = -1.0;
+a4 = 1.0;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+<option name="coarse" value="16">
+<option name="fine" value="16">
+<option name="face" value="2048">
+</definition>
+
+
+
+<definition name="S9" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s9.html
+// Three B3 points
+6 x^2 y - 3 x^2 - 2 y^3 - 3 y^2 + 1 - z^3;
+
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="S10" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s10.html
+// Biplanar B3 points
+x^2 - y^2 - (y^2-z^2) z;
+
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="S11" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s11.html
+// Biplanar B3 points
+3 x^2 + 3 y^2 - (3 x^2 - y^2) y + z^3;
+
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="CayleyVI" type="asurf">
+//<p>In Cayley's notation: //VI=12-B3-C2	
+W X Z+Y^2 Z+a X^3 +b X^2 Y+c X Y^2 + d Y^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<parameter name="a" value="0.5" />
+<parameter name="b" value="0" />
+<parameter name="c" value="0" />
+<parameter name="d" value="0.5" />
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+<definition name="CayleyXIII" type="asurf">
+//<p>In Cayley's notation: //XIII=12-B3-2C2	
+W X Z+Y^2(X+Y+Z);
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="CayleyXVII" type="asurf">
+//<p>In Cayley's notation: //XVII=12-2B3-C2	
+W X Z+X Y^2+Y^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="CayleyXXI" type="asurf">
+//<p>In Cayley's notation: //XXI=12 -3B3	
+W X Z+Y^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+</group>
+
+
+<group name="A3 singularities">
+
+<definition name="Hunt A3a" type="asurf">
+// Cubic with an A3 singularity
+// Rotated to break symmetries
+X Z + (X+Z) Y^2 -0;
+X = (3 X1 + 4 Z1)/5;
+Y = Y1;
+Z = (4 X1 - 3 Z1)/5;
+X1 = (3 x + 4 y)/5;
+Y1 = (4 x - 3 y)/5;
+Z1 = z;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Hunt A3b" type="asurf">
+//# Cubic with an A3 singularity
+x z + (x + z)(y^2 - x^2) - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="KM26" type="asurf">
+//# Cubic with an A3 singularity 
+// From Holzer, Stephan; Labs, Oliver, "Illustrating the Classification of Real Cubic Surfaces"
+2 (x^2 + y^2) w + 2 x (z^2 - 2 x^2 - 4 y^2);
+w=1-y;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+
+<option name="coarse" value="32"/>
+<option name="singPower" value="32"/>
+<option name="facePower" value="16"/>
+<option name="edgePower" value="64"/>
+<option name="adaptiveMesh" value="true"/>
+</definition>
+
+<definition name="CayleyX" type="asurf">
+//<p>In Cayley's notation: //X=12-B4-C2	
+W X Z+(X+Z)(Y^2-X^2);
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="CayleyV" type="asurf">
+//<h3>Class V: one A3 singularity</h3>
+//<p>In Cayley's notation: V=12- B4		
+W X Z +(X+Z)(Y^2-a X^2-b Z^2);
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<parameter name="a" value="-1" />
+<parameter name="b" value="-1" />
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="S12" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s12.html
+//  A3 + 2 A1 points (Biplanar B4 and two C2) 
+18 sqrt(3) y z + 18 x z - 54 x^2 - 9 y^2 z - 27 y^2 x - 9 x^2 z
++54 sqrt(3) x y - 12 z^2 - 4 z^3 + 9 x^3 + 8 x z^2;
+
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-3.13" max="6.04">
+<variable name="z" min="-3.12" max="5.05">
+</definition>
+
+
+
+
+<definition name="S13" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s13.html
+// A3 + 2 Imaginary A1 (Biplanar B4 points and two imaginary C2 points)
+z^3 + x z^2 + 3 z^2 + y^2 z + y^2 x + 3 y^2 + 16 x^2 z;
+
+<variable name="x" min="-3.14" max="1.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+<definition name="CayleyXVIII" type="asurf">
+//<p>In Cayley's notation: //XVIII=12-B4-2C2	
+W X Z+(X+Z)Y^2;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+
+</group>
+
+<group name="A4/A5">
+
+<definition name="Hunt A4" type="asurf">
+//# Cubic with an A4 singularity
+X Z + Y^2 Z + Y X^2 - 0;
+X = x;
+Y = (3 y - 4 z)/5;
+Z = (4 y + 3 z)/5;
+<variable name="x" min="-1.14" max="1.03" type="none">
+<variable name="y" min="-1.13" max="1.04" type="none">
+<variable name="z" min="-1.12" max="1.05" type="none">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="32"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Mean curvature"/>
+<option name="colourMinVal" value="-3.0"/>
+<option name="colourMaxVal" value="3.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="Hunt A5a" type="asurf">
+//# Cubic with an A5 singularity
+X Z + Y^2 Z + X^3 - 0;
+X = (20 x - 12 y + 9 z)/25;
+Y = (15 x + 16 y - 12 z)/25;
+Z = (0 x + 15 y + 20 z)/25;
+
+<variable name="x" min="-1.14" max="1.03" type="none">
+<variable name="y" min="-1.23" max="1.04" steps="2" type="none">
+<variable name="z" min="-1.12" max="1.05" type="none">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="32"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="true"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Mean curvature"/>
+<option name="colourMinVal" value="-3.0"/>
+<option name="colourMaxVal" value="3.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="Hunt A5b" type="asurf">
+//# Cubic with an A5 singularity
+x z + y^2 z + x^3 - z^3 - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+
+<definition name="S14" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s14.html
+// A4 + A1 point
+// (Biplanar B5 points and a C2 points)
+(x -2)(y+z)(x+2)+(y+z)^2+(x-2)z^2;
+
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="5.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="S15" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s15.html
+// A4 + A1 point
+// Biplanar B6 points and a C2 points
+x^2 z - 4 x y^2 - 2 x z^2 + 4 y^2 z + 8 y^2 + 2 z^3 - 4 z;
+
+<variable name="x" min="-4.14" max="5.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="5.05">
+</definition>
+
+<definition name="CayleyVII" type="asurf">
+//<p>In Cayley's notation: //VII=12-B5	
+W X Z +Y^2 Z +Y X^2-Z^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="CayleyXI" type="asurf">
+//<p>In Cayley's notation: //XI=12-B6		
+W X Z + Y^2 Z+X^3-	Z^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="CayleyXIV" type="asurf">
+//<p>In Cayley's notation: //XIV=12-B5-C2	
+W X Z+Y^2 Z+Y X^2;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="CayleyXIX" type="asurf">
+//<p>In Cayley's notation: //XIX=12-B6-C2	
+W X Z + Y^2 Z + X^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+
+</group>
+
+<group name="D singularities">
+
+<definition name="Hunt D4" type="asurf">
+//# Cubic with an D4 singularity
+(x+y+z)^2 + x y z - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Hunt D5" type="asurf">
+//# Cubic with an D5 singularity
+x^2 + x z^2 + y^2 z - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Cayley 2" type="asurf">
+// A D4 singularity
+-0.8*(2*x^3-6*x*y^2)+(a2*z+a3)*(x^2+y^2)+a4*z^3+a5*z^2+a6*z+a7-0;
+a1 = -0.8;
+a2 = 0.0;
+a3 = 0.0;
+a4 = 1.0;
+a5 = 0.8;
+a6 = 0.0;
+a7 = 0.0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+
+<definition name="Cayley 4" type="asurf">
+//# D5
+25*z^3+16*z*y^2+60*x^2*y+50*z^2;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="S16" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s16.html
+//  D4 points
+//  U6 points
+z^2 ( z + 4) + y (y - sqrt(3) x) ( y + sqrt(3) x);
+
+<variable name="x" min="-5.14" max="5.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+<option name="singPower" value="8"/>
+</definition>
+
+
+<definition name="S17" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s17.html
+// D4 Singularity
+// (U6 points)
+z^2 ( z + 4) + y (x^2 + y^2);
+
+<variable name="x" min="-5.14" max="3.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="CayleyXII" type="asurf">
+// D4 singularity
+//<p>In Cayley's notation: //XII=12-U6	
+W(X+Y+Z)^2+X Y Z;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+
+<definition name="S18" type="asurf" opType="none">
+// http://www.dm.unito.it/modelli/modelli/s18.html
+// D5  Singularity
+// (U7 points)
+x^2 ( x + 4) + y^2 z + x z^2;
+<variable name="x" min="-4.14" max="4.03" type="none">
+<variable name="y" min="-4.13" max="4.04" type="none">
+<variable name="z" min="-5.12" max="3.05" type="none">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="true"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="3.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="CayleyXV" type="asurf">
+//<p>In Cayley's notation: //XV=12-U7		
+W X^2+X Z^2+Y^2 Z;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+
+<definition name="S19" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s19.html
+//  U8 points
+z^2 ( z + 4) + y^2 z + x^3;
+
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+<option name="singPower" value="16"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="3.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="CayleyXX" type="asurf">
+//<p>In Cayley's notation: //XX=12-U8	
+W X^2 + X Z^2 + Y^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-3.14" max="3.03">
+<variable name="y" min="-3.13" max="3.04">
+<variable name="z" min="-3.12" max="3.05">
+</definition>
+
+
+</group>
+
+<group name="E6 Singularities">
+
+<definition name="Cubic E6" type="asurf">
+//# A cubic with an E6 singularity
+(x^2*(1-x-y-z))+(x*z^2)+(y^3)-0;
+<variable name="x" min="-0.54" max="0.53">
+<variable name="y" min="-0.53" max="0.54">
+<variable name="z" min="-0.52" max="0.55">
+</definition>
+
+</group>
+
+<group name="nodal lines">
+<definition name="Mobius cubic" type="asurf">
+// http://mathworld.wolfram.com/MoebiusStrip.html
+-R^2 y + x^2 y + y^3 - 2 R x z - 2 x^2 z - 2 y^2 z + y z^2;
+<parameter name="R" value="1" />
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-1.93" max="1.94">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="S20" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s20.html
+y^3 + y^2 z + y x^2 - 2 x y - z x^2  - 0;
+<variable name="x" min="-2.01" max="2.03">
+<variable name="y" min="-2.13" max="2.14">
+<variable name="z" min="-1.85" max="1.86">
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="S21" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s21.html
+y^3 + y^2 z + y x^2 - 2 x y + z x^2 + x y z - 0;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-3.12" max="1.75">
+<option name="singPower" value="16"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="S22" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s22.html
+y^3+(4 x z+ y)x - 0;
+<variable name="x" min="-0.34" max="0.33">
+<variable name="y" min="-0.33" max="0.34">
+<variable name="z" min="-0.32" max="0.35">
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="S23" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s23.html
+y^3+(x + y z)x - 0;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-1.93" max="1.94">
+<variable name="z" min="-2.12" max="2.05">
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="S26" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/s26.html
+x^4 + 3 x^2 y^2 + x^2 z^2 - 4 x^2 z
++ 2 y^4 + 2 y^2 z^2 - 4 y^2 z - 0;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-0.12" max="5.05">
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="CayleyXXII" type="asurf">
+//<p>In Cayley's notation: //XXII=3 S(1,1)	
+W X^2 + Z Y^2;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.53" max="2.54">
+<variable name="z" min="-2.72" max="2.05">
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="CayleyXXIII" type="asurf">
+// In Cayley's notation: XXIII=3 S(1,1)	
+X(W X+Y Z)+Y^3;
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-10.14" max="5.03">
+<variable name="y" min="-2.13" max="5.04">
+<variable name="z" min="-4.12" max="2.05">
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+</group>
+
+
+
+<definition name="T[3,3,3]" type="asurf">
+//# Cubic with a T[3,3,3] singularity, the simplest one with moduli
+x^3+y^3+z^3+2 x y z;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Three Planes" type="asurf">
+x y z - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+<option name="face" value="256">
+</definition>
+
+<definition name="three planes rotated" type="asurf" opType="none">
+// Rotate version of three planes to break 
+X Y Z;
+X = (14400 x -5376 y  -2807 z) /15625;
+Y = (4200 x + 14057 y -5376 z)/15625;
+Z =  (4375 x + 4200 y + 14400 z)/15625;
+normlenlevel1=0.1;
+normlenlevel2=0.01;
+normlenlevel3=0.001;
+normlenlevel4=0.0001;
+<variable name="x" min="-1.14" max="1.03" type="none">
+<variable name="y" min="-1.13" max="1.04" type="none">
+<variable name="z" min="-1.12" max="1.05" type="none">
+<option name="face" value="256"/>
+<option name="coarse" value="8"/>
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="true"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="true"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Mean curvature"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+
+
+<definition name="CayleyI*" type="asurf">
+//I=12  		
+(X,Y,Z,W)^3=0
+X = x + y + z + w;
+Y = -x - y + z + w;
+Z = x -y -z + w;
+W = -x + y - z + w;
+w = 1;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+</group>
+
+
+<group name="Quartics">
+
+<definition name="Tetrahedral Surface" type="asurf">
+//# Degree 4, 4 nodes, Tetrahedral symmetry
+(x^2 + y^2 + z^2)^2 + 8*x*y*z - 10*(x^2 + y^2 + z^2) + 25-0;
+<variable name="x" min="-3.14" max="3.03">
+<variable name="y" min="-3.13" max="3.04">
+<variable name="z" min="-3.12" max="3.05">
+<option name="coarse" value="16">
+<option name="fine" value="64">
+</definition>
+
+<definition name="Chubs Surface" type="asurf">
+//# Degree 4, 12 nodes, cubic sumetry
+x^4 + y^4 + z^4 - x^2 - y^2 - z^2 + 0.5 - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+<option name="coarse" value="16">
+<option name="fine" value="16">
+<option name="face" value="2048">
+</definition>
+
+<definition name="Kummer Surface" type="asurf">
+//# A family of quartic surfaces 
+//# some of which have 16 nodes
+//# Change the value of v to get different surface
+//# try v=1; v=1.1; v=1.5; v=1.7; v=1.8; v=2;
+
+(3-v^2) ( x^2+y^2 + z^2 - v^2 w^2)^2 - (3 v^2 - 1) p q r s - 0;
+p = w - z - x rt2; q = w - z + x rt2;
+r = w + z + y rt2; s = w + z - y rt2;
+rt2 = sqrt(2);
+w = 1;
+<variable name="x" min="-1.54" max="1.63">
+<variable name="y" min="-1.53" max="1.64">
+<variable name="z" min="-1.52" max="1.65">
+<parameter name="v" value="1.2" />
+<option name="coarse" value="16">
+<option name="fine" value="64">
+<option name="face" value="2048">
+</definition>
+
+<definition name="Steiner Surface type 2" type="asurf" opType="None">
+// Degree 4
+x^2 y^2 - x^2 z^2 + y^2 z^2 - x y z - 0;
+<variable name="x" min="-1.24" max="1.03">
+<variable name="y" min="-1.23" max="1.04">
+<variable name="z" min="-1.22" max="1.05">
+<option name="coarse" value="16">
+<option name="fine" value="32">
+<option name="face" value="512">
+<option name="edge" value="4096">
+</definition>
+
+<definition name="Steiner Surface type 4" type="asurf" opType="None">
+// Degree 4
+y^2-2 x y^2 - x z^2 + x^2 y^2 + x^2 z^2 - z^4 - 0;
+<variable name="x" min="-1.04" max="2.03">
+<variable name="y" min="-1.23" max="1.04">
+<variable name="z" min="-1.22" max="1.05">
+<option name="coarse" value="16">
+<option name="fine" value="32">
+<option name="face" value="512">
+<option name="edge" value="4096">
+</definition>
+
+<definition name="Cassini's Surface" type="asurf">
+//#Found at Mathworld
+// Degree 4
+( (x-a)^2 + y^2) ((x+a)^2 + y^2) - z^4;
+
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-0.95" max="0.95">
+<parameter name="a" value="0.5" />
+<option name="coarse" value="16">
+<option name="fine" value="16">
+<option name="face" value="2048">
+</definition>
+
+<definition name="Miter Surface" type="asurf">
+//#Found at Mathworld
+// Degree 4
+4 x^2 ( x^2 + y^2 + z^2) - y^2 ( 1 - y^2 - z^2) - 0;
+
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.02" max="1.05">
+</definition>
+
+<definition name="Bohemian Dome" type="asurf">
+//# The envelope of a set of circles
+//# in planes parallel to the x-z plane whose 
+//# centres lie on a circle in the y-z plane.
+//# Thanks to John Chertok and Giorgio Ferrarese for this.
+// Degree 4
+
+y^4 -( A^2 + B^2 + 6 A B + 2 ab ( A + B));
+ab = y^2 - A - B;
+A = 1-x^2; B = 1-z^2;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="Q2" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/q2.html
+// Kummer surface with 8 double points
+-x^4 + y^4 - z^4
++ 14/3 x^2
++ 14/3 y^2 z^2
+-842/101 y^2
++842/101 z^2 x^2
++14/3 z^2
++14/3 x^2 y^2
+-2552/101 x y z
++ 1 - 0;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="Q3" type="asurf">
+// http://www.dm.unito.it/modelli/modelli/q3.html
+// Kummer surface with 4 double points
++(421/180) * sqrt(5) y^2 z^2
++ (680/189) x^2 y^2
++ y^4 + z^4 - x^4
+- (1664531/190890) sqrt(5) x y z
++ (421/180) sqrt(5) x^2
+- (336/101) sqrt(5) y^2
+- (680/189) z^2
++ (336/101) sqrt(5) z^2 x^2
+- 1;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="Steiner type 2" type="asurf" opType="none">
+// From mathworld https://mathworld.wolfram.com/SteinerSurface.html
+x^2 y^2 - x^2 z^2 + y^2 z^2 - x y z;
+<variable name="x" min="-1.14" max="1.03" steps="2" type="none">
+<variable name="y" min="-1.13" max="1.04" steps="2" type="none">
+<variable name="z" min="-1.12" max="1.05" steps="2" type="none">
+<option name="coarse" value="32"/>
+<option name="singPower" value="2"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="true"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="7.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="Steiner type 4" type="asurf" opType="none">
+// From mathworld https://mathworld.wolfram.com/SteinerSurface.html
+y^2 - 2 x y^2 - x z^2 + x^2 y^2 + x^2 z^2 - z^4;
+<variable name="x" min="-1.3399999999999999" max="2.2300000000000004" steps="2" type="none">
+<variable name="y" min="-1.4300000000000002" max="1.4400000000000004" steps="2" type="none">
+<variable name="z" min="-1.12" max="1.0499999999999998" steps="2" type="none">
+<parameter name="x62" value="0.0">
+<option name="coarse" value="32"/>
+<option name="singPower" value="2"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="true"/>
+<option name="calcSkeleton" value="true"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="7.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="Goursat surfaces" type="asurf" opType="none">
+// https://mathcurve.com/surfaces.gb/goursat/goursat.shtml
+x^4+y^4+z^4 + l (x^2+y^2+z^2)^2 + m a^2 (x^2+y^2+z^2) + n a^4;
+<variable name="x" min="-2.34" max="2.23" steps="2" type="none">
+<variable name="y" min="-2.43" max="2.44" steps="2" type="none">
+<variable name="z" min="-2.22" max="2.25" steps="2" type="none">
+<parameter name="l" value="-1.0">
+<parameter name="m" value="4.0">
+<parameter name="n" value="-6.0">
+<parameter name="a" value="1.0">
+<option name="coarse" value="32"/>
+<option name="singPower" value="4"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="true"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+</group>
+
+<group name="Multiple singularities">
+
+<definition name="Togliatti surfaces" type="asurf">
+// http://enriques.mathematik.uni-mainz.de/docs/Etogliatti.shtml
+// A quintics with 31 nodes
+64 (x-w) (x^4-4 x^3 w - 10 x^2 y^2 - 4 x^2 w^2 
+            + 16 x w^3 - 20 x y^2 w + 5 y^4 + 16 w^4 - 20 y^2 w^2)
+  - 5 sqrt(5 - sqrt(5)) (2 z - sqrt(5 - sqrt(5)) w)
+     ( 4 (x^2+y^2 - z^2) + (1+3 sqrt(5))w^2)^2;
+
+<variable name="x" min="-14.24" max="14.03" />
+<variable name="y" min="-14.23" max="14.04" />
+<variable name="z" min="-14.22" max="14.05" />
+<parameter name="w" value="2" />
+<option name="coarse" value="16">
+<option name="fine" value="64">
+<option name="face" value="2048">
+</definition>
+
+<definition name="Dervish" type="asurf">
+//# A Quintic Surface with 31 nodes
+//# Frow MathWorld/Enderass/Barth/Nordstrand
+// http://mathworld.wolfram.com/Dervish.html
+a F + q;
+F = h1 h2 h3 h4 h5;
+h1 = x - z;
+h2 = c2pi5 x - s2pi5 y - z;
+h3 = c4pi5 x - s4pi5 y - z;
+h4 = c6pi5 x - s6pi5 y - z;
+h5 = c8pi5 x - s8pi5 y - z;
+c2pi5 = 0.30901699437494745; // cos(2 pi/5)
+s2pi5 = 0.9510565162951535;
+c4pi5 = -0.8090169943749473;
+s4pi5 = 0.5877852522924732;
+c6pi5 = -0.8090169943749475;
+s6pi5 = -0.587785252292473;
+c8pi5 = 0.30901699437494723;
+s8pi5 = -0.9510565162951536;
+
+q = (1-c z)(x^2 + y^2 - 1 + r z^2)^2;
+
+r = (1+3 sqrt(5))/4;
+a = - (8 / 5) (1 + 1/sqrt(5)) sqrt(5-sqrt(5));
+c = sqrt(5-sqrt(5)) / 2;
+<variable name="x" min="-6.24" max="6.13" />
+<variable name="y" min="-6.23" max="6.14" />
+<variable name="z" min="-6.22" max="6.15" />
+<parameter name="w" value="2" />
+<option name="coarse" value="16">
+<option name="fine" value="64">
+<option name="face" value="2048">
+</definition>
+
+<definition name="Barth's Sextic" type="asurf">
+//# A Sextic with 65 nodes
+4 ( t^2 x^2 - y^2 ) ( t^2 y^2 - z^2 ) ( t^2 z^2 - x^2 )
+- ( 1 + 2 t) (x^2 + y^2 + z^2 - 1)^2 - 0;
+t = (1+sqrt(5))/2; 
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+
+<definition name="Sarti's Sextic" type="asurf">
+//# A sextic with 48 nodes
+S6+lambda*Q6-0;
+Q6=(4*z^2+4w^2+4*x^2+4*y^2)^3;
+//# simplified version of Q6 =(xx^2+yy^2+zz^2+ww^2)^3;
+S6=xx^6+yy^6+zz^6+ww^6
++15.0*(xx^2*yy^2*zz^2+xx^2*yy^2*ww^2+xx^2*zz^2*ww^2+yy^2*zz^2*ww^2);
+xx=z-1+sqrt(2)*x;
+yy=z-1-sqrt(2)*x;
+zz=-(z+1+sqrt(2)*y);
+ww=-(z+1-sqrt(2)*y);
+w=1;lambda=-7.0/12.0;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+<option name="coarse" value="16">
+<option name="fine" value="64">
+<option name="face" value="2048">
+</definition>
+
+<definition name="Stäbchen" type="asurf">
+// Degree 6
+S6+lambda*Q6-0;
+Q6=(4*z^2+4+4*x^2+4*y^2)^3;
+//# simplified version of Q6 =(xx^2+yy^2+zz^2+ww^2)^3;
+S6=xx^6+yy^6+zz^6+ww^6+15.0*(xx^2*yy^2*zz^2+xx^2*yy^2*ww^2+xx^2*zz^2*ww^2+yy^2*zz^2*ww^2);
+xx=z-1+sqrt(2)*x;
+yy=z-1-sqrt(2)*x;
+zz=-(z+1+sqrt(2)*y);
+ww=-(z+1-sqrt(2)*y);
+w=1;lambda=-2.0/3.0;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+<option name="coarse" value="16">
+<option name="fine" value="32">
+</definition>
+
+<definition name="Lab's Septic" type="asurf" opType="none">
+// Degree 7 
+// A Septic with 99 real Nodes
+// Oliver Labs
+// https://arxiv.org/abs/math/0409348
+U-P;
+P = x  ( x^6 - 3 7 x^4 y^2 + 5 7 x^2 y^4 - 7 y^6)
+  + 7  z ( (x^2+y^2)^3 - 2^3 z^2 (x^2+y^2)^2 + 2^4 z^4 (x^2+y^2) )
+  - 2^6 z^7;
+U = (z+a_5 w) ((z+w)(x^2+y^2)+a_1 z^3+a_2 z^2 w+a_3 z w^2+a_4 w^3)^2;
+a_1 = -12/7 alpha^2-384/49 alpha-8/7;
+a_2 = -32/7 alpha^2+24/49 alpha-4;
+a_3 = -4 alpha^2+24/49 alpha-4; 
+a_4 = -8/7 alpha^2+8/49 alpha-8/7;
+a_5 = 49 alpha^2-7 alpha+50;
+alpha = -0.14010685;
+w =1;
+<variable name="x" min="-20.14" max="20.03" type="none">
+<variable name="y" min="-21.13" max="21.54" steps="2" type="none">
+<variable name="z" min="-20.12" max="20.05" type="none">
+<option name="coarse" value="32"/>
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Mean curvature"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="2.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="Sarti's Octic 72" type="asurf">
+// Degree 8
+S8 -3/4 Q8-0;
+Q8 = 256*(1+12*x^4*y^2*z^2+24*x^2*y^2*z^2+12*x^2*y^2+12*x^2*z^2+12*y^2*z^2+12*x^4*y^2+12*x^4*z^2+12*x^2*y^4+12*x^2*z^4+12*y^4*z^2+12*y^2*z^4+4*x^6*y^2+4*x^6*z^2+6*x^4*y^4+6*x^4*z^4+4*x^2*y^6+4*x^2*z^6+4*y^6*z^2+6*y^4*z^4+4*y^2*z^6+12*x^2*y^4*z^2+12*x^2*y^2*z^4+4*x^2+4*y^2+4*z^2+6*x^4+6*y^4+6*z^4+4*x^6+4*y^6+4*z^6+x^8+y^8+z^8);
+S8 = 256 (+x^8+y^8+z^8+w^8
+
++7 z^4*x^4                    //  x      z
++7 x^4*w^4                    //  x          w
++7 z^4*y^4                    //      y  z
++7 y^4*w^4                    //      y      w
++14 z^4*w^4                   //2        z   w
++14 x^4*y^4                   //2 x   y
+
++42 z^2*x^4*w^2
++42 z^2*y^4*w^2
++42 z^4*x^2*y^2
++42 x^2*y^2*w^4
+-84 z^2*x^2*y^2*w^2);
+w=1;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="Endraß's Octic" type="asurf">
+//# Degree 8, 168 nodes
+64(x^2-w^2)(y^2-w^2)((x+y)^2-2 w^2)((x-y)^2-2 w^2)
+-(      a (x^2+y^2)^2
+        +(b z^2+c w^2)(x^2+y^2)
+        -16 z^4
+        +d z^2 w^2
+        +f w^4
+)^2 - 0; w = 1;
+a = -4(1+sqrt(2)); b =  8(2+sqrt(2));
+c =  2(2+7sqrt(2)); d =  8(1-2sqrt(2));
+f =  -(1+12sqrt(2)); 
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="16">
+<option name="fine" value="64">
+<option name="face" value="2048">
+<option name="timeout" value="100">
+<option name="drawLines" value="false">
+</definition>
+
+<definition name="Sarti's Octic 144" type="asurf">
+S8 -9/16 Q8-0;
+Q8 = 256*(1+12*x^4*y^2*z^2+24*x^2*y^2*z^2+12*x^2*y^2+12*x^2*z^2+12*y^2*z^2+12*x^4*y^2+12*x^4*z^2+12*x^2*y^4+12*x^2*z^4+12*y^4*z^2+12*y^2*z^4+4*x^6*y^2+4*x^6*z^2+6*x^4*y^4+6*x^4*z^4+4*x^2*y^6+4*x^2*z^6+4*y^6*z^2+6*y^4*z^4+4*y^2*z^6+12*x^2*y^4*z^2+12*x^2*y^2*z^4+4*x^2+4*y^2+4*z^2+6*x^4+6*y^4+6*z^4+4*x^6+4*y^6+4*z^6+x^8+y^8+z^8);
+S8 = 3584.0*z^4+256.0*z^8+1792.0*z^4*x^4+10752.0*z^2*x^4+1792.0*x^4+256.0*x^8+256.0+1792.0*z^4*y^4+10752.0*z^2*y^4+1792.0*y^4+256.0*y^8+10752.0*z^4*x^2*y^2-21504.0*z^2*x^2*y^2+10752.0*x^2*y^2+3584.0*x^4*y^4;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+</definition>
+
+<definition name="Chmutov octic" type="asurf">
+// Degree 8, 88 nodes, cubic symetry
+// https://blogs.ams.org/visualinsight/2017/01/01/chmutov-octic/
+(8 x^4 - 8 x^2 +1)^2
++ (8 y^4 - 8 y^2 + 1)^2
++ (8 z^4 - 8 z^2 + 1)^2 - 1;
+
+<variable name="x" min="-1.03" max="1.12" type="none">
+<variable name="y" min="-1.04" max="1.11" type="none">
+<variable name="z" min="-1.05" max="1.1" type="none">
+<option name="coarse" value="32">
+<option name="singPower" value="8">
+<option name="facePower" value="32">
+<option name="edgePower" value="16">
+<option name="showFace" value="true">
+<option name="showEdge" value="true">
+<option name="showVert" value="false">
+<option name="showCurve" value="false">
+<option name="showPoint" value="false">
+<option name="showBoundary" value="true">
+<option name="calcSkeleton" value="false">
+<option name="calcDgen" value="false">
+</definition>
+
+<definition name="Bohemian Star" type="asurf">
+//# Thanks to John Chertok and Giorgio Ferrarese for this.
+
+y^4*((x^2+y^2+z^2)^2-4*r^2*(x^2+z^2))-16*r^2*x^2*z^2*(y^2-r^2) - 0;
+r=1;
+<variable name="x" min="-2" max="2">
+<variable name="y" min="-2.1" max="2.1">
+<variable name="z" min="-2" max="2">
+<option name="coarse" value="16">
+<option name="fine" value="32">
+<option name="face" value="512">
+<option name="timeout" value="100">
+</definition>
+
+
+<definition name="Barth's Dectic" type="asurf">
+//# Degree 10, 345 nodes
+8 (x^2-t^4 y^2)(y^2 -t^4 z^2)(z^2-t^4 x^2)
+  * (x^4 + y^4 + z^4 - 2 x^2 y^2 - 2 x^2 z^2 - 2 y^2 z^2)
++ (3+5 t) (x^2+y^2+z^2-w^2)^2 (x^2 + y^2 + z^2 - (2-t) w^2)^2 w^2 - 0;
+t = (1+sqrt(5))/2;
+w = 2;
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="16">
+<option name="fine" value="16">
+<option name="face" value="2048">
+<option name="timeout" value="100">
+</definition>
+
+<definition name="Barth's Dodectic" type="asurf">
+243 S12 - 22 Q12 - 0;
+//Q12 = 
+// x^12+y^12+z^12+w^12
+//+90*x^4*y^4*z^4+90*x^4*y^4*w^4+90*x^4*z^4*w^4+90*y^4*z^4*w^4
+//+30*x^8*y^2*z^2+30*y^8*z^2*w^2+30*y^2*z^8*w^2+30*y^2*z^2*w^8
+//+6*x^2*z^10+6*x^2*w^10+6*x^10*y^2+6*x^10*z^2+6*x^10*w^2+6*x^2*y^10
+//+6*y^2*z^10+6*y^2*w^10+6*y^10*z^2+6*y^10*w^2+6*z^2*w^10+6*z^10*w^2
+//+15*x^8*y^4+15*x^8*z^4+15*x^8*w^4+15*y^4*z^8+15*y^4*w^8+15*z^8*w^4+15*z^4*w^8
+//+20*x^6*y^6+20*x^6*z^6+20*x^6*w^6+20*y^6*z^6+20*y^6*w^6+20*z^6*w^6
+//+15*x^4*y^8+15*x^4*z^8+15*x^4*w^8+15*y^8*z^4+15*y^8*w^4
+//+60*x^6*y^4*w^2+60*x^4*y^6*w^2+60*x^4*y^6*z^2+60*x^6*y^4*z^2+60*x^4*y^2*z^6+60*x^4*z^6*w^2+60*x^6*y^2*z^4+60*x^4*y^2*w^6
+//+60*x^6*y^2*w^4+60*x^6*z^4*w^2+60*x^6*z^2*w^4+60*y^2*z^4*w^6
+//+60*y^4*z^6*w^2+60*y^6*z^4*w^2+60*y^6*z^2*w^4+60*y^4*z^2*w^6+60*y^2*z^6*w^4
+//+60*x^4*z^2*w^6+60*x^2*y^6*z^4+60*x^2*y^6*w^4+60*x^2*y^4*z^6+60*x^2*y^4*w^6+60*x^2*z^6*w^4+60*x^2*z^4*w^6
+//+30*x^8*y^2*w^2+30*x^8*z^2*w^2+30*x^2*y^8*z^2+30*x^2*y^8*w^2+30*x^2*y^2*z^8+30*x^2*y^2*w^8+30*x^2*z^8*w^2+30*x^2*z^2*w^8
+//+120*x^2*y^2*z^6*w^2+120*x^2*y^6*z^2*w^2+120*x^2*y^2*z^2*w^6+120*x^6*y^2*z^2*w^2
+//+180*x^2*y^2*z^4*w^4+180*x^2*y^4*z^4*w^2+180*x^2*y^4*z^2*w^4+180*x^4*y^2*z^4*w^2+180*x^4*y^2*z^2*w^4+180*x^4*y^4*z^2*w^2
+//;
+//# expanded form of 
+Q12 = (x^2+y^2+z^2+w^2)^6;
+S12 = 33 sqrt(5) ( s23m + s34m + s42m)
+        + 19(s23p + s34p + s42p)
+        + 10 s234 - 14 s10 + 2 s11 - 6 s12
+        - 352 s51 + 336 l5^2 l1 + 48 l2 l3 l4;
+s10 = l1 (l2 l3 + l2 l4 + l3 l4);
+s11 = l1^2 ( l2 + l3 + l4);
+s12 = l1 (l2^2 + l3^2 +l4^2);
+s51 = l5^2 ( l2 + l3 + l4);
+s234 = l2^3 + l3^3 + l4^3;
+
+s23p = l2^2 l3 + l2 l3^2;
+s23m = l2^2 l3 - l2 l3^2;
+
+s34p = l3^2 l4 + l3 l4^2;
+s34m = l3^2 l4 - l3 l4^2;
+
+s42p = l4^2 l2 + l4 l2^2;
+s42m = l4^2 l2 - l4 l2^2;
+
+l1 = x^4 + y^4 + z^4 + w^4;
+l2 = x^2 y^2 + z^2 w^2;
+l3 = x^2 z^2 + y^2 w^2;
+l4 = x^2 w^2 + y^2 z^2;
+l5 = x y z w;
+w = 1;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+<option name="coarse" value="16">
+<option name="fine" value="16">
+<option name="face" value="2048">
+<option name="timeout" value="1000">
+</definition>
+
+<definition name="Sarti's Dodectic 360" type="asurf">
+25 S12 - 2 Q12;
+Q12 = (x^2+y^2+z^2+w^2)^6;
+S12 = 33 sqrt(5) ( s23m + s34m + s42m)
+        + 19(s23p + s34p + s42p)
+        + 10 s234 - 14 s10 + 2 s11 - 6 s12
+        - 352 s51 + 336 l5^2 l1 + 48 l2 l3 l4;
+s10 = l1 (l2 l3 + l2 l4 + l3 l4);
+s11 = l1^2 ( l2 + l3 + l4);
+s12 = l1 (l2^2 + l3^2 +l4^2);
+s51 = l5^2 ( l2 + l3 + l4);
+s234 = l2^3 + l3^3 + l4^3;
+
+s23p = l2^2 l3 + l2 l3^2;
+s23m = l2^2 l3 - l2 l3^2;
+
+s34p = l3^2 l4 + l3 l4^2;
+s34m = l3^2 l4 - l3 l4^2;
+
+s42p = l4^2 l2 + l4 l2^2;
+s42m = l4^2 l2 - l4 l2^2;
+
+l1 = x^4 + y^4 + z^4 + w^4;
+l2 = x^2 y^2 + z^2 w^2;
+l3 = x^2 z^2 + y^2 w^2;
+l4 = x^2 w^2 + y^2 z^2;
+l5 = x y z w;
+w = 1;
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+<option name="coarse" value="16">
+<option name="fine" value="16">
+<option name="face" value="2048">
+<option name="timeout" value="1000">
+</definition>
+
+</group>
+
+<group name="Cuspidal">
+
+<definition name="Swallowtail Surface" type="asurf">
+-4 z^3 y^2 - 27 y^4 + 16 x z^4 -128 x^2 z^2 + 144 x y^2 z + 256 x^3 - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+<option name="coarse" value="16">
+<option name="fine" value="64">
+<option name="face" value="256">
+</definition>
+
+<definition name="Cuspidal butterfly" type="asurf" opType="None">
+//# Thanks to Bill Bruce at Liverpool university for this.
+512*y^2*x^9
++256*z^2*x^8
++5184*y^4*x^6
+-13824*y^2*z^2*x^5
+-8192*z^4*x^4
++17496*y^6*x^3
++186624*y^4*z^2*x^2
++221184*x*y^2*z^4
++19683*y^8+65536*z^6-0;
+<variable name="x" min="-2.24" max="0.03">
+<variable name="y" min="-1.23" max="1.04">
+<variable name="z" min="-1.22" max="1.05">
+<option name="coarse" value="16">
+<option name="fine" value="32">
+<option name="face" value="512">
+<option name="edge" value="4096">
+<option name="timeout" value="1000">
+</definition>
+
+<definition name="Hunt's Surface" type="asurf">
+4 (x^2 + y^2 + z^2 - 13)(x^2 + y^2 + z^2 - 13)(x^2 + y^2 + z^2 - 13)
++ 27 (3 x^2 + y^2 -4 z^2 - 12)^2 - 0;
+<variable name="x" min="-3.54" max="3.53">
+<variable name="y" min="-3.63" max="3.64">
+<variable name="z" min="-3.12" max="3.05">
+<option name="coarse" value="16">
+<option name="fine" value="64">
+<option name="face" value="2048">
+</definition>
+
+</group>
+
+
+
+<group name="Cross-caps">
+
+<definition name="Cross-Cap" type="asurf">
+x^2 y - z^2 - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+<option name="drawLines" value="true">
+<option name="coarse" value="16"/>
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-3.0"/>
+<option name="colourMaxVal" value="3.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="Steiner's Roman Surface" type="asurf">
+x^2 y^2 + y^2 z^2 + z^2 x^2 - 2 x y z ;
+<variable name="x" min="-1.24" max="1.03">
+<variable name="y" min="-1.23" max="1.04">
+<variable name="z" min="-1.22" max="1.05">
+<option name="coarse" value="16"/>
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-3.0"/>
+<option name="colourMaxVal" value="3.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="Sine surface" type="asurf" opType="none">
+// Degree 6
+4 x^2 y^2 z^2 + a^2(x-y-z)(x+y-z)(x-y+z)(x+y+z);
+<variable name="x" min="-4.14" max="4.03" type="none">
+<variable name="y" min="-4.13" max="4.04" type="none">
+<variable name="z" min="-4.12" max="4.05" type="none">
+<parameter name="a" value="1.0">
+<option name="coarse" value="16"/>
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-3.0"/>
+<option name="colourMaxVal" value="3.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="Boy's Surface" type="asurf">
+64 (1-z)^3 z^3- 48 (1-z)^2 z^2 (3 x^2+3 y^2+2 z^2)+
+12 (1-z) z (27 (x^2+y^2)^2-24 z^2 (x^2+y^2)+
+36 sqrt(2) y z (y^2-3 x^2)+4 z^4)+
+(9 x^2+9 y^2-2 z^2) (-81 (x^2+y^2)^2-72 z^2 (x^2+y^2)+
+108 sqrt(2) x z (x^2-3 y^2)+4 z^4)-0; 
+<variable name="x" min="-1.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-1.12" max="2.05">
+<option name="coarse" value="16"/>
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-3.0"/>
+<option name="colourMaxVal" value="3.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="Kline Bottle" type="asurf" opType="None">
+(x^2+y^2+z^2+2*y-1)*((x^2+y^2+z^2-2*y-1)^2-8*z^2)+
+16*x*z*(x^2+y^2+z^2-2*y-1)-0;
+<variable name="x" min="-4.24" max="4.03">
+<variable name="y" min="-3.23" max="3.04">
+<variable name="z" min="-4.12" max="4.05">
+<option name="coarse" value="16"/>
+<option name="singPower" value="8"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-3.0"/>
+<option name="colourMaxVal" value="3.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+</group>
+
+
+
+
+
+
+<group name="minimal">
+<definition name="Bour's minimal surface" type="asurf">
+// http://www.wolframalpha.com/input/?i=minimal+surface
+43486543872 x^9 z^4+347892350976 x^8 y^4+521838526464 x^8 y^2 z^2
++130459631616 x^8 z^4-48922361856 x^7 y^2 z^4+86973087744 x^7 y^2 z^2
++183458856960 x^7 z^6+97844723712 x^7 z^4-463856467968 x^6 y^6
++695784701952 x^6 y^4 z^2+1916125839360 x^6 y^2 z^4-12039487488 x^6 z^8
++501454209024 x^6 z^6-81537269760 x^5 y^4 z^4-318901321728 x^5 y^4 z^2
+-183458856960 x^5 y^2 z^6-97844723712 x^5 y^2 z^4+232190115840 x^5 z^8
++302707113984 x^5 z^6+231928233984 x^4 y^8-115964116992 x^4 y^6 z^2
++1247520227328 x^4 y^4 z^4-59337474048 x^4 y^2 z^8+2605115768832 x^4 y^2 z^6
+-48922361856 x^4 y^2 z^4-29023764480 x^4 z^10+602404356096 x^4 z^8
+-55037657088 x^4 z^6-451172892672 x^3 y^6 z^4+183609851904 x^3 y^6 z^2
+-917294284800 x^3 y^4 z^6-489223618560 x^3 y^4 z^4-464380231680 x^3 y^2 z^8
+-605414227968 x^3 y^2 z^6+544195584 x^3 z^12+80299081728 x^3 z^10
++233910042624 x^3 z^8-51539607552 x^2 y^10-231928233984 x^2 y^8 z^2
+-252765536256 x^2 y^6 z^4-20639121408 x^2 y^4 z^8+770527199232 x^2 y^4 z^6
++32614907904 x^2 y^4 z^4-58047528960 x^2 y^2 z^10+1204808712192 x^2 y^2 z^8
+-110075314176 x^2 y^2 z^6-15509574144 x^2 z^12+232190115840 x^2 z^10
+-165112971264 x^2 z^8-114152177664 x y^8 z^4-28991029248 x y^8 z^2
+-550376570880 x y^6 z^6-293534171136 x y^6 z^4-696570347520 x y^4 z^8
+-908121341952 x y^4 z^6-1632586752 x y^2 z^12-240897245184 x y^2 z^10
+-701730127872 x y^2 z^8+4294967296 y^12+57982058496 y^10 z^2
++285380444160 y^8 z^4-14619377664 y^6 z^8+623760113664 y^6 z^6
+-5435817984 y^6 z^4-29023764480 y^4 z^10+602404356096 y^4 z^8
+-55037657088 y^4 z^6-15509574144 y^2 z^12+232190115840 y^2 z^10
+-165112971264 y^2 z^8+43046721 z^16-1836660096 z^14
++26121388032 z^12-123834728448 z^10;
+<variable name="x" min="-4.24" max="4.03" />
+<variable name="y" min="-4.23" max="4.04" />
+<variable name="z" min="-4.22" max="4.05" />
+</definition>
+
+<definition name="Enneper's minimal surface" type="asurf">
+// http://www.wolframalpha.com/input/?i=minimal+surface
+-729 x^6+2187 x^4 y^2-1215 x^4 z^3-4374 x^4 z^2+729 x^4 z-2187 x^2 y^4
+-6318 x^2 y^2 z^3-1458 x^2 y^2 z-432 x^2 z^6-3888 x^2 z^5-6480 x^2 z^4
++3888 x^2 z^3+729 y^6-1215 y^4 z^3+4374 y^4 z^2+729 y^4 z+432 y^2 z^6
+-3888 y^2 z^5+6480 y^2 z^4+3888 y^2 z^3+64 z^9-1152 z^7+5184 z^5;
+
+<variable name="x" min="-4.24" max="4.03" />
+<variable name="y" min="-4.23" max="4.04" />
+<variable name="z" min="-4.22" max="4.05" />
+</definition>
+
+<definition name="Henneberg's minimal surface " type="asurf">
+// http://www.wolframalpha.com/input/?i=minimal+surface
+-729 x^12-1215 z^3 x^10-4374 z^2 x^10+8748 z x^10+9720 x^10
+-432 z^6 x^8-3888 z^5 x^8+2187 y^4 x^8+7776 z^4 x^8-9963 y^2 z^3 x^8
++69120 z^3 x^8-79704 y^2 x^8-13122 y^2 z^2 x^8+31104 z^2 x^8-26244 y^2 z x^8
+-62208 z x^8-27648 x^8+64 z^9 x^6+4320 z^7 x^6-864 y^2 z^6 x^6+52032 z^6 x^6
+-15552 y^2 z^5 x^6+89856 z^5 x^6+190512 y^4 x^6+62208 y^2 z^4 x^6
+-179712 z^4 x^6-23814 y^4 z^3 x^6-416256 z^3 x^6+55296 y^2 x^6
+-8748 y^4 z^2 x^6-248832 y^2 z^2 x^6-138240 z^2 x^6+17496 y^4 z x^6
++248832 y^2 z x^6-32768 x^6-768 z^10 x^4+192 y^2 z^9 x^4-768 z^9 x^4
+-2187 y^8 x^4-5376 z^8 x^4-7776 y^2 z^7 x^4-162816 z^7 x^4-190512 y^6 x^4
++10560 y^2 z^6 x^4-595968 z^6 x^4-23328 y^4 z^5 x^4-573696 y^2 z^5 x^4
+-651264 z^5 x^4-1147392 y^2 z^4 x^4-86016 z^4 x^4-23814 y^6 z^3 x^4
+-511488 y^4 z^3 x^4+84480 y^2 z^3 x^4-49152 z^3 x^4+98304 y^2 x^4
++8748 y^6 z^2 x^4-248832 y^2 z^2 x^4-196608 z^2 x^4+17496 y^6 z x^4
+-373248 y^4 z x^4+2304 z^11 x^2+4608 z^10 x^2+192 y^4 z^9 x^2
++4608 y^2 z^9 x^2-27648 z^9 x^2+79704 y^8 x^2-55296 z^8 x^2
+-7776 y^4 z^7 x^2-276480 y^2 z^7 x^2+110592 z^7 x^2-55296 y^6 x^2
++864 y^6 z^6 x^2-10560 y^4 z^6 x^2+221184 z^6 x^2-15552 y^6 z^5 x^2
+-573696 y^4 z^5 x^2+1105920 y^2 z^5 x^2-147456 z^5 x^2-98304 y^4 x^2
+-62208 y^6 z^4 x^2+1147392 y^4 z^4 x^2-294912 z^4 x^2-9963 y^8 z^3 x^2
++84480 y^4 z^3 x^2-294912 y^2 z^3 x^2+13122 y^8 z^2 x^2+248832 y^6 z^2 x^2
++248832 y^4 z^2 x^2-26244 y^8 z x^2+248832 y^6 z x^2+729 y^12
++2304 y^2 z^11-9720 y^10+768 y^4 z^10-4608 y^2 z^10+64 y^6 z^9
+-768 y^4 z^9-27648 y^2 z^9+27648 y^8+5376 y^4 z^8+55296 y^2 z^8
++4320 y^6 z^7-162816 y^4 z^7+110592 y^2 z^7+32768 y^6+432 y^8 z^6
+-52032 y^6 z^6+595968 y^4 z^6-221184 y^2 z^6-3888 y^8 z^5+89856 y^6 z^5
+-651264 y^4 z^5-147456 y^2 z^5-7776 y^8 z^4+179712 y^6 z^4+86016 y^4 z^4
++294912 y^2 z^4-1215 y^10 z^3+69120 y^8 z^3-416256 y^6 z^3-49152 y^4 z^3
++4374 y^10 z^2-31104 y^8 z^2+138240 y^6 z^2+196608 y^4 z^2+8748 y^10 z
+-62208 y^8 z;
+
+f = g h;
+g = (x-1)^2 + y^2 - a^2;
+h = (x+1)^2 + y^2 - a^2;
+<variable name="x" min="-4.24" max="4.03" />
+<variable name="y" min="-4.23" max="4.04" />
+<variable name="z" min="-4.22" max="4.05" />
+<parameter name="a" value="2" />
+<parameter name="a" value="6" />
+</definition>
+
+</group>
+
+<group name="Herwig Hauser" decription="Found at Herwig Hauser's Gallery of Singular Algebraic Surfaces https://homepage.univie.ac.at/herwig.hauser/gallery.html">
+
+<definition name="Berg" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2+y^2 z^2+z^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Buggle" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^4 y^2+y^4 x^2-x^2 y^2+z^6;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Calypso" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2+y^2 z  - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Calyx" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2+y^2 z^3  - z^4; 
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Columpius" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^3y+x z^3+y^3z+z^3+7z^2+5z;
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+</definition>
+
+<definition name="Crixxi" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+(y^2+z^2-1)^2 +(x^2+y^2-1)^3;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Daisy" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+(x^2 - y^3)^2 - (z^2-y^2)^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Dance" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under German name Tanz
+x^4-x^2-y^2 z^2;
+<variable name="x" min="-6.14" max="6.03">
+<variable name="y" min="-6.13" max="6.04">
+<variable name="z" min="-6.12" max="6.05">
+</definition>
+
+<definition name="Diabolo" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2 - (y^2+ z^2)^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Dingdong" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2  +y^2 +z^3 - z^2 ;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Dromedary" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under Grman name  Dromedar
+x^4 - 3x^2 +  y^2+z^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+
+<definition name="Dullo" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+(x^2+y^2+z^2)^2-(x^2+y^2);
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Durchblick" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^3 y+x z^3+y^3 z+z^3+5 z;
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+</definition>
+
+<definition name="Eve" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+5x^2 + 2x z^2 + 5y^6  + 15y^4 + 5z^2 = 15y^5 + 5y^3;
+<variable name="x" min="-0.24" max="0.23">
+<variable name="y" min="-0.33" max="0.04">
+<variable name="z" min="-0.22" max="0.25">
+</definition>
+
+<definition name="Flirt" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2-x^3+y^2+y^4+z^3-10z^4;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Funnel" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under german name Trichter
+x^2 + z^3 - y^2 z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Geisha" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2 y z + x^2 z^2 - y^3 z + y^3;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="Harlequin" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under the name Harlekin
+x^3 z + 10x^2 y + x y^2 + y z^2  - z^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Helix" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+6x^2 - 2x^4 - y^2 z^2;
+<variable name="x" min="-5.14" max="5.03">
+<variable name="y" min="-5.13" max="5.04">
+<variable name="z" min="-5.12" max="5.05">
+</definition>
+
+<definition name="Heart" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under the name Herz
+y^2+z^3-z^4-x^2 z^2;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="Heaven and hell" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under then German name Himmel und H&ouml;lle
+x^2-y^2 z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Hummingbird" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under German name Kolibri
+x^3 + x^2 z^2 - y^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Ice Cream Cone" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under the German name Eist&uuml;te
+(x^2+y^2)^3 - 4x^2y^2(z^2+1) ;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Leopold" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2 y^2 z^2+3x^2+3y^2+z^2-1;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Limao" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2-y^3z^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Miau" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2 y z + x^2 z^2  + 2 y^3 z + 3 y^3 - 0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Michelangelo" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2+y^4+y^3 z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Nepali" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+(x y-z^3-1)^2 + (x^2+y^2-1)^3;
+<variable name="x" min="-2.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Octdong" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2 + y^2 + z^4 - z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Pilzchen" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+(z^3 - 1)^2 + (x^2+y^2-1)^3;
+<variable name="x" min="-1.14" max="2.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Plop" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2 + (z+y^2)^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Polsterzipf" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+(x^3-1)^2 + (y^3-1)^2+ (z^2-1)^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="2.04">
+<variable name="z" min="-1.12" max="2.05">
+</definition>
+
+<definition name="Schneeflocke" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^3+y^2z^3+y z^4;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Sea horse" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under German name Seepferdchen
+(x^2-y^3)^2 - (x+y^2) z^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Solitude" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2 y z + x y^2+y^3+y^3 z - x^2 z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Stern" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2 y^2 + y^2 z^2 + x^2 z^2 + 100 ( x^2 + y^2 + z^2 - 1)^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Subway" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2 y^2 - (z^2-1)^3;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="Sweet" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under German name S&uuml;ss
+(x^2+(9/4) y^2+z^2-1)^3 - x^2 z^3 - (9/80) y^2 z^3;
+<variable name="x" min="-1.14" max="2.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.42" max="1.45">
+</definition>
+
+<definition name="Swallowtail" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+256 z^3 - 128 x^2 z^2 + 16 x^4 z+144 x y^2 z - 4 x^3 y^2 - 27 y^4;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Spitz" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+(y^3-x^2-z^2)^3 - 27 x^2 y^3 z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+
+<definition name="Thistle" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+// Under the German name "Distel"
+x^2+y^2+z^2+1000 (x^2+y^2)(x^2+z^2)(y^2+z^2)-1;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Tobel" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^3 z + x^2 + y z^3 + z^4 - 3 x y z
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Tuelle" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+y z(x^2+y-z);
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Twilight" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+(z^3-2)^2 +(x^2+y^2-3)^3;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="Vis a vis" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2-x^3+y^2+y^4+z^3-z^4;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="Wedeln" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^3 - y (1-z^2)^2;
+<variable name="x" min="-2.14" max="2.03">
+<variable name="y" min="-2.13" max="2.04">
+<variable name="z" min="-2.12" max="2.05">
+</definition>
+
+<definition name="Wigwam" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2+y^2 z^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Windkanal" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+- x^2 + y^4 + z^4 - x y z - 100;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Whitney" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2-y^2 z-0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Xano" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^4 +z^3 - y z^2;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Zeck" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2+y^2-z^3(1-z);
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Zeppelin" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x y z+ y z+2 z^5;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Zweiloch" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x y z+y z+2z^5;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+<definition name="Zitrus" type="asurf">
+// From https://homepage.univie.ac.at/herwig.hauser/gallery.html
+x^2+z^2 - y^3(y-1)^3;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+</definition>
+
+</group>
+
+<group name="Curiosities">
+
+<definition name="Pretzal" type="asurf">
+//# see http://xahlee.org/surface/pretzel/pretzel.html
+f^2 + c z^2 - b^2;
+f = g h;
+g = (x-d)^2 + y^2 - a^2;
+h = (x+d)^2 + y^2 - a^2;
+<variable name="x" min="-4.24" max="4.03" />
+<variable name="y" min="-4.23" max="4.04" />
+<variable name="z" min="-4.22" max="4.05" />
+<parameter name="a" value="3" />
+<parameter name="b" value="6" />
+<parameter name="c" value="100" />
+<parameter name="d" value="1" />
+</definition>
+
+<definition name="Indented Octohedron" type="asurf">
+//# This surface has the edges of an octohedron
+//# At the mid point of each edge is a D4+- singularity
+a*(x^8+y^8+z^8)+b*(x^6+y^6+z^6)
++c*(x^4+y^4+z^4)+d*(x^2+y^2+z^2)
++e*(x^4*y^2+x^2*y^4+x^4*z^2+x^2*z^4+y^4*z^2+y^2*z^4)
++g(x^2 y^2 + x^2 z^2 + y^2 z^2)
++h+i(x^2 y^2 z^2);
+b = -183/16*a; h = 54*a; e = -297/16*a; c = 375/8*a;
+d = -82*a; g = 297/4*a;
+a = 1; i = -400;
+//#h = -6*a-2*b; c = -6*a-3*b; d = 8*a+3*b; e = 0; g = 0;
+//#a = 1; b = -1; i = 0;
+<variable name="x" min="-2.54" max="2.53">
+<variable name="y" min="-2.53" max="2.54">
+<variable name="z" min="-2.52" max="2.55">
+</definition>
+
+<definition name="Cross-Cap Propeller" type="asurf">
+//# obtained by deforming a crosscap
+x y z + a x^2 + a y^2 - 0.0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.02" max="1.05">
+<option name="drawLines" value="true">
+</definition>
+
+<definition name="Cone-Plane 1" type="asurf">
+//# obtained by deforming a crosscap
+//# A cone and a plane
+x y z + x^3 - 0.0;
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.02" max="1.05">
+<option name="drawLines" value="true">
+</definition>
+
+
+</group>
+<definition name="E6 (--)" type="asurf" opType="none">
+(z-1)^2 (x^2-z^2) - (x^2 -z)^2
+- y^4 - y^2 (2 x^2 + z^2 + 2 z - 1);
+<variable name="x" min="-1.14" max="1.03" steps="2" type="none">
+<variable name="y" min="-1.2000000000000002" max="1.2400000000000002" steps="2" type="none">
+<variable name="z" min="-1.12" max="1.05" type="none">
+<option name="coarse" value="32"/>
+<option name="singPower" value="2"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="true"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="true"/>
+<option name="calcSkeleton" value="true"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="false"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<group name="Chertok cubics">
+
+<definition name="#00 Cayley's Cubic Surface" type="asurf">
+//– Ferrarese
+ 
+9*x^3 – 4*z^3 – 27*x*y^2 + 3* (x^2 + y^2) *z – 36* (x^2 + y^2) + 16*z^2; 
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#10 Clebsch Diagonal Cubic" type="asurf">
+
+16*x^3 +16*y^3 – 31*z^3 + 24*x^2*z – 48*x^2*y – 48*x*y^2 + 24*y^2*z – 54*sqrt(3)*z^2 –72*z = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#10a Clebsch Diagonal Cubic" type="asurf">
+(x^3+y^3+z^3+w^3)-(x+y+z+w)^3;
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#13: Cubic with 4 A1 Double Points" type="asurf">
+
+-(4*x^3 - 12*x*y^2 + 3*zz*x^2 + 3*zz*y^2 - 6*w*x^2 -6*w*y^2 - 7*zz^3 - 12*zz^2*w - 3*zz*w^2 + 2*w^3);
+w = 1;
+zz = 0.8*z;
+
+//Endrass
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#14: 4 A1, Affine Form of the Cubic with Double Points" type="asurf">
+
+x^3 + y^3 - z^3 - w^3 - 0.25*(x+y-z-w)^3;
+w = 0.5*(1+x+y-z); //Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#14a: 4 A1, Affine Form of the Cubic with Double Points" type="asurf">
+27/32*x^3 - 15/32*x^2*y -15/32*x*y^2 +27/32*y^3 + 15/32*x^2*z + 15/16*x*y*z 
++ 15/32*y^2*z - 15/32*x*z^2 -15/32*y*z^2 - 27/32*z^3 - 9/32*x^2 
+- 9/16*x*y -9/32*y^2 + 9/16*x*z + 9/16*y*z - 9/32*z^2 - 15/32*x - 15/32*y + 15/32*z - 3/32; //Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#15: 4 A1, Affine Form of the Cubic with Double Points" type="asurf">
+
+9x^3 + 3x^2z – 4z^3 – 27y^2x + 3y^2z – 4(9x^2 + 9y^2 – 4z^2)*((2/7)z + (1/7)) =0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#16: 4 A1, Affine Form of the Cubic with Double Points" type="asurf">
+
+x^3+y^3-z^3-w^3-0.25*(x+y-z-w)^3;
+w=1; //Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#16a: 4 A1, Affine Form of the Cubic with Double Points" type="asurf">
+
+3/4*x^3 - 3/4*x^2*y -3/4*x*y^2 +3/4*y^3+ 3/4*x^2*z + 3/2*x*y*z + 3/4*y^2*z - 3/4*x*z^2 
+- 3/4*y*z^2 -3/4*z^3+ 3/4*x^2 + 3/2*x*y + 3/4*y^2 - 3/2*x*z - 3/2*y*z + 3/4*z^2 -3/4*x - 3/4*y + 3/4*z - 3/4;
+//Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#17: 4 A1, Affine Form of the Cubic with Double Points" type="asurf">
+
+x^3 + y^3 + z^3 + w^3-0.25*(x+y+z+w)^3;
+w = 0.5*(1+x+y-z); //Labs
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#17b: 4 A1, Affine Form of the Cubic with Double Points" type="asurf">
+9/32*x^3 - 69/32*x^2*y - 69/32*x*y^2 + 9/32*y^3 -39/32*x^2*z - 39/16*x*y*z 
+-39/32*y^2*z +3/32*x*z^2 + 3/32*y*z^2 + 27/32*z^3 - 15/32*x^2 - 15/16*x*y 
+- 15/32*y^2 - 21/16*x*z - 21/16*y*z + 9/32*z^2 + 3/32*x + 3/32*y -15/32*z + 3/32; //Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#17c: 4 A1, Affine Form of the Cubic with Double Points" type="asurf">
+z x^2 + x^2 – 2z^3 – 3z^2 + y^2z – z = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#18: Cubic with 3 A1 Double Points (from inside)" type="asurf">
+
+a1*p1 + (a2*z+a3)*p3 + a4*z^3 + a5*z^2 + a6*z + a7 = 0;
+p1 = 2*x^3-6*x*y^2;
+p2 = 3*x^2*y-y^3;
+p3 = x^2+y^2;
+a1 = -1.0;
+a2 = 1.0;
+a3 = -3*a1;
+a4 = -1.2;
+a5 = -3.0;
+a6 = -a2;
+a7 = a1; //Endrass
+
+// -2*x^3 + 6*x*y^2 + x^2*z + y^2*z - 6/5*z^3 + 3*x^2 + 3*y^2 -3*z^2 – z – 1; //Labs same eqn
+
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#18c: Cubic with 3 A1 Double Points (from outside)" type="asurf">
+
+10*x^3 - 30*x*y^2 + (-5*z-15*w)*(x^2+y^2) + 6*z^3 + 15*w*z^2 + 5*w^2 *z + 5*w^3;
+w=1; //Unknown
+//-2*x^3 + 6*x*y^2 + x^2*z + y^2*z - 6/5*z^3 + 3*x^2 + 3*y^2 -3*z^2 – z – 1; //Labs same surface
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#20a: Cubic with an A2 Double Point" type="asurf">
+x^3 - x*y^2 - y^2 + z^2; //Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#20b: Cubic with an A2 Double Point" type="asurf">
+X^2 – y^2 – (y^2 – z^2)z = 0; //Ferrarese 
+<variable name="x" min="-4.14" max="4.03">
+<variable name="y" min="-4.13" max="4.04">
+<variable name="z" min="-4.12" max="4.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#21: Cubic with an A2 Double Point" type="asurf">
+// (other real form of the singularity)
+
+x^2 + y^2 + z^3 + 3.2*(x^3-3*x*y^2) = 0; //Endrass
+<variable name="x" min="-0.54" max="0.53">
+<variable name="y" min="-0.53" max="0.54">
+<variable name="z" min="-0.82" max="0.35">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#21a: Cubic with an A2 Double Point" type="asurf">
+x^3 - 3*x*y^2 + z^3 + 3*x^2 + 3*y^2; //(too small) Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#22: Cubic with 3 A2 Double Points" type="asurf">
+
+a1*p1 + (a2*z+a3)*p3 + a4*z^3 + a5*z^2 + a6*z + a7 = 0;
+p1 = 2*x^3-6*x*y^2;
+p2 = 3*x^2*y-y^3;
+p3 = x^2+y^2;
+a1 = -1.0;
+a2 = -1.0;
+a3 = -3*a1;
+a4 = 1.0;
+a5 = a2^2/(3.0*a1);
+a6 = -a2;
+a7 = a1; //Endrass
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#22a: Cubic with 3 A2 Double Points" type="asurf">
+x^3 - 3*x*y^2 + z^3 + 3*x^2 + 3*y^2 – 4; //(too small) Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#23: Cubic with an A3 Double Point" type="asurf">
+
+y*(4*(x^2) + (y-1)^2-1) + (y-2)*z^2 = 0; // Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#23b: Cubic with an A3 Double Point" type="asurf">
+Z^3 + x z^2 + 3z^2 + y^2z + y^2x + 3y^2 + 16x^2z = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#24: Cubic with an A3 and 2 A1 Double Points" type="asurf">
+x*y^2 + 2*x^2*z - 2*x*y*z + y^2*z + 2*x*z^2 + 2*x*z; //Labs
+<variable name="x" min="-5.14" max="5.03">
+<variable name="y" min="-5.13" max="5.04">
+<variable name="z" min="-5.12" max="5.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#25: Cubic with an A4 and an A1 Double Point" type="asurf">
+
+1/2*x^2*y - 1/8*x*y*z - y^2*z - 1/8*x*z^2 + 1/8*x*z; //(not perfect yet) Labs 
+<variable name="x" min="-3.14" max="3.03">
+<variable name="y" min="-3.13" max="3.04">
+<variable name="z" min="-3.12" max="3.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#25a: Cubic with an A4 and an A1 Double Point" type="asurf">
+
+(x - 2)(y + z)(x + 2) + ((y + z)^2)z + (x - 2)(z^2) = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#26: Cubic with an A5 and an A1 Double Point" type="asurf">
+
+w*x*z - y^2*z - x^3;
+w = 1-z; //Undetermined/Endrass
+// -x^3 - y^2*z - x*z^2 + x*z; //Labs identical
+<variable name="x" min="-3.14" max="3.03">
+<variable name="y" min="-3.13" max="3.04">
+<variable name="z" min="-3.12" max="3.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#26b: Cubic with an A5 and an A1 Double Point" type="asurf">
+(x – 2)(y + z)(x + 2) + (y + z)^3 + (x – 2)z^2 = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#28: Cubic with a D4 Double Point" type="asurf">
+
+a1*p1 + (a2*z+a3)*p3 + a4*z^3 + a5*z^2 + a6*z + a7 = 0;
+p1 = 2*x^3-6*x*y^2;
+p2 = 3*x^2*y-y^3;
+p3 = x^2+y^2;
+a1 = -0.8;
+a2 = 0;
+a3 = 0;
+a4 = 1.0;
+a5 = 0.8;
+a6 = 0;
+a7 = 0; // Endrass
+//-x^3 + 3*x*y^2 + z^3 + (1/2)z^2; //(Same surface Scale slightly different) Labs
+<variable name="x" min="-1.14" max="1.03">
+<variable name="y" min="-1.13" max="1.04">
+<variable name="z" min="-1.12" max="1.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#28b: Cubic with a D4 Double Point" type="asurf">
+z^2(z + 4) + y(y – sqrt(3) x)(y + sqrt(3) x) = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#29: Cubic with a D4 Double Point" type="asurf">
+//(other real form of the singularity)
+
+w*x^2 + (z*(-(y^2)-(z^2)));
+w = 1-x; // Undetermined/Endrass
+// -x^3 - y^2*z - z^3 + x^2; // Labs - identical
+<variable name="x" min="-2.74" max="3.33">
+<variable name="y" min="-3.13" max="3.04">
+<variable name="z" min="-3.12" max="3.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#29b: Cubic with a D4 Double Point" type="asurf">
+z^2(z + 4) + y(x^2 + y^2) = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#30: Cubic with a D5 Double Point" type="asurf">
+
+25*z^3 + 16*z*y^2 + 60*x^2*y + 50*z^2 = 0; //Endrass /Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#30b: Cubic with a D5 Double Point" type="asurf">
+x^2(x + 4) + y^2z + x z^2 = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#31a: Cubic with a E6 Double Point" type="asurf">
+(x^2*w) - (x*z^2) + (y^3);
+w = (1-x-y-z); //Unknown
+<variable name="x" min="-3.14" max="3.03">
+<variable name="y" min="-3.13" max="3.04">
+<variable name="z" min="-3.12" max="3.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#31b: Cubic with a E6 Double Point" type="asurf">
+-x^3-  a x^2*y + y^3 - x*z^2 + x^2; //Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<parameter name="a" value="0.1" />
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#31c: Cubic with a E6 Double Point" type="asurf">
+Z^2(z + 4) + y^2z + x^3 = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#32: Nodal line" type="asurf">
+
+y^3 + x*y*z - (1+x)*z^2; Unknown/Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#32a:  Nodal line" type="asurf">
+y^3 + y^2z + yx^2 – 2x y + z x^2 + x y z = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#33a: Cayley’s Ruled Surface" type="asurf">
+z*x^2 - w*y^2;
+w = x - y; //Unknown/Labs
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#33b: Cayley’s Ruled Surface" type="asurf">
+y^3 + (x*z + y)*x = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#01: Ruled Surface" type="asurf">
+
+y^3 + y^2z + y x^2 – 2x y – z x^2 = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.54">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
+<definition name="#02: Ruled Surface" type="asurf">
+
+y^3 + (x + y z)x = 0; //Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#BS: Bohemian Star" type="asurf">
+
+y^4((x^2 + y^2 + z^2)^2 – 4(x^2 + z^2)) – (16x^2 z^2)(y^2 – 1) = 0; //Todesco
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="16"/>
+<option name="facePower" value="64"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#BSa: Bohemian Star" type="asurf">
+y^4*((x^2 + y^2 + z^2)^2 - 4*r^2*(x^2+z^2))-16*r^2*x^2*z^2*(y^2 - r^2) = 0;
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="4"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+<definition name="#BSb: Bohemian Star" type="asurf">
+
+15x^3 + 18x^2z + 108x^2 – 16z^3 – 72z^2 + 792z – 1512 – 162y^2x + 18y^2z + 108; //UNKNOWN Ferrarese
+<variable name="x" min="-7.14" max="7.03">
+<variable name="y" min="-7.13" max="7.04">
+<variable name="z" min="-7.12" max="7.05">
+<option name="coarse" value="32"/>
+<option name="singPower" value="4"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+</group>
+<definition name="#BSa: Bohemian Star" type="asurf" opType="none">
+Y^4*((X^2 + Y^2 + Z^2)^2 
+- 4*r^2*(X^2+Z^2))-16*r^2*X^2*Z^2*(Y^2 - r^2) = 0;
+
+X = ( 4 X1 - 3 Y1 )/5;
+Y = ( 3 X1 + 4 Y1 )/5;
+Z = Z1;
+X1 = x;
+Y1 = (4 y - 3 z) / 5;
+Z1 = (3 y + 4 z)/ 5;
+
+<variable name="x" min="-7.14" max="7.03" type="none">
+<variable name="y" min="-7.13" max="7.04" type="none">
+<variable name="z" min="-7.12" max="7.05" type="none">
+<parameter name="r" value="2.0">
+<option name="coarse" value="32"/>
+<option name="singPower" value="8"/>
+<option name="facePower" value="16"/>
+<option name="edgePower" value="8"/>
+<option name="colourMinVal" value="-5.0"/>
+<option name="colourMaxVal" value="2.0"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="true"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Mean curvature"/>
+<option name="edgeColour" value="None"/>
+</definition>
+<definition name="Wave surface" type="asurf" opType="none">
+
+(a^2x^2+b^2y^2+c^2z^2)(x^2+y^2+z^2)
+-(a^2b^2x^2+a^2c^2x^2+a^2b^2y^2+b^2c^2y^2+a^2c^2z^2+b^2c^2z^2)w^2+a^2b^2c^2w^4=0;
+<variable name="x" min="-0.9399999999999996" max="2.2300000000000004" steps="2" type="none">
+<variable name="y" min="-2.43" max="2.4400000000000004" steps="2" type="none">
+<variable name="z" min="-2.12" max="2.05" steps="2" type="none">
+<parameter name="a" value="1.0">
+<parameter name="b" value="0.4899999999999999">
+<parameter name="c" value="1.4579999999999997">
+<parameter name="w" value="1.0">
+<option name="coarse" value="128"/>
+<option name="singPower" value="4"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>

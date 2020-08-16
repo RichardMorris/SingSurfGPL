@@ -1,0 +1,99 @@
+<definition name="X axis" type="pcurve">
+[x,0,0];
+<variable name="x" min="-1" max="1" steps="10"/>
+</definition>
+
+<definition name="Y axis" type="pcurve">
+[0,x,0];
+<variable name="x" min="-1" max="1" steps="10"/>
+</definition>
+
+<definition name="Z axis" type="pcurve">
+[0,0,x];
+<variable name="x" min="-1" max="1" steps="10"/>
+</definition>
+
+<definition name="point" type="pcurve">
+[a,b,c];
+<variable name="x" min="0" max="1" steps="1"/>
+<parameter name="a" value="0" />
+<parameter name="b" value="0" />
+<parameter name="c" value="0" />
+<option name="showVert" value="true" />
+</definition>
+
+<definition name="Line" type="pcurve">
+[a x+x0, b x+y0, c x+z0];
+<parameter name="a" value="1">
+<parameter name="b" value="-1">
+<parameter name="c" value="0.5">
+<parameter name="x0" value="0">
+<parameter name="y0" value="0">
+<parameter name="z0" value="0">
+<variable name="x" min="-1" max="1">
+</definition>
+
+<definition name="Line segment" type="pcurve">
+(1-x) * [px,py,pz] + x * [qx,qy,qz]; 
+<parameter name="px" value="1">
+<parameter name="py" value="-1">
+<parameter name="pz" value="0.5">
+<parameter name="qx" value="0">
+<parameter name="qy" value="0">
+<parameter name="qz" value="0">
+<variable name="x" min="0" max="1">
+</definition>
+
+<definition name="Circle" type="pcurve">
+[r cos(pi t)+x0, r sin(pi t)+y0, 0];
+<parameter name="r" value="1">
+<parameter name="x0" value="0">
+<parameter name="y0" value="0">
+<variable name="t" min="-1" max="1">
+</definition>
+
+<definition name="Ellipse" type="pcurve">
+[a cos(pi t), b sin(pi t), 0];
+<parameter name="a" value="2">
+<parameter name="b" value="1">
+<parameter name="x0" value="0">
+<parameter name="y0" value="0">
+<variable name="t" min="-1" max="1">
+</definition>
+
+<definition name="Limacon" type="pcurve">
+[a * cos(2 pi t) + 2 cos(pi t),
+a * sin(2 pi t) + 2 sin(pi t),0];
+<parameter name="a" value="1.5">
+<parameter name="x0" value="0">
+<parameter name="y0" value="0">
+<parameter name="z0" value="0">
+<variable name="t" min="-1" max="1">
+</definition>
+
+<definition name="Bean" type="pcurve">
+[a * cos(2 pi t) + cos(pi t),
+b * sin(2 pi t+phi) +  sin(pi t),0]+[x0,y0,0];
+<parameter name="a" value="0.5">
+<parameter name="b" value="0.1">
+<parameter name="phi" value="1">
+<parameter name="x0" value="2">
+<parameter name="y0" value="0">
+<variable name="t" min="-1" max="1">
+</definition>
+
+<definition name="rhamphoid cusp" type="pcurve">
+// A curve whose projection can give a rhamphoid cusp
+[x^2,a x^4 + b x^5,x];
+<parameter name="a" value="1.0">
+<parameter name="b" value="0.5">
+<variable name="x" min="-1" max="1">
+</definition>
+
+<definition name="Helix" type="pcurve">
+[cos(2 pi t),sin(2 pi t),t];
+<parameter name="a" value="1.0">
+<parameter name="b" value="0.5">
+<variable name="t" min="-1" max="1">
+</definition>
+
