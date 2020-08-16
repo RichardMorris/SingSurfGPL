@@ -3,7 +3,8 @@ package org.singsurf.singsurf.definitions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.singsurf.singsurf.jepwrapper.Dimensions;
+import org.lsmp.djep.vectorJep.Dimensions;
+
 
 
 /** typesafe enum for var types */
@@ -18,8 +19,8 @@ public class DefType
 	Dimensions inputDims;
 	private DefType(String s) { 
 	    type = s; 
-	    inputDims = Dimensions.SCALER;
-	    outputDims = Dimensions.SCALER;
+	    inputDims = Dimensions.ONE;
+	    outputDims = Dimensions.ONE;
 	    knownTypes.add(this); 
 	}
 	/**
@@ -30,8 +31,8 @@ public class DefType
 	 */
 	public DefType(String s, int in,int out) {
 	    type = s; 
-	    inputDims = Dimensions.valueOfVecOrScaler(in);
-	    outputDims = Dimensions.valueOfVecOrScaler(out);
+	    inputDims = Dimensions.valueOf(in);
+	    outputDims = Dimensions.valueOf(out);
 	    knownTypes.add(this);
     }
     public static final DefType none  = new DefType("none");

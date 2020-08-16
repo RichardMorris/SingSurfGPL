@@ -45,7 +45,7 @@ public class EquationConverter {
 			names[i] = params.get(i).getName();
 			values[i] = params.get(i).getVal();
 		}
-		//top = jep.substitute(top, names, values);
+		top = jep.substitute(top, names, values);
 		RingI ring = new Reals();
 		ExtendedFreeGroup fg = new ExtendedFreeGroup(ring,variables[0]);
 		ExtendedFreeGroup fg2 = new ExtendedFreeGroup(fg,variables[1]);
@@ -84,7 +84,7 @@ public class EquationConverter {
 			names[i] = params.get(i).getName();
 			values[i] = params.get(i).getVal();
 		}
-		//top = jep.substitute(top, names, values);
+		top = jep.substitute(top, names, values);
 		RingI ring = new Reals();
 		ExtendedFreeGroup fg = new ExtendedFreeGroup(ring,variables[2]);
 		ExtendedFreeGroup fg2 = new ExtendedFreeGroup(fg,variables[1]);

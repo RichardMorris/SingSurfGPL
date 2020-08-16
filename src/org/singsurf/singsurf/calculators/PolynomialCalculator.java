@@ -14,7 +14,8 @@ public class PolynomialCalculator extends Calculator {
 	@Override
 	public void setParamValue(String name, double val) {
 		super.setParamValue(name, val);
-		mj.setVariable(name, val);
+		
+//		mj.setVariable(name, val);
 	}
 
 }

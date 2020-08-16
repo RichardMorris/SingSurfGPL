@@ -109,10 +109,10 @@ public class Calculator {
 		variableRefs = new int[def.getNumVars()];
 		jepVars = new MatrixVariableI[def.getNumVars()];
 		derivOrder = nderiv;
-//		CMul cmul = new CMul(); // JepFix
-//		CDiv cdiv = new CDiv(cmul);
-//		mj.addFunction("cmul",cmul);
-//		mj.addFunction("cdiv",cdiv);
+		CMul cmul = new CMul(); // JepFix
+		CDiv cdiv = new CDiv(cmul);
+		mj.addFunction("cmul",cmul);
+		mj.addFunction("cdiv",cdiv);
 //		mj.addFunction("min", new MinMax(true));
 //		mj.addFunction("max", new MinMax(false));
 		//		if(nderiv==1)
@@ -349,6 +349,7 @@ public class Calculator {
 			mrpe.setVarValue(paramRefs.get(name).intValue(),val);
 		definition.setParameterValue(name,val);
 	}
+	
 	public DefVariable getDefVariable(int i) {
 		return definition.getVar(i).duplicate();
 	}
@@ -435,11 +436,11 @@ public class Calculator {
 		List<MRpCommandList> derivs = new ArrayList<MRpCommandList>(derivComs);
 
 		List<MRpCommandList> allcom = new ArrayList<MRpCommandList>(allComs); 
-		Evaluator ev= new Evaluator(inputDim, vr, topCom, allcom, derivs);
+		Evaluator ev= new Evaluator(inputDim, mrpe, vr, topCom, allcom, derivs);
 		return ev;
 	}
 
-	public void setDerivDepth(int derivDepthFromColour) {
+	public void setDerivDepth(int depth) {
 		// TODO Auto-generated method stub
 		
 	}

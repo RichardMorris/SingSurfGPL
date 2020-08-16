@@ -1,7 +1,7 @@
 package org.singsurf.singsurf.definitions;
 
+import org.lsmp.djep.vectorJep.Dimensions;
 import org.nfunk.jep.ParseException;
-import org.singsurf.singsurf.jepwrapper.Dimensions;
 
 /** A single variable. */
 public class DefVariable

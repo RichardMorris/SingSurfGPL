@@ -21,7 +21,7 @@ public class Evaluator {
 
 	private int inputDim;
 	/** The mrpe instance */
-//	MRpEval mrpe = null;
+	MRpEval mrpe = null;
 	/** mrpe reference numbers for each DefVariable, indexed by posn in definition */
 	int variableRefs[];
 	private MRpCommandList topCom;
@@ -51,11 +51,11 @@ public class Evaluator {
 	}
 	*/
 
-	public Evaluator(int inputDim, int[] variableRefs, MRpCommandList topCom,
+	public Evaluator(int inputDim, MRpEval mrpe, int[] variableRefs, MRpCommandList topCom,
 			List<MRpCommandList> allComs, List<MRpCommandList> derivComs) {
 		super();
 		this.inputDim = inputDim;
-//		this.mrpe = mrpe;
+		this.mrpe = mrpe;
 		this.variableRefs = variableRefs;
 		this.topCom = topCom;
 		this.allComs = allComs;
@@ -69,28 +69,27 @@ public class Evaluator {
 	{
 		double v[];
 		try {
-//			for(int i=0;i<inputDim;++i) {
-//				if(variableRefs[i] >=0 )
-////					mrpe.setVarValue(variableRefs[i],in[i]);
-//			}
+			for(int i=0;i<inputDim;++i) {
+				if(variableRefs[i] >=0 )
+					mrpe.setVarValue(variableRefs[i],in[i]);
+			}
 
-			for(MRpCommandList com:allComs);
-//				mrpe.evaluate(com);
+			for(MRpCommandList com:allComs)
+				mrpe.evaluate(com);
 
-//			MRpRes res = mrpe.evaluate(topCom);
-//			v = (double []) res.toArray();
+			MRpRes res = mrpe.evaluate(topCom);
+			v = (double []) res.toArray();
 		} catch (Exception e) {
 			throw new EvaluationException(e);
 		}
-		return null;//v;
+		return v;
 	}
 
 	/** Evaluates a first derivative. */
 	public double[] evalDerivative(int i)
 	{
-//		MRpRes res = mrpe.evaluate(derivComs.get(i));
-//		return (double []) res.toArray();
-		return null;
+		MRpRes res = mrpe.evaluate(derivComs.get(i));
+		return (double []) res.toArray();
 	}
 
 }

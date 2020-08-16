@@ -12,10 +12,7 @@ import java.awt.event.ItemEvent;
 import java.util.Collections;
 import java.util.List;
 
-import jv.geom.PgPolygonSet;
-import jv.object.PsDebug;
-import jv.project.PgGeometryIf;
-
+import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.LmsPolygonSetMaterial;
 import org.singsurf.singsurf.PaSingSurf;
@@ -30,8 +27,11 @@ import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
-import org.singsurf.singsurf.jep.EquationPolynomialConverter;
-import org.singsurf.singsurf.jepwrapper.JepException;
+import org.singsurf.singsurf.jep.EquationConverter;
+
+import jv.geom.PgPolygonSet;
+import jv.object.PsDebug;
+import jv.project.PgGeometryIf;
 
 /**
  * @author Rich Morris Created on 30-Mar-2005
@@ -227,15 +227,15 @@ public class ACurve extends AbstractClient {
 
 	PgGeometryIf resultGeom = null;
 
-	EquationPolynomialConverter ec = new EquationPolynomialConverter(calc.getJep(), calc.getField());
+	EquationConverter ec = new EquationConverter(calc.getJep());
 	try {
-	    double[][] coeffs = ec.convert2D(calc.getPreprocessedEqns(), new String[] { localY.getName(), localX.getName() },
+	    double[][] coeffs = ec.convert2D(calc.getRawEqns(), new String[] { localY.getName(), localX.getName() },
 		    calc.getParams());
 
 	    resultGeom = plotter.calculate(coeffs, localX.getMin(), localX.getMax(), localY.getMin(), localY.getMax());
 	} catch (AsurfException e) {
 	    e.printStackTrace();
-	} catch (JepException e) {
+	} catch (ParseException e) {
 	    PsDebug.error(e.getMessage());
 	}
 	if (resultGeom == null) {

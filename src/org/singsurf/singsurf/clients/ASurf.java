@@ -48,7 +48,6 @@ import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.jep.EquationConverter;
-import org.singsurf.singsurf.jep.EquationPolynomialConverter;
 import org.singsurf.singsurf.operators.SimpleClip;
 
 import org.singsurf.singsurf.jepwrapper.EvaluationException;

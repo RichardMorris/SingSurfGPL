@@ -1,40 +1,29 @@
 package org.singsurf.singsurf.jep;
 
-import com.singularsys.extensions.djep.DiffRulesI;
-import com.singularsys.extensions.matrix.Dimensions;
-import com.singularsys.extensions.matrix.MatrixFactoryI;
-import com.singularsys.extensions.matrix.MatrixFunctionI;
-import com.singularsys.extensions.matrix.VectorI;
-import com.singularsys.extensions.xjep.XJep;
+
+import org.lsmp.djep.djep.DiffRulesI;
+import org.lsmp.djep.vectorJep.Dimensions;
+import org.lsmp.djep.vectorJep.function.BinaryOperatorI;
+import org.lsmp.djep.xjep.NodeFactory;
+import org.lsmp.djep.xjep.XJep;
+import org.nfunk.jep.OperatorSet;
+import org.nfunk.jep.function.PostfixMathCommand;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
-import com.singularsys.jep.Jep;
-import com.singularsys.jep.JepComponent;
-import com.singularsys.jep.JepException;
-import com.singularsys.jep.NodeFactory;
-import com.singularsys.jep.OperatorTableI;
-import com.singularsys.jep.ParseException;
-import com.singularsys.jep.functions.UnaryFunction;
-import com.singularsys.jep.parser.ASTFunNode;
-import com.singularsys.jep.parser.Node;
 
 /**
  * Simulates re(z) function by assuming a 2D vector is a complex number.
  */
-public class CIm  extends UnaryFunction  implements DiffRulesI,MatrixFunctionI {
+public class CIm   extends PostfixMathCommand  implements DiffRulesI, BinaryOperatorI {
     private static final long serialVersionUID = 350L;
     NodeFactory nf;
-    OperatorTableI ot;
+    OperatorSet ot;
     XJep djep;
+        
     
-    MatrixFactoryI mfac;
-    
-    
-    
-    public CIm(XJep djep, MatrixFactoryI mfac) {
+    public CIm(XJep djep) {
         this.djep = djep;
         nf = djep.getNodeFactory();
-        ot = djep.getOperatorTable();
-        this.mfac = mfac;
+        ot = djep.getOperatorSet();
     }
 
     

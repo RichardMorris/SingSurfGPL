@@ -1,22 +1,12 @@
 package org.singsurf.singsurf.jep;
 
-import com.singularsys.extensions.djep.DiffRulesI;
-import com.singularsys.extensions.matrix.Dimensions;
-import com.singularsys.extensions.matrix.MatrixFactoryI;
-import com.singularsys.extensions.matrix.MatrixFunctionI;
-import com.singularsys.extensions.xjep.XJep;
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
-import com.singularsys.jep.Jep;
-import com.singularsys.jep.JepComponent;
-import com.singularsys.jep.JepException;
-import com.singularsys.jep.NodeFactory;
-import com.singularsys.jep.OperatorTableI;
-import com.singularsys.jep.ParseException;
-import com.singularsys.jep.functions.UnaryFunction;
-import com.singularsys.jep.parser.ASTFunNode;
-import com.singularsys.jep.parser.Node;
 
-public class CExp extends UnaryFunction implements MatrixFunctionI, DiffRulesI {
+import org.lsmp.djep.djep.DiffRulesI;
+import org.lsmp.djep.vectorJep.function.BinaryOperatorI;
+import org.nfunk.jep.function.PostfixMathCommand;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
+
+public class CExp  extends PostfixMathCommand  implements DiffRulesI, BinaryOperatorI {
 	private static final long serialVersionUID = 1L;
 
     MatrixFactoryI mfac;
