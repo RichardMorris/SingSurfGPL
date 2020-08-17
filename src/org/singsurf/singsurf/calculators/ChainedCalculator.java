@@ -15,6 +15,8 @@ import org.lsmp.djep.matrixJep.MatrixVariableI;
 import org.lsmp.djep.mrpe.MRpCommandList;
 import org.lsmp.djep.mrpe.MRpEval;
 import org.lsmp.djep.mrpe.MRpRes;
+import org.lsmp.djep.vectorJep.Dimensions;
+import org.lsmp.djep.xjep.XVariable;
 import org.nfunk.jep.ParseException;
 import org.nfunk.jep.Variable;
 import org.singsurf.singsurf.definitions.DefType;
@@ -22,6 +24,7 @@ import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.jep.ExternalPartialDerivative;
 import org.singsurf.singsurf.jep.ExternalVariable;
+import org.singsurf.singsurf.jepwrapper.DimensionVisitor;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 /**
@@ -34,6 +37,7 @@ public class ChainedCalculator extends Calculator {
 	DefVariable dependentVariable=null;
 	ExternalVariable jepVar=null;
 	int jepVarRef;
+	List<Integer> normVarRefs =null;
 
 	public ChainedCalculator(Definition def, int nderiv) {
 		super(def, nderiv);
@@ -48,6 +52,7 @@ public class ChainedCalculator extends Calculator {
 		mrpe = new MRpEval(mj);
 	}
 
+	
 	List<Integer> derivMrpeRefs=null;
 	@Override
 	public void build() {
@@ -77,6 +82,18 @@ public class ChainedCalculator extends Calculator {
 		super.build();
 		if(!good) return;
 		try {
+			normVarRefs = new ArrayList<>();
+	           List<DefVariable> normalVars = this.definition
+	                    .getVariablesByType(DefType.none);
+	           for(DefVariable inputVars:normalVars) {
+		            XVariable normVar1 = (XVariable) mj.getVar(inputVars.getName());
+//JEPFIX            normVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.ONE);	
+		            normVarRefs.add(mrpe.getVarRef(normVar1));
+	           }
+
+			
+			
+			
 			jepVarRef = mrpe.getVarRef((MatrixVariableI)jepVar);
 			derivMrpeRefs = new ArrayList<Integer>();
 			int dnum=0;
@@ -147,31 +164,25 @@ public class ChainedCalculator extends Calculator {
 		}
 		
 	}
-
-    @Override
-    public double[] evalTop(double[] in) throws EvaluationException {
-        double[] ingrRes = ingredient.evalTop(in);
-        try {
-            mrpe.setVarValue(jepVarRef, ingrRes);
-            for (int i = 0; i < this.derivMrpeRefs.size(); ++i) {
-                double[] derivRes = ingredient.evalDerivative(this.derivTrans
-                        .get(i));
-                mrpe.setVarValue(this.derivMrpeRefs.get(i), derivRes);
-            }
-
-            for (MRpCommandList com : allComs)
-                mrpe.evaluate(com);
-
-            MRpRes res = mrpe.evaluate(topCom);
-            double v[] = (double[]) res.toArray();
-            return v;
-        } catch (Exception e) {
-            throw new EvaluationException(e);
-        }
-
-    }
 	
 	public boolean goodIngredient() {
 		return super.isGood() && this.ingredient != null && this.ingredient.isGood();
 	}
+
+	@Override
+	public Evaluator createEvaluator() {
+		List<Integer> drefs = new ArrayList<>();
+		derivMrpeRefs.forEach(ref -> drefs.add(ref));
+		List<Integer> nvr = new ArrayList<>();
+		normVarRefs.forEach(ref -> nvr.add(ref));
+		
+		
+		List<Integer> dt = new ArrayList<Integer>(derivTrans);
+		return new ChainedEvaluator(
+				super.createEvaluator(),
+				ingredient.createEvaluator(), jepVarRef, nvr, drefs, dt);
+	}
+	
+	
+	
 }

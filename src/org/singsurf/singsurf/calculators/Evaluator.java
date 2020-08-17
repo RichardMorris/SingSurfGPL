@@ -24,9 +24,9 @@ public class Evaluator {
 	MRpEval mrpe = null;
 	/** mrpe reference numbers for each DefVariable, indexed by posn in definition */
 	int variableRefs[];
-	private MRpCommandList topCom;
-	private List<MRpCommandList> allComs;
-	private List<MRpCommandList> derivComs;
+	protected MRpCommandList topCom;
+	protected List<MRpCommandList> allComs;
+	protected List<MRpCommandList> derivComs;
 	
 	/* JepFix
 	double[] resultAsVector(MrpRes res) throws EvaluationException {
@@ -62,6 +62,16 @@ public class Evaluator {
 		this.derivComs = derivComs;
 	}
 
+	public Evaluator(Evaluator root) {
+		this.inputDim = root.inputDim;
+		this.mrpe = root.mrpe;
+		this.variableRefs = root.variableRefs;
+		this.topCom = root.topCom;
+		this.derivComs = root.derivComs;
+		this.allComs = root.allComs;		
+	}
+	
+	
 	/** Evaluate the top equation 
 	 * @throws EvaluationException
 	 **/

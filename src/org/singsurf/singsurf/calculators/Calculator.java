@@ -401,7 +401,7 @@ public class Calculator {
 	public boolean isGood() {return good;}
 	public String getMsg() { return msg; }
 	public Definition getDefinition() {
-		return definition.duplicate();
+		return definition;
 	}
 
 	/**
