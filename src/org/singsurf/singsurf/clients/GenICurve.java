@@ -314,7 +314,7 @@ public class GenICurve extends ICurve implements GeneralisedOperator {
 		if(this.cbProject.getState()) {
 			final Calculator inCalc = this.getIngredient().getCalculator();
 			Evaluator eval = inCalc.createEvaluator();
-		    SimpleCalcMap projectionMap   = new SimpleCalcMap(eval,inCalc.derivDepth>0);
+		    SimpleCalcMap projectionMap   = new SimpleCalcMap(eval,inCalc.getDerivDepth()>0);
 
 		    PgGeometryIf res;
 			try {

@@ -181,7 +181,7 @@ public class GeneralizedIntersection extends Intersection implements Generalised
 	
 	if(this.cbProject.getState()) {
 		   /** The operator which performs the mapping */
-	    SimpleCalcMap projectionMap   = new SimpleCalcMap(inCalc.createEvaluator(),inCalc.derivDepth>0);
+	    SimpleCalcMap projectionMap   = new SimpleCalcMap(inCalc.createEvaluator(),inCalc.getDerivDepth()>0);
 
 	    PgGeometryIf res = projectionMap.operate(result);
 	    result = res;

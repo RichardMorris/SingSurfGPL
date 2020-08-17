@@ -62,7 +62,7 @@ public class Calculator {
 
 	//MatrixNodeI firstDerivs[];
 	//MRpCommandList firstDerivComs[];
-	int derivOrder = 0;
+	int derivDepth = 0;
 
 	/** The raw list of equations */
 	Vector<Node> rawEqns;
@@ -108,7 +108,7 @@ public class Calculator {
 		mrpe = new MRpEval(mj);
 		variableRefs = new int[def.getNumVars()];
 		jepVars = new MatrixVariableI[def.getNumVars()];
-		derivOrder = nderiv;
+		derivDepth = nderiv;
 		CMul cmul = new CMul(); // JepFix
 		CDiv cdiv = new CDiv(cmul);
 		mj.addFunction("cmul",cmul);
@@ -282,14 +282,32 @@ public class Calculator {
 		definition.setParamNames(paramRefs.keySet().toArray());
 	}
 
-	void buildDerivatives() {
+	
+	void buildDerivatives() throws ParseException {
 		this.derivativesIndex.clear();
 		this.derivComs.clear();
 		this.derivivativeEquations.clear();
 
-		if(derivOrder == 1)
-			for(int i=0;i<getNumInputVariables();++i)
-				requireDerivative(new String[]{getInputVariableName(i)});
+		switch(getDerivDepth()) {
+		case 0:
+			break;
+		case 1:
+			for (int i = 0; i < getNumInputVariables(); ++i)
+				requireDerivative(new String[] { getNormalInputVariableName(i) });
+			break;
+		case 2:
+			for (int i = 0; i < getNumNormalInputVariables(); ++i)
+				requireDerivative(new String[] { getNormalInputVariableName(i) });
+			for (int i = 0; i < getNumNormalInputVariables(); ++i)
+				for (int j = i; j < getNumNormalInputVariables(); ++j)
+					requireDerivative(new String[] { 
+							getNormalInputVariableName(i), 
+							getNormalInputVariableName(j) });
+			break;
+		default:
+			throw new ParseException("Only first and second derivatives supported");
+		}
+
 	}
 
 	/** Evaluate the top equation 
@@ -359,6 +377,17 @@ public class Calculator {
 	public String getInputVariableName(int i) {
 		return definition.getVar(i).getName();
 	}
+	
+	public int getNumNormalInputVariables() {
+		List<DefVariable> normalVars = this.definition.getVariablesByType(DefType.none);
+		return normalVars.size();
+	}
+
+	public String getNormalInputVariableName(int i) {
+		List<DefVariable> normalVars = this.definition.getVariablesByType(DefType.none);
+		return normalVars.get(i).getName();
+	}
+
 	public int getNParam() {
 		return definition.getNumParams();
 	}
@@ -440,9 +469,11 @@ public class Calculator {
 		return ev;
 	}
 
-	public void setDerivDepth(int depth) {
-		// TODO Auto-generated method stub
-		
+	public void setDerivDepth(int dorder) {
+		if(dorder != getDerivDepth()) {
+			derivDepth = dorder;
+			good = false;
+		}
 	}
 
 	public Number getSimpleAssignment(String str) {
@@ -463,6 +494,10 @@ public class Calculator {
 			}
 		
 		return null;
+	}
+
+	public int getDerivDepth() {
+		return derivDepth;
 	}
 
 }

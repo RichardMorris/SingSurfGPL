@@ -188,7 +188,7 @@ public class Mapping extends AbstractOperatorClient {
 		}
 		PgGeometryIf input = p.getInput();
 
-		SimpleMap map = new SimpleCalcMap(calc.createEvaluator(),calc.derivDepth>0);
+		SimpleMap map = new SimpleCalcMap(calc.createEvaluator(),calc.getDerivDepth()>0);
 		map.setParamsFromTexture(cbParamsFromTexture.getState());
 
 		if (input == null) {
