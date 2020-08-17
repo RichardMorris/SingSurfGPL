@@ -2,33 +2,31 @@ package org.singsurf.singsurf.calculators;
 
 import java.util.List;
 
-import com.singularsys.extensions.fastmatrix.MrpCommandList;
-import com.singularsys.extensions.fastmatrix.MrpRes;
-import com.singularsys.extensions.fastmatrix.MrpVarRef;
+import org.lsmp.djep.mrpe.MRpCommandList;
+import org.lsmp.djep.mrpe.MRpRes;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 public class BiChainedEvaluator extends Evaluator {
-	
 
 	Evaluator ingredient1;
 	Evaluator ingredient2;
-	private MrpVarRef jepNormVarRef1;
-	private MrpVarRef jepNormVarRef2;
-	private MrpVarRef jepVarRef1;
-	private MrpVarRef jepVarRef2;
+	private int jepNormVarRef1 = -1;
+	private int jepNormVarRef2 = -1;
+	private int jepVarRef1;
+	private int jepVarRef2;
 	
-    List<MrpVarRef> derivMrpeRefs1 = null;
-    List<MrpVarRef> derivMrpeRefs2 = null;
+    List<Integer> derivMrpeRefs1 = null;
+    List<Integer> derivMrpeRefs2 = null;
     /** Translate number of derivative to reference in ingredient */
     List<Integer> derivTrans1;
     List<Integer> derivTrans2;
 
 	
 	public BiChainedEvaluator(Evaluator supercalc,Evaluator ingr1,Evaluator ingr2,
-			MrpVarRef jepVarRef1, MrpVarRef jepNormVarRef1,
-			List<MrpVarRef> derivMrpeRefs1, List<Integer> derivTrans1, 
-			MrpVarRef jepVarRef2, MrpVarRef jepNormVarRef2, 
-			List<MrpVarRef> derivMrpeRefs2, List<Integer> derivTrans2) {
+			int jepVarRef1, int jepNormVarRef1,
+			List<Integer> derivMrpeRefs1, List<Integer> derivTrans1, 
+			int jepVarRef2, int jepNormVarRef2, 
+			List<Integer> derivMrpeRefs2, List<Integer> derivTrans2) {
 		super(supercalc);
 		
 		this.ingredient1 = ingr1;
@@ -52,9 +50,9 @@ public class BiChainedEvaluator extends Evaluator {
         try {
             igr1in[0] = in[0];
             igr2in[0] = in[1];
-            if (jepNormVarRef1 != null)
+            if (jepNormVarRef1 != -1)
                 mrpe.setVarValue(jepNormVarRef1, in[0]);
-            if (jepNormVarRef2 != null)
+            if (jepNormVarRef2 != -1)
                 mrpe.setVarValue(jepNormVarRef2, in[1]);
             
             double[] ingrRes1 = ingredient1.evalTop(igr1in);
@@ -73,10 +71,10 @@ public class BiChainedEvaluator extends Evaluator {
                 mrpe.setVarValue(this.derivMrpeRefs2.get(i), derivRes);
             }
 
-            for (MrpCommandList com : allComs)
+            for (MRpCommandList com : allComs)
                 mrpe.evaluate(com);
 
-            MrpRes res = mrpe.evaluate(topCom);
+            MRpRes res = mrpe.evaluate(topCom);
             double v[] = resultAsVector(res);
             return v;
 

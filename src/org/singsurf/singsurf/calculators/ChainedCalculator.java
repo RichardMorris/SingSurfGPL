@@ -86,6 +86,7 @@ public class ChainedCalculator extends Calculator {
 	           List<DefVariable> normalVars = this.definition
 	                    .getVariablesByType(DefType.none);
 	           for(DefVariable inputVars:normalVars) {
+	        	   mj.addVariable(inputVars.getName(),0.0);
 		            XVariable normVar1 = (XVariable) mj.getVar(inputVars.getName());
 //JEPFIX            normVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.ONE);	
 		            normVarRefs.add(mrpe.getVarRef(normVar1));

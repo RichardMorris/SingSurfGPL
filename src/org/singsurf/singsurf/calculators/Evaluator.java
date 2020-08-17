@@ -7,7 +7,8 @@ import java.util.List;
 import org.lsmp.djep.mrpe.MRpCommandList;
 import org.lsmp.djep.mrpe.MRpEval;
 import org.lsmp.djep.mrpe.MRpRes;
-
+import org.lsmp.djep.vectorJep.Dimensions;
+import org.lsmp.djep.vectorJep.values.MatrixValueI;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 
@@ -28,16 +29,17 @@ public class Evaluator {
 	protected List<MRpCommandList> allComs;
 	protected List<MRpCommandList> derivComs;
 	
-	/* JepFix
-	double[] resultAsVector(MrpRes res) throws EvaluationException {
+	double[] resultAsVector(MRpRes res) throws EvaluationException {
 		double[] v;
-		Dimensions dim = res.getDimensions();
+		Dimensions dim = res.getDims();
 		if (dim.is0D()) {
 			v = new double[] { res.doubleValue() };
-		} else if (dim.is1D())
-			v = res.toArrayVec();
+		} else if (dim.is1D()) {
+			//MatrixValueI val =  res.toVecMat();
+			v = (double[]) res.toArray(); 
+		}
 		else if(dim.is2D()) {
-			double[][] mat = res.toArrayMat();
+			double[][] mat = (double[][]) res.toArray();
 			v = new double[dim.numEles()];
 			int pos=0;
 			for(int i=0;i<dim.getFirstDim();++i) {
@@ -49,7 +51,6 @@ public class Evaluator {
 			throw new EvaluationException("Result should either be a scaler or a vector");
 		return v;
 	}
-	*/
 
 	public Evaluator(int inputDim, MRpEval mrpe, int[] variableRefs, MRpCommandList topCom,
 			List<MRpCommandList> allComs, List<MRpCommandList> derivComs) {

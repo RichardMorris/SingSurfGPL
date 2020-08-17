@@ -29,8 +29,6 @@ import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Parameter;
-import org.singsurf.singsurf.jep.CDiv;
-import org.singsurf.singsurf.jep.CMul;
 import org.singsurf.singsurf.jep.ExternalPartialDerivative;
 import org.singsurf.singsurf.jep.ExternalVariable;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
@@ -109,10 +107,7 @@ public class Calculator {
 		variableRefs = new int[def.getNumVars()];
 		jepVars = new MatrixVariableI[def.getNumVars()];
 		derivDepth = nderiv;
-		CMul cmul = new CMul(); // JepFix
-		CDiv cdiv = new CDiv(cmul);
-		mj.addFunction("cmul",cmul);
-		mj.addFunction("cdiv",cdiv);
+
 //		mj.addFunction("min", new MinMax(true));
 //		mj.addFunction("max", new MinMax(false));
 		//		if(nderiv==1)

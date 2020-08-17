@@ -230,49 +230,6 @@ public class BiChainedCalculator extends Calculator {
 
     }
 
-    double igr1in[] = new double[1];
-    double igr2in[] = new double[2];
-
-    @Override
-    public double[] evalTop(double[] in) throws EvaluationException {
-        try {
-            igr1in[0] = in[0];
-            igr2in[0] = in[1];
-            if (jepNormVarRef1 >= 0)
-                mrpe.setVarValue(jepNormVarRef1, in[0]);
-            if (jepNormVarRef2 >= 0)
-                mrpe.setVarValue(jepNormVarRef2, in[1]);
-            double[] ingrRes1 = ingredient1.evalTop(igr1in);
-            mrpe.setVarValue(jepVarRef1, ingrRes1);
-            for (int i = 0; i < this.derivMrpeRefs1.size(); ++i) {
-                double[] derivRes = ingredient1.evalDerivative(this.derivTrans1
-                        .get(i));
-                mrpe.setVarValue(this.derivMrpeRefs1.get(i), derivRes);
-            }
-
-            double[] ingrRes2 = ingredient2.evalTop(igr2in);
-            mrpe.setVarValue(jepVarRef2, ingrRes2);
-            for (int i = 0; i < this.derivMrpeRefs2.size(); ++i) {
-                double[] derivRes = ingredient2.evalDerivative(this.derivTrans2
-                        .get(i));
-                mrpe.setVarValue(this.derivMrpeRefs2.get(i), derivRes);
-            }
-
-            for (MRpCommandList com : allComs)
-                mrpe.evaluate(com);
-
-            MRpRes res = mrpe.evaluate(topCom);
-            double v[] = (double[]) res.toArray();
-            return v;
-
-        } catch (EvaluationException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new EvaluationException(e);
-        }
-
-    }
-
     public boolean goodIngredients() {
         boolean g0 = super.isGood();
         boolean g1 = this.ingredient1 == null ? false : this.ingredient1
@@ -282,4 +239,24 @@ public class BiChainedCalculator extends Calculator {
         System.out.println("BiCh " + g0 + " " + g1 + " " + g2);
         return g0 && g1 && g2;
     }
+    
+	public Evaluator createEvaluator() {
+		List<Integer> drefs1 = new ArrayList<>();
+		derivMrpeRefs1.forEach(ref -> drefs1.add(ref));
+		List<Integer> dt1 = new ArrayList<Integer>(derivTrans1);
+
+		List<Integer> drefs2 = new ArrayList<>();
+		derivMrpeRefs2.forEach(ref -> drefs2.add(ref));
+		List<Integer> dt2 = new ArrayList<Integer>(derivTrans2);
+
+		return new BiChainedEvaluator(
+				super.createEvaluator(),
+				ingredient1.createEvaluator(), 
+				ingredient2.createEvaluator(),
+				jepVarRef1, jepNormVarRef1,
+				drefs1, dt1,
+				jepVarRef2, jepNormVarRef2,
+				drefs2, dt2);
+	}
+
 }

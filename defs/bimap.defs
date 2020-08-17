@@ -19,18 +19,6 @@ TT2 = diff(S2,y);
 <variable name="y">
 </definition>
 
-<definition name="SSmul" type="biMap" opType="pcurve">
-cdiv( cmul(S1,T2) - cmul(S2,T1) ,  T2 - T1 ); 
-T1 = TT1 / sqrt( TT1 . TT1);
-T2 = TT2 / sqrt( TT2 . TT2);
-TT1 = diff(S1,x); 
-TT2 = diff(S2,y);
-<variable name="S1" type="pcurve">
-<variable name="S2" type="pcurve">
-<variable name="x">
-<variable name="y">
-</definition>
-
 <definition name="ADSS" type="biMap" opType="pcurve">
 T + lam2 an2;
 lam2 =  (an1 ^^ (T-S)) . [0,0,1] / del;

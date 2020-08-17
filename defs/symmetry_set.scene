@@ -1,7 +1,12 @@
 <definitions>
+<definition name="Globals" type="globals">
+
+</definition>
+
 <definition name="Bean" type="pcurve" opType="none">
 [a * cos(2 pi t) + cos(pi t),
 b * sin(2 pi t+phi) +  sin(pi t),0]+[x0,y0,0];
+
 
 
 <variable name="t" min="-1.0" max="1.0" steps="60" type="none">
@@ -10,15 +15,34 @@ b * sin(2 pi t+phi) +  sin(pi t),0]+[x0,y0,0];
 <parameter name="phi" value="1.0">
 <parameter name="x0" value="2.0">
 <parameter name="y0" value="0.0">
+<option name="textureXmin" value="-1.0"/>
+<option name="textureXmax" value="1.0"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="true"/>
+<option name="colour" value="None"/>
 </definition>
+
 <definition name="Triangular domain" type="psurf" opType="none">
 h*[x,x,0]+(1-h)*[-1,1,0];
 h=2.0-2.0/(1.0+y)
 
 
+
 <variable name="x" min="-1.0" max="1.0" steps="40" type="none">
 <variable name="y" min="0.01" max="0.99" steps="40" type="none">
+<option name="textureXmin" value="-1.0"/>
+<option name="textureXmax" value="1.0"/>
+<option name="textureYmin" value="0.01"/>
+<option name="textureYmax" value="0.99"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="clipping" value="100.0"/>
 </definition>
+
 <definition name="preSS" type="biInt" opType="pcurve">
 // Simple formulation using Giblin-Basset formulation
 (S1 - S2) . (TT1 - TT2);
@@ -29,33 +53,57 @@ T2 = diff(S2,t);
 
 
 
+
 <variable name="S1" min="0.0" max="0.0" type="pcurve">
 <variable name="S2" min="0.0" max="0.0" type="pcurve">
 <variable name="s" min="0.0" max="0.0" type="none">
 <variable name="t" min="0.0" max="0.0" type="none">
+<option name="showVert" value="false"/>
+<option name="showCurve" value="true"/>
+<option name="colour" value="Unchanged"/>
+<option name="numItts" value="5"/>
 </definition>
+
 <definition name="SSmul" type="biMap" opType="pcurve">
-cdiv( cmul(S1,T2) - cmul(S2,T1) ,  T2 - T1 ); 
+(S1 * T2 - S2 *T1)  /(  T2 - T1 ); 
 T1 = TT1 / sqrt( TT1 . TT1);
 T2 = TT2 / sqrt( TT2 . TT2);
 TT1 = diff(S1,x); 
 TT2 = diff(S2,y);
 
 
+
 <variable name="S1" min="0.0" max="0.0" type="pcurve">
 <variable name="S2" min="0.0" max="0.0" type="pcurve">
 <variable name="x" min="0.0" max="0.0" type="none">
 <variable name="y" min="0.0" max="0.0" type="none">
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="true"/>
+<option name="showCurve" value="true"/>
+<option name="surfColour" value="Unchanged"/>
+<option name="curveColour" value="Black"/>
+<option name="clipping" value="100.0"/>
+<option name="continuity" value="100.0"/>
 </definition>
+
 </definitions>
 <dependancies>
 <projectComponents name="preSS">
-  <input name="Triangular domain" />
+  <input name="Triangular domain" >
+    <inputOpt name="showPoints" value="false" />
+    <inputOpt name="curveColours" value="Black" />
+    <inputOpt name="showCurves" value="true" />
+  </input>
   <ingredient name="Bean" />
   <ingredient name="Bean" />
 </projectComponents>
 <projectComponents name="SSmul">
-  <input name="preSS(Bean,Bean,Triangular domain)" />
+  <input name="preSS(Bean,Bean,Triangular domain)" >
+    <inputOpt name="showPoints" value="false" />
+    <inputOpt name="curveColours" value="Black" />
+    <inputOpt name="showCurves" value="true" />
+  </input>
   <ingredient name="Bean" />
   <ingredient name="Bean" />
 </projectComponents>
