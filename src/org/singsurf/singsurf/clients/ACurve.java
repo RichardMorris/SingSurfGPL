@@ -27,7 +27,7 @@ import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
-import org.singsurf.singsurf.jep.EquationConverter;
+import org.singsurf.singsurf.jep.EquationPolynomialConverter;
 
 import jv.geom.PgPolygonSet;
 import jv.object.PsDebug;
@@ -227,7 +227,7 @@ public class ACurve extends AbstractClient {
 
 	PgGeometryIf resultGeom = null;
 
-	EquationConverter ec = new EquationConverter(calc.getJep());
+	EquationPolynomialConverter ec = new EquationPolynomialConverter(calc.getJep());
 	try {
 	    double[][] coeffs = ec.convert2D(calc.getRawEqns(), new String[] { localY.getName(), localX.getName() },
 		    calc.getParams());

@@ -89,6 +89,7 @@ public class Calculator {
 	boolean good=false;
 	/** Error message on error */
 	protected String msg=null;
+	private ArrayList<Node> preprocessedEqns;
 
 	@SuppressWarnings("unused")
 	private Calculator() {}
@@ -152,11 +153,15 @@ public class Calculator {
 		while((n = mj.continueParsing())!=null)
 			v1.add(n);
 		rawEqns = new Vector<Node>();
+		preprocessedEqns = new ArrayList<>();
+
 		for(int i=v1.size()-1;i>=0;--i)
 		{
 			Node n1 = v1.elementAt(i);
 			//System.out.print("Node i: ");
 			mj.println(n1);
+			preprocessedEqns.add(n1);
+
 			Node n2 = mj.simplify(mj.preprocess(n1));
 			rawEqns.add(n2);
 		}
@@ -493,6 +498,10 @@ public class Calculator {
 
 	public int getDerivDepth() {
 		return derivDepth;
+	}
+
+	public List<Node> getPreprocessedEqns() {
+		return preprocessedEqns;
 	}
 
 }

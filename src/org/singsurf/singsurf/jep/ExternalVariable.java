@@ -21,6 +21,12 @@ public class ExternalVariable extends MatrixVariable {
 		this.setDimensions(Dimensions.valueOf(dim));
 	}
 
+	public ExternalVariable(Calculator calc, String name, Dimensions dims) {
+		super(name);
+		this.calc = calc;
+		this.setDimensions(dims);
+	}
+
 	@Override
 	public PartialDerivative createDerivative(String[] derivnames, Node eqn) {
 		return new ExternalPartialDerivative(this,derivnames);
@@ -28,13 +34,11 @@ public class ExternalVariable extends MatrixVariable {
 
 	@Override
 	protected PartialDerivative calculateDerivative(String[] derivnames, DJep jep) throws ParseException {
-		// TODO Auto-generated method stub
 		return createDerivative(derivnames, null);
 	}
 
 	@Override
 	public MatrixValueI getMValue() {
-		// TODO Auto-generated method stub
 		return super.getMValue();
 	}
 

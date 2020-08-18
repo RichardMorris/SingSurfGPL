@@ -4,13 +4,11 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.lsmp.djep.djep.DJep;
+import org.nfunk.jep.Node;
 import org.singsurf.singsurf.jep.DiffForm;
+import org.singsurf.singsurf.jepwrapper.JepException;
 
-import com.singularsys.extensions.djep.DJep;
-import com.singularsys.extensions.djep.DVariable;
-import com.singularsys.extensions.xjep.XAssign;
-import com.singularsys.jep.JepException;
-import com.singularsys.jep.parser.Node;
 
 public class DiferentailFormTest {
 	DJep jep;
@@ -19,8 +17,8 @@ public class DiferentailFormTest {
 		jep = new DJep();
 		jep.addStandardDiffRules();
 		jep.addFunction("Diff", new DiffForm());
-		jep.getOperatorTable().getAssign().setPFMC(new XAssign());
-		jep.reinitializeComponents();
+		jep.getOperatorSet().getAssign().setPFMC(new XAssign());
+//		jep.reinitializeComponents();
 	}
 
 
@@ -31,7 +29,7 @@ public class DiferentailFormTest {
 		Node n2 = jep.parse("dS = Diff(S,x,y)");
 		Node p2 = jep.preprocess(n2);
 		Node rhs2 = p2.jjtGetChild(1);
-		assertEquals(jep.getOperatorTable().getList(),rhs2.getOperator());
+		assertEquals(jep.getOperatorSet().getList(),rhs2.getOperator());
 		assertEquals(2,rhs2.jjtGetNumChildren());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x"),rhs2.jjtGetChild(0).getVar());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("y"),rhs2.jjtGetChild(1).getVar());
@@ -39,7 +37,7 @@ public class DiferentailFormTest {
 		Node n3 = jep.parse("ddS = Diff(dS,x,y)");
 		Node p3 = jep.preprocess(n3);
 		Node rhs3 = p3.jjtGetChild(1);
-		assertEquals(jep.getOperatorTable().getList(),rhs3.getOperator());
+		assertEquals(jep.getOperatorSet().getList(),rhs3.getOperator());
 		assertEquals(3,rhs3.jjtGetNumChildren());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x","x"),rhs3.jjtGetChild(0).getVar());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x","y"),rhs3.jjtGetChild(1).getVar());
@@ -48,7 +46,7 @@ public class DiferentailFormTest {
 		Node n4 = jep.parse("dddS = Diff(ddS,x,y)");
 		Node p4 = jep.preprocess(n4);
 		Node rhs4 = p4.jjtGetChild(1);
-		assertEquals(jep.getOperatorTable().getList(),rhs4.getOperator());
+		assertEquals(jep.getOperatorSet().getList(),rhs4.getOperator());
 		assertEquals(4,rhs4.jjtGetNumChildren());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x","x","x"),rhs4.jjtGetChild(0).getVar());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x","x","y"),rhs4.jjtGetChild(1).getVar());
@@ -63,7 +61,7 @@ public class DiferentailFormTest {
 		Node n2 = jep.parse("dS = Diff(S,x,y,z)");
 		Node p2 = jep.preprocess(n2);
 		Node rhs2 = p2.jjtGetChild(1);
-		assertEquals(jep.getOperatorTable().getList(),rhs2.getOperator());
+		assertEquals(jep.getOperatorSet().getList(),rhs2.getOperator());
 		assertEquals(3,rhs2.jjtGetNumChildren());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x"),rhs2.jjtGetChild(0).getVar());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("y"),rhs2.jjtGetChild(1).getVar());
@@ -72,7 +70,7 @@ public class DiferentailFormTest {
 		Node n3 = jep.parse("ddS = Diff(dS,x,y,z)");
 		Node p3 = jep.preprocess(n3);
 		Node rhs3 = p3.jjtGetChild(1);
-		assertEquals(jep.getOperatorTable().getList(),rhs3.getOperator());
+		assertEquals(jep.getOperatorSet().getList(),rhs3.getOperator());
 		assertEquals(6,rhs3.jjtGetNumChildren());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x","x"),rhs3.jjtGetChild(0).getVar());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x","y"),rhs3.jjtGetChild(1).getVar());
@@ -84,7 +82,7 @@ public class DiferentailFormTest {
 		Node n4 = jep.parse("dddS = Diff(ddS,x,y,z)");
 		Node p4 = jep.preprocess(n4);
 		Node rhs4 = p4.jjtGetChild(1);
-		assertEquals(jep.getOperatorTable().getList(),rhs4.getOperator());
+		assertEquals(jep.getOperatorSet().getList(),rhs4.getOperator());
 		assertEquals(10,rhs4.jjtGetNumChildren());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x","x","x"),rhs4.jjtGetChild(0).getVar());
 		assertEquals(((DVariable )jep.getVariable("S")).getDerivative("x","x","y"),rhs4.jjtGetChild(1).getVar());

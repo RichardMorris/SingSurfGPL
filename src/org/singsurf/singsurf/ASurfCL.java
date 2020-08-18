@@ -10,6 +10,11 @@ import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 import java.util.function.IntConsumer;
 
+import org.lsmp.djep.xjep.PrintVisitor;
+import org.nfunk.jep.ASTConstant;
+import org.nfunk.jep.ASTVarNode;
+import org.nfunk.jep.Node;
+import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.acurve.AsurfException;
 import org.singsurf.singsurf.asurf.BoxClevA;
 import org.singsurf.singsurf.asurf.BoxClevVrml;
@@ -20,12 +25,6 @@ import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.DefinitionReader;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.jep.EquationPolynomialConverter;
-
-import com.singularsys.jep.JepException;
-import com.singularsys.jep.PrintVisitor;
-import com.singularsys.jep.parser.ASTConstant;
-import com.singularsys.jep.parser.ASTVarNode;
-import com.singularsys.jep.parser.Node;
 
 public class ASurfCL {
 
@@ -70,11 +69,11 @@ public class ASurfCL {
 
 	PlotMode plotMode = PlotMode.JustSurface;
 
-	private void go(String outfilename) throws JepException, AsurfException {
+	private void go(String outfilename) throws ParseException, AsurfException {
 		calc = new PolynomialCalculator(def, 0);
-		calc.getJep().getOperatorTable().getSubtract().addAltSymbol("\u2212");
-		calc.getJep().getOperatorTable().getSubtract().addAltSymbol("\u2013");
-		calc.getJep().reinitializeComponents();
+//		calc.getJep().getOperatorTable().getSubtract().addAltSymbol("\u2212");
+//		calc.getJep().getOperatorTable().getSubtract().addAltSymbol("\u2013");
+//		calc.getJep().reinitializeComponents();
 		char c = calc.getDefinition().getEquation().charAt(2);
 		System.out.printf("Char %s %x %d%n",c,(int) c,(int) c);
 		calc.build();
@@ -85,8 +84,8 @@ public class ASurfCL {
 		PrintVisitor pv = calc.getJep().getPrintVisitor();
 		BoxClevA boxclev = new BoxClevVrml(PlotMode.JustSurface,new File(outfilename),def.toString());
 
-		EquationPolynomialConverter ec = new EquationPolynomialConverter(calc.getJep(), calc.getField());
-		double[][][] coeffs = ec.convert3D(calc.getPreprocessedEqns(),
+		EquationPolynomialConverter ec = new EquationPolynomialConverter(calc.getJep()); //, calc.getField());
+		double[][][] coeffs = ec.convert3D(calc.getRawEqns(),
 				new String[] { def.getVar(0).getName(),def.getVar(1).getName(),def.getVar(2).getName() },
 				calc.getParams());
 		if (coeffs.length == 1 && coeffs[0].length == 1 && coeffs[0][0].length == 1)

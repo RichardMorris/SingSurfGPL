@@ -16,6 +16,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
+import org.nfunk.jep.ASTVarNode;
+import org.nfunk.jep.Node;
+import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.Fractometer;
 import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.PaSingSurf;
@@ -40,9 +43,6 @@ import org.singsurf.singsurf.operators.SphereIntersectionClip;
 import org.singsurf.singsurf.operators.Split4D;
 
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
-import com.singularsys.jep.ParseException;
-import com.singularsys.jep.parser.ASTVarNode;
-import com.singularsys.jep.parser.Node;
 
 import jv.geom.PgElementSet;
 import jv.object.PsDebug;
@@ -527,7 +527,7 @@ public class P3 extends AbstractClient {
 			z0 = 0.95;
 			w0 = 0.90;
 			
-			EquationPolynomialConverter ec = new EquationPolynomialConverter(calc.getJep(), calc.getField());
+			EquationPolynomialConverter ec = new EquationPolynomialConverter(calc.getJep());
 			try {
 				final List<Parameter> paramsXYZ = new ArrayList<>(calc.getParams());
 				paramsXYZ.add(new Parameter(localW.getName(),w0));

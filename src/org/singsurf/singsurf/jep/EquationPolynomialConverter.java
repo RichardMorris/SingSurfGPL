@@ -23,13 +23,13 @@ import org.singsurf.singsurf.definitions.Parameter;
  * @author Richard Morris
  *
  */
-public class EquationConverter {
+public class EquationPolynomialConverter {
 	MatrixJep jep;
 	PolynomialVisitor pv;
 	/**
 	 * @param jep
 	 */
-	public EquationConverter(MatrixJep jep) {
+	public EquationPolynomialConverter(MatrixJep jep) {
 		this.jep = jep;
 		this.pv = new PolynomialVisitor(jep);
 	}
@@ -73,11 +73,11 @@ public class EquationConverter {
 		return res;
 	}
 
-	public double[][][] convert3D(Vector<Node> equations,String[] variables,List<Parameter> params)  throws ParseException {
+	public double[][][] convert3D(List<Node> equations,String[] variables,List<Parameter> params)  throws ParseException {
 
-		Node top = jep.deepCopy(equations.lastElement());
+		Node top = jep.deepCopy(equations.get(equations.size()-1));
 		for(int i=equations.size()-2;i>=0;--i)
-			top = jep.substitute(top,equations.elementAt(i));
+			top = jep.substitute(top,equations.get(i));
 		String[] names = new String[params.size()];
 		Double[] values = new Double[params.size()];
 		for(int i=0;i<params.size();++i) {

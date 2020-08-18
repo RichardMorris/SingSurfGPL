@@ -47,7 +47,7 @@ import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
-import org.singsurf.singsurf.jep.EquationConverter;
+import org.singsurf.singsurf.jep.EquationPolynomialConverter;
 import org.singsurf.singsurf.operators.SimpleClip;
 
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
@@ -451,7 +451,7 @@ public class ASurf extends AbstractClient {
 			PgPolygonSet curveRes = new PgPolygonSet(3);
 			PgPointSet pointsRes = new PgPointSet(3);
 			
-			EquationConverter ec = new EquationConverter(calc.getJep());
+			EquationPolynomialConverter ec = new EquationPolynomialConverter(calc.getJep());
 			try {
 				double[][][] coeffs = ec.convert3D(calc.getRawEqns(),
 						new String[] { localX.getName(), localY.getName(), localZ.getName() }, calc.getParams());
