@@ -184,7 +184,7 @@ public class Pcurve extends AbstractClient {
 				}
 				// System.out.println("i "+i+" j "+j+" index "+index);
 				outCurve.setVertex(index, topRes[0], topRes[1], topRes[2]);
-				outCurve.setVertexTexture(index, new PdVector(((double)i)/localX.getSteps(),0 ));
+				outCurve.setVertexTexture(index, new PdVector(((double)i)/(localX.getSteps()-1),0 ));
 				++index;
 			}
 			getDefinition().setOption("textureXmin",localX.getMin());

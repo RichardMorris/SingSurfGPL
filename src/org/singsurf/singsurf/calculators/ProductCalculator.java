@@ -1,39 +1,38 @@
 package org.singsurf.singsurf.calculators;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
+import org.lsmp.djep.djep.DSymbolTable;
+import org.lsmp.djep.djep.PartialDerivative;
+import org.lsmp.djep.matrixJep.MatrixJep;
+import org.lsmp.djep.matrixJep.MatrixVariableI;
+import org.lsmp.djep.vectorJep.Dimensions;
+import org.lsmp.djep.xjep.XVariable;
+import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.jep.ExternalPartialDerivative;
 import org.singsurf.singsurf.jep.ExternalVariable;
 
-import com.singularsys.extensions.djep.DVariableFactory;
-import com.singularsys.extensions.djep.PartialDerivative;
-import com.singularsys.extensions.fastmatrix.MrpVarRef;
-import com.singularsys.extensions.matrix.DimensionVisitor;
-import com.singularsys.extensions.matrix.Dimensions;
-import com.singularsys.extensions.xjep.XVariable;
-import com.singularsys.jep.ParseException;
-import com.singularsys.jep.Variable;
-
 public class ProductCalculator extends Calculator {
 	Calculator ingredient;
 	ExternalVariable ingrOutputVar = null;
-	MrpVarRef ingrOutputVarRef;
-	List<MrpVarRef> ingrInputVarRefs =null;
-	List<MrpVarRef> localVarRefs=null;
+	int ingrOutputVarRef;
+	List<Integer> ingrInputVarRefs =null;
+	List<Integer> localVarRefs=null;
 
-	List<MrpVarRef> derivMrpeRefs = null;
+	List<Integer> derivMrpeRefs = null;
 	/** Translate number of derivative to reference in ingredient */
 	List<Integer> derivTrans;
+	private SpecialVariableFactory varFac;
 
 	public ProductCalculator(Definition def, int nderiv) {
 		super(def, nderiv);
-		mj.setComponent(new ProductVariableFactory());
-		mj.reinitializeComponents();
-
+		varFac = new SpecialVariableFactory();
+		mj = (MatrixJep) mj.newInstance(new DSymbolTable(varFac));
 	}
 
 	@Override
@@ -52,6 +51,7 @@ public class ProductCalculator extends Calculator {
 		}
 		DefVariable dependentVariable = var.get(0);
 		ingrOutputVar = new ExternalVariable(this, dependentVariable.getName(), type.getOutputDimensions());
+		varFac.set(ingrOutputVar);
 		super.build();
 		if (!good)
 			return;
@@ -62,7 +62,7 @@ public class ProductCalculator extends Calculator {
 					.getVariablesByType(DefType.ingrVar);
 			for(DefVariable inputVars:ingrInputVars) {
 				XVariable normVar1 = (XVariable) mj.addVariable(inputVars.getName());
-				normVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.SCALER);	
+//				normVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.ONE);	
 				ingrInputVarRefs.add(mrpe.getVarRef(normVar1));
 			}
 
@@ -71,18 +71,20 @@ public class ProductCalculator extends Calculator {
 					definition.getVariablesByType(DefType.localVar);
 			for(DefVariable inputVars:localVars) {
 				XVariable localVar1 = (XVariable) mj.addVariable(inputVars.getName());
-				localVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.SCALER);	
+//				localVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.SCALER);	
 				localVarRefs.add(mrpe.getVarRef(localVar1));
 			}
 
 
 			derivTrans = new ArrayList<>();
-			ingrOutputVarRef = mrpe.getVarRef(ingrOutputVar); // ,type.getDimensions());
+			ingrOutputVarRef = mrpe.getVarRef((MatrixVariableI)ingrOutputVar); // ,type.getDimensions());
 			derivMrpeRefs = new ArrayList<>();
 			int dnum = 0;
-			for (PartialDerivative pd : ingrOutputVar.allDerivatives()) {
-				ExternalPartialDerivative diff = (ExternalPartialDerivative) pd;
-				MrpVarRef ref = mrpe.getVarRef(diff);
+			
+			 Enumeration allDerivatives = ingrOutputVar.allDerivatives();
+			while (allDerivatives.hasMoreElements()) {
+				ExternalPartialDerivative diff = (ExternalPartialDerivative) allDerivatives.nextElement();
+				int ref = mrpe.getVarRef((MatrixVariableI)diff);
 				derivMrpeRefs.add(dnum, ref);
 				++dnum;
 			}
@@ -93,7 +95,9 @@ public class ProductCalculator extends Calculator {
 				return;
 			}
 			dnum = 0;
-			for (PartialDerivative diff : ingrOutputVar.allDerivatives()) {
+			allDerivatives = ingrOutputVar.allDerivatives();
+			while (allDerivatives.hasMoreElements()) {
+				PartialDerivative diff = (PartialDerivative) allDerivatives.nextElement();
 				String dnames[] = diff.getDnames();
 				String ingrNames[] = new String[dnames.length];
 				/** translate names used here to those used by the ingredient */
@@ -129,7 +133,7 @@ public class ProductCalculator extends Calculator {
 		return this.ingredient != null && this.ingredient.isGood();
 	}
 
-
+/*
 	private class ProductVariableFactory extends DVariableFactory {
 		private static final long serialVersionUID = 350L;
 
@@ -148,14 +152,15 @@ public class ProductCalculator extends Calculator {
 		}
 
 	}
-
+*/
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(super.toString());
 //		sb.append("DefVariable\n");
 //		sb.append(dependentVariable);
 		sb.append("LocalVariable\n");
-		for(MrpVarRef ref:localVarRefs) {
+		for(Integer ref:localVarRefs) {
 			sb.append(ref.toString());
 			sb.append("\n");
 		}
@@ -164,7 +169,7 @@ public class ProductCalculator extends Calculator {
 		sb.append("\nMVarRef\n");
 		sb.append(ingrOutputVarRef);
 		sb.append("\nderivMrpeRefs\n");
-		for(MrpVarRef ref:derivMrpeRefs) {
+		for(Integer ref:derivMrpeRefs) {
 			sb.append(ref.toString());
 			sb.append("\n");
 		}
@@ -182,18 +187,18 @@ public class ProductCalculator extends Calculator {
 	}
 
 	public Evaluator createEvaluator() {
-		List<MrpVarRef> drefs = new ArrayList<>();
-		derivMrpeRefs.forEach(ref -> drefs.add(ref.duplicate()));
-		List<MrpVarRef> iivr = new ArrayList<>();
-		ingrInputVarRefs.forEach(ref -> iivr.add(ref.duplicate()));
-		List<MrpVarRef> lvr = new ArrayList<>();
-		localVarRefs.forEach(ref -> lvr.add(ref.duplicate()));
+		List<Integer> drefs = new ArrayList<>();
+		derivMrpeRefs.forEach(ref -> drefs.add(ref));
+		List<Integer> iivr = new ArrayList<>();
+		ingrInputVarRefs.forEach(ref -> iivr.add(ref));
+		List<Integer> lvr = new ArrayList<>();
+		localVarRefs.forEach(ref -> lvr.add(ref));
 		
 		
 		List<Integer> dt = new ArrayList<Integer>(derivTrans);
 		return new ProductEvaluator(
 				super.createEvaluator(),
-				ingredient.createEvaluator(), ingrOutputVarRef.duplicate(), iivr, drefs, dt,lvr);
+				ingredient.createEvaluator(), ingrOutputVarRef, iivr, drefs, dt,lvr);
 	}
 
 }

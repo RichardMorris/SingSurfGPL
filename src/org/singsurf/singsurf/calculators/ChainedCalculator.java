@@ -10,7 +10,6 @@ import java.util.List;
 import org.lsmp.djep.djep.DSymbolTable;
 import org.lsmp.djep.matrixJep.MatrixJep;
 import org.lsmp.djep.matrixJep.MatrixPartialDerivative;
-import org.lsmp.djep.matrixJep.MatrixVariableFactory;
 import org.lsmp.djep.matrixJep.MatrixVariableI;
 import org.lsmp.djep.mrpe.MRpCommandList;
 import org.lsmp.djep.mrpe.MRpEval;
@@ -18,7 +17,6 @@ import org.lsmp.djep.mrpe.MRpRes;
 import org.lsmp.djep.vectorJep.Dimensions;
 import org.lsmp.djep.xjep.XVariable;
 import org.nfunk.jep.ParseException;
-import org.nfunk.jep.Variable;
 import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
@@ -38,10 +36,14 @@ public class ChainedCalculator extends Calculator {
 	ExternalVariable jepVar=null;
 	int jepVarRef;
 	List<Integer> normVarRefs =null;
+	/** Translate number of derivative to reference in ingredient */
+	List<Integer> derivTrans;
+	private SpecialVariableFactory varFac;
 
 	public ChainedCalculator(Definition def, int nderiv) {
 		super(def, nderiv);
-		mj = (MatrixJep) mj.newInstance(new DSymbolTable(new ChainedVariableFactory()));
+		varFac = new SpecialVariableFactory();
+		mj = (MatrixJep) mj.newInstance(new DSymbolTable(varFac));
 		mj.setAllowAssignment(true);
 		mj.setAllowUndeclared(true);
 		mj.setImplicitMul(true);
@@ -78,7 +80,7 @@ public class ChainedCalculator extends Calculator {
             this.good = false;
             return;
 		}
-		
+		varFac.set(jepVar);
 		super.build();
 		if(!good) return;
 		try {
@@ -139,33 +141,12 @@ public class ChainedCalculator extends Calculator {
 	public Calculator getIngredient() {
 		return ingredient;
 	}
-	/** Translate number of derivative to reference in ingredient */
-	List<Integer> derivTrans;
+
 	public void setIngredient(Calculator ingredient) {
 		this.ingredient = ingredient;
 		build();
 	}
 
-	private class ChainedVariableFactory extends MatrixVariableFactory {
-
-		@Override
-		public Variable createVariable(String name, Object value) {
-			if(dependentVariable!=null && name.equals(dependentVariable.getName()))
-				return jepVar;
-			else
-				return super.createVariable(name, value);
-		}
-
-		@Override
-		public Variable createVariable(String name) {
-			if(dependentVariable!=null && name.equals(dependentVariable.getName()))
-				return jepVar;
-			else
-				return super.createVariable(name);
-		}
-		
-	}
-	
 	public boolean goodIngredient() {
 		return super.isGood() && this.ingredient != null && this.ingredient.isGood();
 	}

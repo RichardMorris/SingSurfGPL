@@ -294,7 +294,7 @@ public class Extrude extends AbstractOperatorClient {
 			if (input instanceof PgElementSet)
 				output = store.aquireSurface(getPreferredOutputName(name), this);
 			else if (input instanceof PgPolygonSet)
-				output = store.aquireCurve(getPreferredOutputName(name), this);
+				output = store.aquireSurface(getPreferredOutputName(name), this);
 			else if (input instanceof PgPointSet)
 				output = store.aquireCurve(getPreferredOutputName(name), this);
 			

@@ -1,7 +1,7 @@
 # SingSurf
 A mathematical curve and surface visualiser for singular surface and objects from Singularity Theory.
 
-The program can calculate many of the objects found in Singularity theory:
+The program can calculate many of the objects found in Singularity theory and geometry:
 
 * Algebraic curves defined by a single polynomial equation in two variables. e.g. a circle 
 

@@ -2,24 +2,23 @@ package org.singsurf.singsurf.calculators;
 
 import java.util.List;
 
-import com.singularsys.extensions.fastmatrix.MrpCommandList;
-import com.singularsys.extensions.fastmatrix.MrpRes;
-import com.singularsys.extensions.fastmatrix.MrpVarRef;
+import org.lsmp.djep.mrpe.MRpCommandList;
+import org.lsmp.djep.mrpe.MRpRes;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 public class ProductEvaluator extends Evaluator {
 
 	Evaluator ingrEvaluator;
-	MrpVarRef ingrOutputVarRef;
-	List<MrpVarRef> ingrInputVarRefs =null;
-	List<MrpVarRef> localVarRefs =null;
-	List<MrpVarRef> derivMrpeRefs = null;
+	int ingrOutputVarRef;
+	List<Integer> ingrInputVarRefs =null;
+	List<Integer> localVarRefs =null;
+	List<Integer> derivMrpeRefs = null;
 	/** Translate number of derivative to reference in ingredient */
 	List<Integer> derivTrans;
 
 	public ProductEvaluator(Evaluator supercalc, 
-			Evaluator ingrCE, MrpVarRef jvr,List<MrpVarRef> nvr,
-			List<MrpVarRef> dmvr,List<Integer> dt,List<MrpVarRef> lvr) {
+			Evaluator ingrCE, int jvr,List<Integer> nvr,
+			List<Integer> dmvr,List<Integer> dt,List<Integer> lvr) {
 		super(supercalc);
 		ingrEvaluator = ingrCE;
 		ingrOutputVarRef = jvr;
@@ -54,11 +53,11 @@ public class ProductEvaluator extends Evaluator {
 				mrpe.setVarValue(this.derivMrpeRefs.get(i), derivRes);
 			}
 
-			for (MrpCommandList com : allComs) {
+			for (MRpCommandList com : allComs) {
 				mrpe.evaluate(com);
 			}
 
-			MrpRes res = mrpe.evaluate(topCom);
+			MRpRes res = mrpe.evaluate(topCom);
 			double v[] = resultAsVector(res);
 			return v;
 		} catch (Exception e) {

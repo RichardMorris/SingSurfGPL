@@ -41,37 +41,37 @@ public class DefType
 
     public static final DefType psurf = new DefType("psurf",2,3);
 	public static final DefType pcurve = new DefType("pcurve",1,3);
+	
 	public static final DefType asurf = new DefType("asurf",3,1);
 	public static final DefType acurve = new DefType("acurve",2,1);
 	//public static final DefType acurve3 = new DefType("acurve3",2);
 	public static final DefType intersect = new DefType("intersect",3,1);
 	public static final DefType genInt = new DefType("genInt",3,1);
-	//public static final DefType impsurf = new DefType("impsurf");
+
+	public static final DefType clip = new DefType("clip",3,1);
+	public static final DefType genClip = new DefType("genClip",3,1);
+
+	public static final DefType mapping = new DefType("mapping",3,3);
+	public static final DefType genMap = new DefType("genMap",3,3);
+	
+	public static final DefType biMap = new DefType("biMap",3,3);
+	public static final DefType biInt = new DefType("biInt",2,1);
+
 	public static final DefType vfield = new DefType("vfield",3,3);
 	public static final DefType genVfield = new DefType("genVfield",3,3);
 
 	public static final DefType icurve = new DefType("icurve",3,3);
 	public static final DefType genicurve = new DefType("genICurve",3,3);
 
-	public static final DefType mapping = new DefType("mapping",3,3);
-	public static final DefType genMap = new DefType("genMap",3,3);
+	public static final DefType ridgeInt = new DefType("ridgeInt",3,1);
 
-	public static final DefType clip = new DefType("clip",3,1);
-	public static final DefType genClip = new DefType("genClip",3,1);
-	//public static final DefType psurf_icurve = new DefType("psurf vfield");
-	//public static final DefType pcurve_pcurve = new DefType("pcurve pcurve");
-	//public static final DefType sceneGraph = new DefType("scene graph");
-	public static final DefType biMap = new DefType("biMap",3,3);
-	public static final DefType biInt = new DefType("biInt",2,1);
 	public static final DefType colour = new DefType("colour",3,3);
 	public static final DefType genColour = new DefType("genColour",3,3);
-	public static final DefType globals = new DefType("globals");
-	public static final DefType dual = new DefType("dual");
+
 	public static final DefType extrude = new DefType("extrude",2,3);
 	public static final DefType genExtrude = new DefType("genExtrude",2,3);
 	public static final DefType p3 = new DefType("p3",2,3);
-
-	public static final DefType ridgeInt = new DefType("ridgeInt",3,1);
+	public static final DefType globals = new DefType("globals");
 
 	@Override
 	public String toString() { return type; }

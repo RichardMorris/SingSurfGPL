@@ -13,7 +13,7 @@ import org.lsmp.djep.groupJep.groups.Reals;
 import org.lsmp.djep.groupJep.interfaces.RingI;
 import org.lsmp.djep.groupJep.values.FreeGroupElement;
 import org.lsmp.djep.groupJep.values.Polynomial;
-import org.lsmp.djep.matrixJep.MatrixJep;
+import org.lsmp.djep.xjep.XJep;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.definitions.Parameter;
@@ -24,12 +24,12 @@ import org.singsurf.singsurf.definitions.Parameter;
  *
  */
 public class EquationPolynomialConverter {
-	MatrixJep jep;
+	XJep jep;
 	PolynomialVisitor pv;
 	/**
 	 * @param jep
 	 */
-	public EquationPolynomialConverter(MatrixJep jep) {
+	public EquationPolynomialConverter(XJep jep) {
 		this.jep = jep;
 		this.pv = new PolynomialVisitor(jep);
 	}

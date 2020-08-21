@@ -23,8 +23,11 @@ import org.lsmp.djep.xjep.XVariable;
 import org.nfunk.jep.ASTConstant;
 import org.nfunk.jep.ASTFunNode;
 import org.nfunk.jep.ASTVarNode;
+import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
+import org.nfunk.jep.SymbolTable;
+import org.nfunk.jep.Variable;
 import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
@@ -402,6 +405,19 @@ public class Calculator {
 	public String getMsg() { return msg; }
 	public Definition getDefinition() {
 		return definition;
+	}
+
+	/** removes non constant variables from table */
+	protected void reset() {
+		good = false;
+		msg = null;
+		SymbolTable vt = mj.getSymbolTable();
+		for(Enumeration<?> e = vt.elements(); e.hasMoreElements(); ) 
+		{
+			Variable var = (Variable) e.nextElement();
+			if(!var.isConstant())
+				vt.remove(var);
+		}
 	}
 
 	/**
