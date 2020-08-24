@@ -308,7 +308,7 @@ public class VecField extends AbstractOperatorClient {
 			return null;
 		}
 		if (!calc.isGood()) {
-			showStatus(calc.getMsg());
+			showStatus("calcVFGeomThread calc message "+calc.getMsg());
 			return null;
 		}
 		PgGeometryIf input = p.getInput();

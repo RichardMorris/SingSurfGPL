@@ -4,22 +4,24 @@ Created 17 Sep 2006 - Richard Morris
 package org.singsurf.singsurf.calculators;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
+import org.lsmp.djep.djep.DSymbolTable;
+import org.lsmp.djep.djep.PartialDerivative;
+import org.lsmp.djep.matrixJep.MatrixJep;
+import org.lsmp.djep.matrixJep.MatrixVariable;
+import org.lsmp.djep.matrixJep.MatrixVariableI;
+import org.lsmp.djep.vectorJep.Dimensions;
+import org.lsmp.djep.xjep.XVariable;
+import org.nfunk.jep.ParseException;
+import org.nfunk.jep.Variable;
 import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.jep.ExternalPartialDerivative;
 import org.singsurf.singsurf.jep.ExternalVariable;
 
-import com.singularsys.extensions.djep.DVariableFactory;
-import com.singularsys.extensions.djep.PartialDerivative;
-import com.singularsys.extensions.fastmatrix.MrpVarRef;
-import com.singularsys.extensions.matrix.DimensionVisitor;
-import com.singularsys.extensions.matrix.Dimensions;
-import com.singularsys.extensions.xjep.XVariable;
-import com.singularsys.jep.ParseException;
-import com.singularsys.jep.Variable;
 
 
 /**
@@ -35,22 +37,27 @@ public class RidgeCalculator extends Calculator {
     Variable jepPVar = null;
     Variable jepQVar = null;
     
-    MrpVarRef jepSurfVarRef;
-    MrpVarRef jepPVarRef;
-    MrpVarRef jepQVarRef;
+    int jepSurfVarRef;
+    int jepPVarRef;
+    int jepQVarRef;
 
-    MrpVarRef jepXVarRef;
-    MrpVarRef jepYVarRef;
-    MrpVarRef jepZVarRef;
+    int jepXVarRef;
+    int jepYVarRef;
+    int jepZVarRef;
 
-    List<MrpVarRef> xDerivRefs = null;
-    List<MrpVarRef> yDerivRefs = null;
-    List<MrpVarRef> zDerivRefs = null;
+    List<Integer> xDerivRefs = null;
+    List<Integer> yDerivRefs = null;
+    List<Integer> zDerivRefs = null;
+
+	private SpecialVariableFactory varFac;
 
     public RidgeCalculator(Definition def, int nderiv) {
         super(def, nderiv);
-        mj.setComponent(new RidgeVariableFactory());
-        mj.reinitializeComponents();
+		varFac = new SpecialVariableFactory();
+		mj = (MatrixJep) mj.newInstance(new DSymbolTable(varFac));
+
+//JepFix        mj.setComponent(new RidgeVariableFactory());
+//        mj.reinitializeComponents();
     }
 
     @Override
@@ -76,10 +83,12 @@ public class RidgeCalculator extends Calculator {
         DefVariable defVariableQ = fieldvars.get(1);
 
         jepSurfVar = new ExternalVariable(this, defVariableSurf.getName(), optype.getOutputDimensions());
-        jepPVar = mj.addVariable(defVariableP.getName());
-        jepQVar = mj.addVariable(defVariableQ.getName());
-        jepPVar.setHook(DimensionVisitor.DIM_KEY,Dimensions.THREE);
-        jepQVar.setHook(DimensionVisitor.DIM_KEY,Dimensions.THREE);
+        jepPVar = addVariable(defVariableP.getName(),Dimensions.THREE);
+        jepQVar = addVariable(defVariableQ.getName(),Dimensions.THREE);
+        varFac.clear();
+        varFac.add(jepSurfVar);
+        varFac.add(jepPVar);
+        varFac.add(jepQVar);
         
         super.build();
         if (!good)
@@ -87,28 +96,26 @@ public class RidgeCalculator extends Calculator {
         try {
             List<DefVariable> normalVars = this.definition.getVariablesByType(DefType.none);
 
-            XVariable normVar1 = (XVariable) mj.addVariable(normalVars.get(0).getName());
-            normVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.SCALER);
+            XVariable normVar1 = addVariable(normalVars.get(0).getName(),Dimensions.ONE);
             jepXVarRef = mrpe.getVarRef(normVar1);//,Dimensions.ONE);
-            XVariable normVar2 = (XVariable) mj.addVariable(normalVars.get(1).getName());
-            normVar2.setHook(DimensionVisitor.DIM_KEY,Dimensions.SCALER);
+            XVariable normVar2 = addVariable(normalVars.get(1).getName(),Dimensions.ONE);
             jepYVarRef = mrpe.getVarRef(normVar2);
-            XVariable normVar3 = (XVariable) mj.addVariable(normalVars.get(2).getName());
-            normVar3.setHook(DimensionVisitor.DIM_KEY,Dimensions.SCALER);
+            XVariable normVar3 = addVariable(normalVars.get(2).getName(),Dimensions.ONE);
             jepZVarRef = mrpe.getVarRef(normVar3);
             
-            jepSurfVarRef = mrpe.getVarRef(jepSurfVar);
-            jepPVarRef = mrpe.getVarRef(jepPVar);
-            jepQVarRef = mrpe.getVarRef(jepQVar);
+            jepSurfVarRef = mrpe.getVarRef((MatrixVariableI) jepSurfVar);
+            jepPVarRef = mrpe.getVarRef((MatrixVariableI) jepPVar);
+            jepQVarRef = mrpe.getVarRef((MatrixVariableI) jepQVar);
             
             xDerivRefs = new ArrayList<>();
             yDerivRefs = new ArrayList<>();
             zDerivRefs = new ArrayList<>();
             
             int dnum1 = 0;
-            for(PartialDerivative pd:jepSurfVar.allDerivatives()) {
-                ExternalPartialDerivative diff = (ExternalPartialDerivative) pd;
-                MrpVarRef ref = mrpe.getVarRef(diff);
+            final Enumeration<?> allDerivatives = jepSurfVar.allDerivatives();
+			while(allDerivatives.hasMoreElements()) {
+                ExternalPartialDerivative diff = (ExternalPartialDerivative) allDerivatives.nextElement();
+                int ref = mrpe.getVarRef((MatrixVariableI) diff);
                 xDerivRefs.add(dnum1, ref);
                 ++dnum1;
             }
@@ -131,8 +138,10 @@ public class RidgeCalculator extends Calculator {
     public void buildIngr1() throws ParseException {
         derivTrans1 = new ArrayList<>();
         int dnum = 0;
-        for(PartialDerivative pd:jepSurfVar.allDerivatives()) {
-            ExternalPartialDerivative diff = (ExternalPartialDerivative) pd;
+
+        final Enumeration<?> allDerivatives = jepSurfVar.allDerivatives();
+		while(allDerivatives.hasMoreElements()) {
+            ExternalPartialDerivative diff = (ExternalPartialDerivative) allDerivatives.nextElement();
             String dnames[] = diff.getDnames();
             String ingrNames[] = new String[dnames.length];
             List<DefVariable> normalVars = this.definition
@@ -154,40 +163,6 @@ public class RidgeCalculator extends Calculator {
         build();
     }
 
-    class RidgeVariableFactory extends DVariableFactory {
-        private static final long serialVersionUID = 350L;
-
-        @Override
-        public Variable createVariable(String name, Object value) {
-            if (jepSurfVar != null
-                    && name.equals(jepSurfVar.getName()))
-                return jepSurfVar;
-//            if (jepPVar != null
-//                    && name.equals(jepPVar.getName()))
-//                return jepPVar;
-//            if (jepQVar != null
-//                    && name.equals(jepQVar.getName()))
-//                return jepQVar;
-            
-			return super.createVariable(name, value);
-        }
-
-        @Override
-        public Variable createVariable(String name) {
-            if (jepSurfVar != null
-                    && name.equals(jepSurfVar.getName()))
-                return jepSurfVar;
-//            if (defVariableSurf != null
-//                    && name.equals(defVariableSurf.getName()))
-//                return jepSurfVar;
-//            if (defVariableP != null
-//                    && name.equals(defVariableP.getName()))
-//                return jepDirVar1;
-			return super.createVariable(name);
-        }
-
-    }
-
     public boolean goodIngredients() {
         boolean g0 = super.isGood();
         boolean g1 = this.ingredient1 == null ? false : this.ingredient1
@@ -197,23 +172,23 @@ public class RidgeCalculator extends Calculator {
     }
         
 	public Evaluator createEvaluator() {
-		List<MrpVarRef> drefs1 = new ArrayList<>();
-		xDerivRefs.forEach(ref -> drefs1.add(ref.duplicate()));
+		List<Integer> drefs1 = new ArrayList<>();
+		xDerivRefs.forEach(ref -> drefs1.add(ref));
 		List<Integer> dt1 = new ArrayList<Integer>(derivTrans1);
 
-		List<MrpVarRef> drefs2 = new ArrayList<>();
-		yDerivRefs.forEach(ref -> drefs2.add(ref.duplicate()));
+		List<Integer> drefs2 = new ArrayList<>();
+		yDerivRefs.forEach(ref -> drefs2.add(ref));
 //		List<Integer> dt2 = new ArrayList<Integer>(derivTrans2);
 
 		return new RidgeEvaluator(
 				super.createEvaluator(),
 				ingredient1.createEvaluator(), 
-				jepSurfVarRef.duplicate(), 
-				jepPVarRef.duplicate(), 
-				jepQVarRef.duplicate(), 
-				jepXVarRef.duplicate(),
-				jepYVarRef.duplicate(),
-				jepZVarRef.duplicate(),
+				jepSurfVarRef, 
+				jepPVarRef, 
+				jepQVarRef, 
+				jepXVarRef,
+				jepYVarRef,
+				jepZVarRef,
 				drefs1, dt1);	
 	}
 

@@ -2,31 +2,30 @@ package org.singsurf.singsurf.calculators;
 
 import java.util.List;
 
-import com.singularsys.extensions.fastmatrix.MrpCommandList;
-import com.singularsys.extensions.fastmatrix.MrpRes;
-import com.singularsys.extensions.fastmatrix.MrpVarRef;
+import org.lsmp.djep.mrpe.MRpCommandList;
+import org.lsmp.djep.mrpe.MRpRes;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 public class RidgeEvaluator extends Evaluator {
 	
 
 	Evaluator ingredient1;
-	private MrpVarRef jepXVarRef;
-	private MrpVarRef jepYVarRef;
-	private MrpVarRef jepZVarRef;
-	private MrpVarRef jepSurfVarRef;
-	private MrpVarRef jepPVarRef;
-	private MrpVarRef jepQVarRef;
+	private Integer jepXVarRef;
+	private Integer jepYVarRef;
+	private Integer jepZVarRef;
+	private Integer jepSurfVarRef;
+	private Integer jepPVarRef;
+	private Integer jepQVarRef;
 	
-    List<MrpVarRef> derivMrpeRefs = null;
+    List<Integer> derivMrpeRefs = null;
     /** Translate number of derivative to reference in ingredient */
     List<Integer> derivTrans;
 
 	
 	public RidgeEvaluator(Evaluator supercalc,Evaluator ingr1,
-			MrpVarRef jepVarRef1, MrpVarRef jepVarRef2, MrpVarRef jepVarRef3, 
-			MrpVarRef jepNormVarRef1, MrpVarRef jepNormVarRef2, MrpVarRef jepNormVarRef3,
-			List<MrpVarRef> derivMrpeRefs1, List<Integer> derivTrans1) { 
+			Integer jepVarRef1, Integer jepVarRef2, Integer jepVarRef3, 
+			Integer jepNormVarRef1, Integer jepNormVarRef2, Integer jepNormVarRef3,
+			List<Integer> derivMrpeRefs1, List<Integer> derivTrans1) { 
 		super(supercalc);
 		
 		this.ingredient1 = ingr1;
@@ -44,12 +43,8 @@ public class RidgeEvaluator extends Evaluator {
 
     @Override
     public double[] evalTop(double[] in) throws EvaluationException {
-//        double igr1in[] = new double[1];
-//        double igr2in[] = new double[2];
 
         try {
-//            igr1in[0] = in[0];
-//            igr2in[0] = in[1];
             if (jepXVarRef != null)
                 mrpe.setVarValue(jepXVarRef, in[0]);
             if (jepYVarRef != null)
@@ -70,18 +65,11 @@ public class RidgeEvaluator extends Evaluator {
             
             mrpe.setVarValue(jepPVarRef, pVal);
             mrpe.setVarValue(jepQVarRef, qVal);
-//            double[] ingrRes2 = ingredient2.evalTop(igr2in);
-//            mrpe.setVarValue(jepPVarRef, ingrRes2);
-//            for (int i = 0; i < this.derivMrpeRefs2.size(); ++i) {
-//                double[] derivRes = ingredient2.evalDerivative(this.derivTrans2
-//                        .get(i));
-//                mrpe.setVarValue(this.derivMrpeRefs2.get(i), derivRes);
-//            }
 
-            for (MrpCommandList com : allComs)
+            for (MRpCommandList com : allComs)
                 mrpe.evaluate(com);
 
-            MrpRes res = mrpe.evaluate(topCom);
+            MRpRes res = mrpe.evaluate(topCom);
             double v[] = resultAsVector(res);
             return v;
 

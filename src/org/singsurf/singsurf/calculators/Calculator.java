@@ -2,19 +2,24 @@ package org.singsurf.singsurf.calculators;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.lsmp.djep.djep.DPrintVisitor;
 import org.lsmp.djep.matrixJep.MatrixJep;
+import org.lsmp.djep.matrixJep.MatrixVariable;
 import org.lsmp.djep.matrixJep.MatrixVariableI;
 import org.lsmp.djep.matrixJep.nodeTypes.MatrixNodeI;
 import org.lsmp.djep.mrpe.MRpCommandList;
 import org.lsmp.djep.mrpe.MRpEval;
 import org.lsmp.djep.mrpe.MRpRes;
+import org.lsmp.djep.vectorJep.Dimensions;
 import org.lsmp.djep.vectorJep.values.Scaler;
 import org.lsmp.djep.xjep.PrintVisitor;
 import org.lsmp.djep.xjep.XJep;
@@ -35,8 +40,6 @@ import org.singsurf.singsurf.definitions.Parameter;
 import org.singsurf.singsurf.jep.ExternalPartialDerivative;
 import org.singsurf.singsurf.jep.ExternalVariable;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
-
-
 
 public class Calculator {
 	/** The MatrixJep instance */
@@ -68,7 +71,7 @@ public class Calculator {
 	/** The raw list of equations */
 	Vector<Node> rawEqns;
 	/** All variables found in equations */
-	Vector<?> depVars;
+	Vector<XVariable> depVars;
 
 	/** mrpe reference numbers for each DefVariable, indexed by posn in definition */
 	int variableRefs[];
@@ -214,13 +217,29 @@ public class Calculator {
 		depVars = mj.recursiveGetVarsInEquation(top,new Vector<Object>());
 	}
 
-	void extendDepVars(Node eqn) throws ParseException
+	void extendDepVars(Node eqn) throws ParseException {
+		Set<XVariable> oldVars = new HashSet<>(depVars);
+		depVars = mj.recursiveGetVarsInEquation(eqn, depVars);
+		for (XVariable var : depVars) {
+			if (oldVars.contains(var)) {
+				continue;
+			}
+			if (var.hasEquation()) {
+				System.out.println("depVar "+var.toString());
+				MRpCommandList com = mrpe.compile((MatrixVariableI) var,var.getEquation());
+				allComs.add(com);
+			}
+		}
+	}
+
+	void extendDepVarsOld(Node eqn) throws ParseException
 	{
 		int oldSize = depVars.size();
 		depVars = mj.recursiveGetVarsInEquation(eqn,depVars);
 		for(int i=oldSize;i<depVars.size();++i)
 		{
 			MatrixVariableI var = (MatrixVariableI) depVars.get(i);
+			System.out.println("depVar "+var.toString());
 			MRpCommandList com = mrpe.compile(var,var.getEquation());
 			allComs.add(com);
 		}
@@ -295,7 +314,7 @@ public class Calculator {
 		case 0:
 			break;
 		case 1:
-			for (int i = 0; i < getNumInputVariables(); ++i)
+			for (int i = 0; i < getNumNormalInputVariables(); ++i)
 				requireDerivative(new String[] { getNormalInputVariableName(i) });
 			break;
 		case 2:
@@ -518,6 +537,13 @@ public class Calculator {
 
 	public List<Node> getPreprocessedEqns() {
 		return preprocessedEqns;
+	}
+
+	protected MatrixVariable addVariable(String name, Dimensions three) {
+		mj.addVariable(name);
+		MatrixVariable var = (MatrixVariable) mj.getVar(name);
+		var.setDimensions(three);
+		return var;
 	}
 
 }

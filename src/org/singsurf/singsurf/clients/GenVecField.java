@@ -241,7 +241,7 @@ public class GenVecField extends VecField implements GeneralisedOperator {
 	public PgVectorField[] calcVFGeomThread(GeomPair p) {
 		// TODO Auto-generated method stub
 		PgVectorField[] fields =  super.calcVFGeomThread(p);
-		
+		if(fields==null) return null;
 		if(this.cbProject.getState()) {
 			TangentSpaceCalcMap projection = new TangentSpaceCalcMap(
 				ingredient.getCalculator().createEvaluator(),
@@ -288,7 +288,10 @@ public class GenVecField extends VecField implements GeneralisedOperator {
 		PgGeometryIf out = p.getOutput();
 //		PgGeometryIf input = p.getInput();
 
-		
+		if(vecs==null) {
+			System.out.println("displayVFGeom null vect fields");
+			return;
+		}
 		if (out instanceof PgElementSet) {
 			((PgElementSet) out).showElements(false);
 			((PgElementSet) out).showEdges(false);
