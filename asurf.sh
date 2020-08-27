@@ -1,2 +1,2 @@
 #! /bin/sh
-java -Xmx16g -cp "bin" org.singsurf.singsurf.ASurfCL  "$1" "$2" "$3"
+java -Xmx16g -cp "lib/javaview.jar;lib/jep.jar;lib/jepext.jar;lib/jvx.jar;lib/SingSurf.jar" org.singsurf.singsurf.ASurfCL  "$1" "$2" "$3"

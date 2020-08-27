@@ -12,7 +12,7 @@
     <property name="javaview.jar" value="${dir.javaview}/jars/javaview.jar"/>
     <property name="jvx.jar" value="${dir.javaview}/jars/jvx.jar"/>
 	
-    <property name="dir.jep" value="../jep-java-gpl"/>
+    <property name="dir.jep" value="C:/Users/rich/git/jep-java-gpl"/>
     <property name="jep.jar" value="${dir.jep}/dist/jep-2.4.0.jar"/>
     <property name="jepext.jar" value="${dir.jep}/dist/ext-1.1.0.jar"/>
 	
@@ -20,8 +20,9 @@
     <property name="classpath" value="${cp.junit};${dir.jep}/lbin;${javaview.jar};${jvx.jar}"/>
 	
 	<target name="clean">
-        <delete dir="${dir.dist}"/>
-        <mkdir dir="${dir.dist}"/>
+		<delete includeemptydirs="true">
+		  <fileset dir="${dir.dist}" includes="**/*"/>
+		</delete>
 	</target>
 	
 	<!-- Compiles with ensuring compatibility if JRE1_2HOME is set -->
@@ -64,7 +65,7 @@
         <copy file="${jep.jar}" tofile="${dir.lib}/jep.jar"/>
         <copy file="${jepext.jar}" tofile="${dir.lib}/jepext.jar"/>
 		<copy todir="${dir.dist}/rsrc">
-		  <fileset dir="${dir.javaview}/rsrc"/>
+		  <fileset dir="${dir.javaview}/rsrc" excludes="**/jv-lic.lic" />
 		</copy>
 		<copy todir="${dir.dist}/images">
 		  <fileset dir="${dir.javaview}/images"/>
@@ -74,24 +75,16 @@
 		</copy>
 	</target>
 	
-	<target name="foo">
-        <copy file="readme.md" todir="${dir.out}"/>
-    	<copy todir="${dir.out}/defs">
-    	    <fileset dir="defs"/>
-    	</copy>
-        <copy todir="${dir.out}/images">
-            <fileset dir="${dir.javaview}/images"/>
+	<target name="dist">
+        <copy todir="${dir.dist}">
+			<fileset dir="${dir.buildfile}" includes="README.md,asurf.sh,singsurf.sh" />
         </copy>
-        <copy todir="${dir.out}/rsrc">
-            <fileset dir="${dir.javaview}/rsrc" excludes="**/jv.lic" />
-        </copy>
-        <copy file="readme.md" todir="${dir.out}"/>
     </target>
 	
-	<target name="zip">
+	<target name="zip" depends="jar,dist" >
 
 	    <echo message="Creating zip files -----------------------" />
-	    <zip zipfile="${dir.build}/singsurf.zip" basedir="${dir.build}" includes="singsurf/**" />
+	    <zip zipfile="singsurf.zip" basedir="${dir.dist}" />
 
 	    <!-- clean up temporary files 
 	        <delete dir="disttemp" />-->
