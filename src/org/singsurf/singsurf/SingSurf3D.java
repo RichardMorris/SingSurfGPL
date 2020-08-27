@@ -48,7 +48,7 @@ import jv.vecmath.PdVector;
  * 
  * @author Rich Morris Created on 20-Jun-2003
  */
-public class SingSurfPro extends PaSingSurf implements ActionListener {
+public class SingSurf3D extends PaSingSurf implements ActionListener {
 	private static final long serialVersionUID = -7242387172848278637L;
 
 	CheckboxMenuItem twoDview;
@@ -59,7 +59,7 @@ public class SingSurfPro extends PaSingSurf implements ActionListener {
 
 	private ProjectChooserController controller;
 
-	public SingSurfPro() {
+	public SingSurf3D() {
 		super();
 	}
 
@@ -286,7 +286,7 @@ public class SingSurfPro extends PaSingSurf implements ActionListener {
 	 */
 
 	public static void main(String args[]) {
-		PaSingSurf va = new SingSurfPro();
+		PaSingSurf va = new SingSurf3D();
 		commonMain(va, args);
 	}
 

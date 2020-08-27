@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="jar" name="SingSurfGPL">
+
+    <property name="dir.buildfile" value="."/>
+    <property name="dir.out" value="./build"/>
+    <property name="dir.src" value="${dir.buildfile}/src"/>
+    <property name="dir.bin" value="${dir.buildfile}/bin"/> <!-- compiled .class files -->
+    <property name="dir.dist" value="./dist"/>				<!-- files for distribution -->
+    <property name="dir.lib" value="${dir.dist}/lib"/>      <!-- jar files for distribution -->
+	
+    <property name="dir.javaview" value="C:/Users/rich/bin/javaview/"/>
+    <property name="javaview.jar" value="${dir.javaview}/jars/javaview.jar"/>
+    <property name="jvx.jar" value="${dir.javaview}/jars/jvx.jar"/>
+	
+    <property name="dir.jep" value="../jep-java-gpl"/>
+    <property name="jep.jar" value="${dir.jep}/dist/jep-2.4.0.jar"/>
+    <property name="jepext.jar" value="${dir.jep}/dist/ext-1.1.0.jar"/>
+	
+	<property name="cp.junit" value="C:\Users\rich\.p2\pool\plugins\org.junit_4.13.0.v20200204-1500.jar;C:\Users\rich\.p2\pool\plugins\org.hamcrest.core_1.3.0.v20180420-1519.jar" />
+    <property name="classpath" value="${cp.junit};${dir.jep}/lbin;${javaview.jar};${jvx.jar}"/>
+	
+	<target name="clean">
+        <delete dir="${dir.dist}"/>
+        <mkdir dir="${dir.dist}"/>
+	</target>
+	
+	<!-- Compiles with ensuring compatibility if JRE1_2HOME is set -->
+	<target name="compile">
+		<echo message="classpath=${classpath}"/>
+		<!-- <echoproperties /> -->
+		<!-- Create the build directory -->
+		<mkdir dir="${dir.bin}"/>
+
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${dir.src}"
+		       destdir="${dir.bin}"
+		       classpath="${classpath}"
+			   deprecation="on"
+			   includeantruntime="false"
+		       source="1.8"
+			   target="1.8"
+		       bootclasspath="${bootclasspath}"
+			excludes="**/JetExtractor.java, **/DiferentailFormTest.java, **/package-info.java, **/RayTrace.java, **/DiffForm.java" />
+
+		<copy todir="${dir.bin}" includeEmptyDirs="false" verbose="true">
+			<fileset dir="${dir.src}" includes="**/messages.properties" />
+		</copy>
+	</target>
+
+    <target name="jar" depends="compile,dependants">
+        <jar destfile="${dir.lib}/SingSurf.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.singsurf.singsurf.SingSurf3D"/>
+                <attribute name="Class-Path" value=". javaview.jar jvx.jar jep.jar jepext.jar"/>
+            </manifest>
+
+            <fileset dir="${dir.buildfile}/bin"/>
+        </jar>
+    </target>
+    	
+	<target name="dependants">
+        <copy file="${dir.javaview}/jars/javaview.jar" todir="${dir.lib}"/>
+        <copy file="${dir.javaview}/jars/jvx.jar" todir="${dir.lib}"/>
+        <copy file="${jep.jar}" tofile="${dir.lib}/jep.jar"/>
+        <copy file="${jepext.jar}" tofile="${dir.lib}/jepext.jar"/>
+		<copy todir="${dir.dist}/rsrc">
+		  <fileset dir="${dir.javaview}/rsrc"/>
+		</copy>
+		<copy todir="${dir.dist}/images">
+		  <fileset dir="${dir.javaview}/images"/>
+		</copy>
+		<copy todir="${dir.dist}/defs">
+		  <fileset dir="${dir.buildfile}/defs"/>
+		</copy>
+	</target>
+	
+	<target name="foo">
+        <copy file="readme.md" todir="${dir.out}"/>
+    	<copy todir="${dir.out}/defs">
+    	    <fileset dir="defs"/>
+    	</copy>
+        <copy todir="${dir.out}/images">
+            <fileset dir="${dir.javaview}/images"/>
+        </copy>
+        <copy todir="${dir.out}/rsrc">
+            <fileset dir="${dir.javaview}/rsrc" excludes="**/jv.lic" />
+        </copy>
+        <copy file="readme.md" todir="${dir.out}"/>
+    </target>
+	
+	<target name="zip">
+
+	    <echo message="Creating zip files -----------------------" />
+	    <zip zipfile="${dir.build}/singsurf.zip" basedir="${dir.build}" includes="singsurf/**" />
+
+	    <!-- clean up temporary files 
+	        <delete dir="disttemp" />-->
+	</target>
+
+</project>

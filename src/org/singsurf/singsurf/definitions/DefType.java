@@ -41,7 +41,6 @@ public class DefType
 
     public static final DefType psurf = new DefType("psurf",2,3);
 	public static final DefType pcurve = new DefType("pcurve",1,3);
-	
 	public static final DefType asurf = new DefType("asurf",3,1);
 	public static final DefType acurve = new DefType("acurve",2,1);
 	//public static final DefType acurve3 = new DefType("acurve3",2);

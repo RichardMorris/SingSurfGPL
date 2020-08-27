@@ -1,7 +1,7 @@
 /*
 Created 23-Apr-2006 - Richard Morris
 */
-package org.singsurf.singsurf.junit;
+package org.singsurf.singsurf.test;
 
 import org.junit.Test;
 import org.singsurf.singsurf.definitions.Definition;

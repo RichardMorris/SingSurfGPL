@@ -27,17 +27,17 @@ import jvx.loader.PgWrlLoader;
 public class ProjectChooserController {
 
 	PvViewer m_viewer;
-	SingSurfPro ssp;
+	SingSurf3D ssp;
 	ProjectChooserModel model;
 	ProjectFactory factory;
 	AbstractClient currentProject;
 
-	public ProjectChooserController(SingSurfPro ssp, PvViewer m_viewer, ProjectChooserModel model) {
+	public ProjectChooserController(SingSurf3D singSurf3D, PvViewer m_viewer, ProjectChooserModel model) {
 		super();
-		this.ssp = ssp;
+		this.ssp = singSurf3D;
 		this.m_viewer = m_viewer;
 		this.model = model;
-		this.factory = new ProjectFactory(model, ssp.store);
+		this.factory = new ProjectFactory(model, singSurf3D.store);
 	}
 
 
@@ -230,6 +230,7 @@ public class ProjectChooserController {
 			FileWriter fw = new FileWriter(filename);
 			fw.write("<" + "definitions" + ">\n");
 			for (AbstractClient proj:model.projects) {
+				if(proj==null) continue;
 				Definition def = proj.getDefinition();
 				proj.setDefinitionOptions(def);
 				fw.write(def.toString());
@@ -239,6 +240,7 @@ public class ProjectChooserController {
 
 			fw.write("<dependancies>\n");
 			for (AbstractClient proj:model.projects) {
+				if(proj==null) continue;
 				ProjectComponents pc = proj.getProjectComponents();
 				if (!pc.isEmpty()) {
 					fw.write(pc.toString());

@@ -4,7 +4,7 @@ import jv.project.PvCameraIf;
 import jv.project.PvDisplayIf;
 import jv.vecmath.PdVector;
 
-public class SingSurf2D extends SingSurfPro {
+public class SingSurf2D extends SingSurf3D {
     private static final long serialVersionUID = 1L;
 
     @Override

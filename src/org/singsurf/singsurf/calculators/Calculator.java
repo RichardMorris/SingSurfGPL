@@ -2,7 +2,6 @@ package org.singsurf.singsurf.calculators;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,7 +27,6 @@ import org.lsmp.djep.xjep.XVariable;
 import org.nfunk.jep.ASTConstant;
 import org.nfunk.jep.ASTFunNode;
 import org.nfunk.jep.ASTVarNode;
-import org.nfunk.jep.JEP;
 import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 import org.nfunk.jep.SymbolTable;
@@ -212,11 +210,13 @@ public class Calculator {
 	 * Finds the dependency table for variable.
 	 * @throws ParseException
 	 */
+	@SuppressWarnings("unchecked")
 	void buildDepVars() throws ParseException
 	{
-		depVars = mj.recursiveGetVarsInEquation(top,new Vector<Object>());
+		depVars = mj.recursiveGetVarsInEquation(top,new Vector<XVariable>());
 	}
 
+	@SuppressWarnings("unchecked")
 	void extendDepVars(Node eqn) throws ParseException {
 		Set<XVariable> oldVars = new HashSet<>(depVars);
 		depVars = mj.recursiveGetVarsInEquation(eqn, depVars);

@@ -288,10 +288,7 @@ public class GenVecField extends VecField implements GeneralisedOperator {
 		PgGeometryIf out = p.getOutput();
 //		PgGeometryIf input = p.getInput();
 
-		if(vecs==null) {
-			System.out.println("displayVFGeom null vect fields");
-			return;
-		}
+		
 		if (out instanceof PgElementSet) {
 			((PgElementSet) out).showElements(false);
 			((PgElementSet) out).showEdges(false);
