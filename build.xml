@@ -77,7 +77,7 @@
 	
 	<target name="dist">
         <copy todir="${dir.dist}">
-			<fileset dir="${dir.buildfile}" includes="README.md,asurf.sh,singsurf.sh" />
+			<fileset dir="${dir.buildfile}" includes="README.md,asurf.sh,singsurf.sh,singsurf.bat" />
         </copy>
     </target>
 	

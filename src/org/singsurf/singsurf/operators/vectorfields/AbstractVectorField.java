@@ -45,6 +45,20 @@ public abstract class AbstractVectorField extends AbstractOperator {
 	
 	public abstract PdVector calcVector(PdVector vec) throws EvaluationException;
 
+	public PdVector calcVector3D(PdVector vec) throws EvaluationException {
+		PdVector res = calcVector(vec);
+		final int size = res.getSize();
+		if(size==3) 
+			return res;
+		else if(size<3) {
+			res.concat(new PdVector(3-size));
+			return res;
+		} else {
+			return new PdVector(res.m_data[0],res.m_data[1],res.m_data[2]);
+		}
+	}
+	
+	
 	public PgVectorField[] operateAll(PgGeometryIf geom) throws EvaluationException, UnSuportedGeometryException {
 		PgVectorField field = (PgVectorField) this.operate(geom);
 		return new PgVectorField[] { field} ;

@@ -34,3 +34,20 @@ min(min(min(xh-x,x-xl),min(yh-y,y-yl)),min(zh-z,z-zl));
 <variable name="z" type="Normal">
 </definition>
 
+<definition name="super ellipse" type="intersect" opType="none">
+// super ellipse
+pow(abs(x/a),p)+pow(abs(y/b),p)-1; 
+
+<variable name="x" min="0.0" max="0.0" type="none">
+<variable name="y" min="0.0" max="0.0" type="none">
+<variable name="z" min="0.0" max="0.0" type="none">
+<parameter name="a" value="1.0">
+<parameter name="b" value="1.0">
+<parameter name="p" value="4.0">
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="true"/>
+<option name="colour" value="Black"/>
+<option name="numItts" value="5"/>
+</definition>

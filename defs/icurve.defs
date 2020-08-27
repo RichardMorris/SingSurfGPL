@@ -56,7 +56,7 @@
 </definition>
 
 <definition name="Hopf bifurcation" type="icurve">
-cmul( [x,y] , [lambda, 1] + (x^2+y^2) [alpha,beta] );
+[x,y] *( [lambda, 1] + (x^2+y^2) [alpha,beta] );
 <parameter name="alpha" value="-1">
 <parameter name="beta" value="0.5">
 <parameter name="lambda" value="0.5">
