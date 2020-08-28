@@ -8,6 +8,7 @@ import org.lsmp.djep.djep.DSymbolTable;
 import org.lsmp.djep.djep.PartialDerivative;
 import org.lsmp.djep.matrixJep.MatrixJep;
 import org.lsmp.djep.matrixJep.MatrixVariableI;
+import org.lsmp.djep.vectorJep.Dimensions;
 import org.lsmp.djep.xjep.XVariable;
 import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.definitions.DefType;
@@ -60,8 +61,7 @@ public class ProductCalculator extends Calculator {
 			List<DefVariable> ingrInputVars = this.definition
 					.getVariablesByType(DefType.ingrVar);
 			for(DefVariable inputVars:ingrInputVars) {
-				XVariable normVar1 = (XVariable) mj.addVariable(inputVars.getName());
-//				normVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.ONE);	
+				XVariable normVar1 = addVariable(inputVars.getName(),Dimensions.ONE);
 				ingrInputVarRefs.add(mrpe.getVarRef(normVar1));
 			}
 
@@ -69,8 +69,7 @@ public class ProductCalculator extends Calculator {
 			List<DefVariable> localVars = 
 					definition.getVariablesByType(DefType.localVar);
 			for(DefVariable inputVars:localVars) {
-				XVariable localVar1 = (XVariable) mj.addVariable(inputVars.getName());
-//				localVar1.setHook(DimensionVisitor.DIM_KEY,Dimensions.SCALER);	
+				XVariable localVar1 = addVariable(inputVars.getName(),Dimensions.ONE);
 				localVarRefs.add(mrpe.getVarRef(localVar1));
 			}
 
@@ -80,7 +79,7 @@ public class ProductCalculator extends Calculator {
 			derivMrpeRefs = new ArrayList<>();
 			int dnum = 0;
 			
-			 Enumeration allDerivatives = ingrOutputVar.allDerivatives();
+			Enumeration<?> allDerivatives = ingrOutputVar.allDerivatives();
 			while (allDerivatives.hasMoreElements()) {
 				ExternalPartialDerivative diff = (ExternalPartialDerivative) allDerivatives.nextElement();
 				int ref = mrpe.getVarRef((MatrixVariableI)diff);

@@ -75,9 +75,9 @@ with options for sterographic projections and rotations in 4D
 
 The program requires
 
-* Java any recent version
+* Java version 8 or upwards.
 * JavaView mathematical visualization software from [javaview.de](http://www.javaview.de/) Alas not open-source
-* JEP 2.4.1 Java Expression Parser, a mathematical parser evaluator from [jep-java-gpl](https://github.com/nathanfunk/jep-java-gpl) or my own fork [jep-java-gpl](https://github.com/RichardMorris/jep-java-gpl) which may contain some customisation of the package to fit the needs of the SingSurf program.
+* JEP 2.4.1 Java Expression Parser, a mathematical parser evaluator from my fork [jep-java-gpl](https://github.com/RichardMorris/jep-java-gpl) which may contain some customisation of the package to fit the needs of the SingSurf program.
 
 It is a good idea to register your version of JavaView. Regestration provides a licence file `jv-lic.lic` which should be copied to the `rsrc` directory, this prevents a notification message appearing.    
 

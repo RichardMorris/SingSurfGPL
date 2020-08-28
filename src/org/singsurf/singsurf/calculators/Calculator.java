@@ -540,7 +540,7 @@ public class Calculator {
 	}
 
 	protected MatrixVariable addVariable(String name, Dimensions three) {
-		mj.addVariable(name);
+		mj.addVariable(name, null);
 		MatrixVariable var = (MatrixVariable) mj.getVar(name);
 		var.setDimensions(three);
 		return var;
