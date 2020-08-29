@@ -3,59 +3,52 @@ package org.singsurf.singsurf.jep;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.singularsys.extensions.djep.DJep;
-import com.singularsys.extensions.djep.DVariable;
-import com.singularsys.extensions.djep.PartialDerivative;
-import com.singularsys.extensions.xjep.CommandVisitorI;
-import com.singularsys.jep.Jep;
-import com.singularsys.jep.JepComponent;
-import com.singularsys.jep.NodeFactory;
-import com.singularsys.jep.OperatorTableI;
-import com.singularsys.jep.ParseException;
-import com.singularsys.jep.Variable;
-import com.singularsys.jep.functions.PostfixMathCommand;
-import com.singularsys.jep.parser.ASTVarNode;
-import com.singularsys.jep.parser.Node;
-import com.singularsys.jep.parser.Node.HookKey;
+import org.lsmp.djep.djep.DJep;
+import org.lsmp.djep.djep.DVariable;
+import org.lsmp.djep.djep.PartialDerivative;
+import org.lsmp.djep.xjep.CommandVisitorI;
+import org.lsmp.djep.xjep.NodeFactory;
+import org.lsmp.djep.xjep.XJep;
+import org.nfunk.jep.ASTVarNode;
+import org.nfunk.jep.Node;
+import org.nfunk.jep.OperatorSet;
+import org.nfunk.jep.ParseException;
+import org.nfunk.jep.Variable;
+import org.nfunk.jep.function.PostfixMathCommand;
 
-public class DiffForm extends PostfixMathCommand  implements CommandVisitorI, JepComponent {
+
+public class DiffForm extends PostfixMathCommand  implements CommandVisitorI {
 	private static final long serialVersionUID = 1L;
 
 	DJep djep;
 	NodeFactory nf;
-	OperatorTableI ot;
+	OperatorSet ot;
 	
-	public HookKey RankKey = new HookKey() {};
+//JepFix	public HookKey RankKey = new HookKey() {};
 
 	public DiffForm() {
-		super(-1);
+//JepFix		super(-1);
+		this.numberOfParameters = -1;
 	}
 
-	@Override
-	public void init(Jep jep) {
+	public void init(DJep jep) {
 		djep = (DJep) jep;
 		nf = jep.getNodeFactory();
-		ot = jep.getOperatorTable();
+		ot = jep.getOperatorSet();
 	}
 
 	@Override
-	public JepComponent getLightWeightInstance() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Node process(Node node, Node[] children) throws ParseException {
+	public Node process(Node node, Node[] children, XJep xjep) throws ParseException {
 		Node lhs = children[0];
 		
 		if(lhs instanceof ASTVarNode ) {
-			DVariable lhsvar = (DVariable) lhs.getVar();
+			DVariable lhsvar = (DVariable) ((ASTVarNode) lhs).getVar();
 			Node eqn = lhsvar.getEquation();
-			Object rank = eqn.getHook(RankKey);
-			if(rank==null)			
+//	JepFix		Object rank = eqn.getHook(RankKey);
+//			if(rank==null)			
 				return process0Form(node,children);
-			else
-				return diffHigherForm(lhs,eqn,children);			
+//			else
+//	JepFix			return diffHigherForm(lhs,eqn,children);			
 		}
 		throw new ParseException("First argument should be a variable");
 	}
@@ -72,23 +65,24 @@ public class DiffForm extends PostfixMathCommand  implements CommandVisitorI, Je
 		
 		for(int i=0;i<nchild-1;++i) {
 			Node rhs = children[i+1];
-			Variable var = rhs.getVar();
+			Variable var = ((ASTVarNode) rhs).getVar();
 			if (var ==null) {
 				throw new ParseException(
-					"Format should be " + name + "(f,x) where x is a variables and 1,2 are constants");
+					"Format should be fun(f,x) where x is a variables and 1,2 are constants");
 			}
 			rhsnames[i] = var.getName();
 		}
 
 		
 		int lhsnchild = eqn.jjtGetNumChildren();
-		PartialDerivative pd0 = (PartialDerivative) eqn.jjtGetChild(0).getVar();
+		PartialDerivative pd0 = (PartialDerivative) ((ASTVarNode)eqn.jjtGetChild(0)).getVar();
 		DVariable base = pd0.getRoot();
 		int nderiv = pd0.getDnames().length;
 		
 		for(int i=0;i<lhsnchild;++i) {
-			if(eqn.jjtGetChild(i).getVar() instanceof PartialDerivative) {
-				PartialDerivative pd = (PartialDerivative) eqn.jjtGetChild(i).getVar();
+			final Node child = eqn.jjtGetChild(i);
+			if(child instanceof ASTVarNode && ((ASTVarNode)child).getVar() instanceof PartialDerivative) {
+				PartialDerivative pd = (PartialDerivative) ((ASTVarNode)child).getVar();
 				if(base != pd.getRoot()) {
 					throw new ParseException("All partial derivatives should have the same root");
 				}
@@ -117,13 +111,15 @@ public class DiffForm extends PostfixMathCommand  implements CommandVisitorI, Je
 			res.jjtAddChild(nf.buildVariableNode(deriv), pos++);
 		}
 		res.jjtClose();
-		res.setHook(RankKey, nderiv+1);
+//JepFix		res.setHook(RankKey, nderiv+1);
 		return res;
 	}
 
 	private void findAllDerivatives(DVariable base, String[] curnames,int depth, String[] names, List<DVariable> list) throws ParseException {
 		if(depth==0) {
-				DVariable var = djep.differentiate(base, curnames);
+				Node var_node = djep.getNodeFactory().buildVariableNode(base);
+				Node deriv = (Node) djep.getDifferentationVisitor().visit((ASTVarNode)var_node, names);
+				DVariable var = (DVariable) ((ASTVarNode)deriv).getVar();
 				list.add(var);
 		} else {
 			for(int i=0;i<names.length;++i) {
@@ -146,24 +142,21 @@ public class DiffForm extends PostfixMathCommand  implements CommandVisitorI, Je
 			Node rhs = children[i+1];
 			if (!djep.getTreeUtils().isVariable(rhs)) {
 				throw new ParseException(
-					"Format should be " + name + "(f,x) where x is a variables and 1,2 are constants");
+					"Format should be fun(f,x) where x is a variables and 1,2 are constants");
 			}
 			ASTVarNode var;
 			try {
 				var = (ASTVarNode) rhs;
 			} catch (ClassCastException e) {
 				throw new ParseException(
-					"Format should be " + name + "(f,x) where x is a variables and 1,2 are constants");
+					"Format should be fun(f,x) where x is a variables and 1,2 are constants");
 			}
 
 			Node ele =  djep.differentiate(lhs, var.getName());
 			res.jjtAddChild(ele, i);	
 		}
 		res.jjtClose();
-		res.setHook(RankKey, 1);
+//JepFix		res.setHook(RankKey, 1);
 		return res;
-	}
-
-	
-	
+	}	
 }
