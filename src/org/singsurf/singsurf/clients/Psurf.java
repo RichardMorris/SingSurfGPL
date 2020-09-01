@@ -259,7 +259,7 @@ public class Psurf extends AbstractClient {
 				calc.setVarValue(0, x);
 				
 				double xlambda = localX.getSteps() > 1 
-						? ((double) i)/localX.getSteps()
+						? ((double) i)/(localX.getSteps() -1)
 						: 0.5;
 						
 				for (int j = 0; j < localY.getSteps(); ++j) {
@@ -270,7 +270,7 @@ public class Psurf extends AbstractClient {
 					calc.setVarValue(1, y);
 
 					double ylambda = localY.getSteps() > 1 
-							? ((double) j)/localY.getSteps()
+							? ((double) j)/(localY.getSteps() - 1)
 							: 0.5;
 
 					double topRes[] = ce.evalTop(new double[] { x, y });
