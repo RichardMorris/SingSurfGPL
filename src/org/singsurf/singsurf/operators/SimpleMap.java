@@ -16,7 +16,7 @@ public abstract class SimpleMap extends AbstractModifier {
     	
 	@Override
 	public PgElementSet operateSurface(PgElementSet geom) throws EvaluationException {
-	    if(doNormals() && geom.hasVertexNormals()) {
+	    if(doNormals() && geom.hasVertexNormals() && !paramsFromTexture) {
 		return operatePointsAndNormals(geom);
 	    } else {
 		return (PgElementSet) operatePoints(geom);
@@ -40,10 +40,19 @@ public abstract class SimpleMap extends AbstractModifier {
 
 	@Override
 	public PgPointSet operatePoints(PgPointSet geom) throws EvaluationException {
+		TextureRange texrng =
+				paramsFromTexture
+				? TextureRange.findFrom(geom)
+				: TextureRange.UnitRange;
+
 		for(int i=0;i<geom.getNumVertices();++i)
 		{
-			PdVector vec = map(geom.getVertex(i));
-			geom.setVertex(i,vec);
+			PdVector vec = useTextureCoordinates || paramsFromTexture
+					? texrng.scale(geom.getVertexTexture(i))
+					: geom.getVertex(i);
+
+			PdVector res = map(vec);
+			geom.setVertex(i,res);
 		}
 		return geom;
 	}
