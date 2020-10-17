@@ -16,10 +16,14 @@ The program can calculate many of the objects found in Singularity theory and ge
 
            [x,x y,y^2];          
 
-* Intersection of surfaces with sets defined by an equation. Can be used to calculate non-polynomial curves. 
+* Intersection of surfaces with sets defined by an equation. 
+![Intersection of a cone with a plane](doc/cone_intersection_sml.png)
+
+Can be used to calculate non-polynomial curves. 
 For example a super ellipse
 
 			pow(abs(x/a),p)+pow(abs(y/b),p)-1; 
+
 
 * Clipping, part of a surface inside a set define by an implicit equation
 
