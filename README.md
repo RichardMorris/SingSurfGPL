@@ -6,17 +6,17 @@ The program can calculate many of the objects found in Singularity theory and ge
 * **Algebraic curves** defined by a single polynomial equation in two variables. e.g. electric motor 
 `y^2(y^2-9)-x^2(x^2-10);`
 
-![Electric motor](doc/electric motor.png)
+![Electric motor](doc/electric_motor.png)
 * **Algebraic surfaces** defined by a single polynomial equation in three variables. e.g. a Chubs surface
 `x^4 + y^4 + z^4 - x^2 - y^2 - z^2 + 0.5;`
             
-![Chubs surface](doc/chubs surface.png)
+![Chubs surface](doc/chubs_surface.png)
 * **Paramertised curves** defined by a 3D vector expression in a single variable. e.g. a helix
 `[cos(pi t), sin(pi t), t];`    
 ![Helix](doc/helix.png)
 * **Parameterised surfaces** defined by a 3D vector expression in two variables. e.g. a cross-cap
 `[x,x y,y^2]`          
-![Cross cap](doc/cross cap.png)
+![Cross cap](doc/cross_cap.png)
 
 * **Intersection** of surfaces with sets defined by another equation. 
 For example the intersection of a conical surface with the set defined by a plane `a x b y + cz =d`.
@@ -26,33 +26,33 @@ For example the intersection of a conical surface with the set defined by a plan
 It can be used to calculate non-polynomial curves. 
 For example a super ellipse `pow(abs(x/a),p)+pow(abs(y/b),p)-1` 
 
-![superellipse](doc/super ellipse.png)
+![superellipse](doc/super_ellipse.png)
 
 * **Clipping**, part of a surface inside a set define by an implicit equation, like the set inside a box 
 `min(min(min(xh-x,x-xl),min(yh-y,y-yl)),min(zh-z,z-zl))`,
 or clipped by a sphere `x^2+y^2+z^2-r^2`
-![Clipped cross cap ](doc/cross cap clip.png)
+![Clipped cross cap ](doc/cross_cap_clip.png)
 
 * **Mapping** from R^3 to R^3 defined by 3D vector equation in three variables. e.g. a rotation
 `[cos(pi th) x - sin(pi th) y,sin(pi th) x + cos(pi th) y,z];`   	
 		   
-![Torus and its rotation](doc/rotated torus.png)
+![Torus and its rotation](doc/rotated_torus.png)
 * **Vector Fields**, including unoriented vector field, and binary differential equations
 
-![vector field](doc/vector field.png)
+![vector field](doc/vector_field.png)
 
 * **Integral Curves**. Uses the points in a geometry to define the starting points
 
-![Limit cycle](doc/hopf bifucation.png)
+![Limit cycle](doc/hopf_bifucation.png)
 
 * **Colourise**: sets the colour of a surface depending on an expression. For example to colour by the z coordinate
 `[(z+1), 0,(1-z)];`	setting the red, green, and blue components for each point. 
 	
-![Colour by height](doc/colour by height.png)
+![Colour by height](doc/colour_by_height.png)
 * **Extrude**: produces surfaces of revolution and similar surfaces which depend on a curve and an equation. 
 Can be used to produce families of curves.
 
-![Surface of revolution](doc/surface of revolution.png)
+![Surface of revolution](doc/surface_of_revolution.png)
 	 
 Several of these models have versions where the equation of another curve or surface can be used as part of the definition
 
@@ -66,7 +66,7 @@ For example Gauss Map of a surface
 	Sy = diff(S,y);  // Definition of S read from the input surface
 ```
 
-![cusp of gauss map](doc/cusp of gauss map.png)
+![cusp of gauss map](doc/cusp_of_gauss_map.png)
 * **Generalised Intersections** where the equation depends on the definition of another curve or surface. 
 e.g. The profile of a surface, or parabolic lines
 
@@ -74,7 +74,7 @@ e.g. The profile of a surface, or parabolic lines
 			N . [A,B,C];
 			N = diff(S,x) ^^ diff(S,y);	
 
-![Profile of a torus](doc/torus profile sml.png)
+![Profile of a torus](doc/torus_profile_sml.png)
 
 * **Generalised Clipping**: eg the part of 	surface contained inside another already defined implicit surface
 
@@ -87,7 +87,7 @@ e.g. The profile of a surface, or parabolic lines
         T = TT/sqrt(TT.TT); // unit length
         TT = diff(S,x);     // tangent to curve
 ```
-![tangent developable](doc/tangent developable.png)
+![tangent developable](doc/tangent_developable.png)
 
 * **Generalised Vector Fields**: eg. principle directions which are caluclated using the definition of the input surface
 
@@ -95,7 +95,7 @@ e.g. The profile of a surface, or parabolic lines
 
 * **Generalised Integrals Curves**: e.g. principle curves of a surface caluclated using the definition of the input surface
 
-![principle curve](doc/principle curves.png)
+![principle curve](doc/principle_curves.png)
 
 There are some more specialised modules
 
@@ -107,7 +107,7 @@ There are some more specialised modules
 
 * **BiMap** Mapping where the equation depends on a pair of curves. For example the Symmetry set.
 
-![symmetry set](doc/symmetry set.png)
+![symmetry set](doc/symmetry_set.png)
 
 * Projective varities: algebraic surfaces defined in real projective space, 
 with options for sterographic projections and rotations in 4D
