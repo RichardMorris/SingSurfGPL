@@ -17,6 +17,7 @@ The program can calculate many of the objects found in Singularity theory and ge
            [x,x y,y^2];          
 
 * Intersection of surfaces with sets defined by an equation. 
+
 ![Intersection of a cone with a plane](doc/cone_intersection_sml.png)
 
 Can be used to calculate non-polynomial curves. 
@@ -87,11 +88,13 @@ It is a good idea to register your version of JavaView. Regestration provides a 
 
 ## Installation and running
 
+The souce code can be downloaded from (SingSurfGPL on github)[https://github.com/RichardMorris/SingSurfGPL].
+
 A zip file with an executable jar file and all necessary files is availiable from [singsurf.org](http://singsurf.org/singsurf/SingSurfPro.html). Once unpacked this can be run using a single line java command.
 
 For the git source code, there are three different main classes
-* `org.singsurf.singsurf.SingSurfPro` the 3D version with all sub-types
-* `org.singsurf.singsurf.SingSurf2D` the 2D version optimised for curves in the plane
+* `org.singsurf.singsurf.SingSurf3D` the 3D version with all sub-types
+* `org.singsurf.singsurf.SingSurf2D` the 2D version, with setting for examining curves in the plane
 * `org.singsurf.singsurf.ASurfSimp` a simplified version just with the algebraic surface component
 
 
