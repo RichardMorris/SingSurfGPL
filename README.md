@@ -91,7 +91,7 @@ e.g. The profile of a surface, or parabolic lines
 
 * **Generalised Vector Fields**: eg. principle directions which are caluclated using the definition of the input surface
 
-![Principle directions](doc/principle directions.png)
+![Principle directions](doc/principle_directions.png)
 
 * **Generalised Integrals Curves**: e.g. principle curves of a surface caluclated using the definition of the input surface
 
