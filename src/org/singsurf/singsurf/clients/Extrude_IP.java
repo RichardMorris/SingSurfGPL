@@ -40,7 +40,7 @@ public class Extrude_IP extends SingSurf_IP {
 	@Override
 	protected PsPanel getSouthPanel() {
 		PsPanel pan = super.getSouthPanel();
-		pan.add(((GeneralizedExtrude) project).cbAsLineBundle);
+		pan.add(((Extrude) project).cbAsLineBundle);
 
 		pan.addSubTitle("New Input Geometry");
 		pan.add(((Extrude) project).ch_inputSurf);

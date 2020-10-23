@@ -7,7 +7,7 @@ S;
 </definition>
 
 <definition name="Gauss map" type="genMap" opType="psurf">
-// Projects curves from the paraameter space onto a surface
+// Projects curves from the parameter space onto a surface
 N / sqrt(N.N);
 N = Sx ^^ Sy;
 Sx = diff(S,x);
