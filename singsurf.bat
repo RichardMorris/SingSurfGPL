@@ -1,4 +1,4 @@
-@echo on
+@echo off
 rem # USAGE:    Run
 rem #             singsurf.bat 
 rem #           from the windows explorer or command line.
@@ -21,15 +21,21 @@ rem # Optional: memory allocation
 rem # Default is 1GB, to allocate more space use -Xmx8g for 8 GB
 set MEM_SPEC=-Xmx1g
 
-rem # No need to edit below
-rem # 
-rem #set jar=%jv_cb%/lib/SingSurf.jar
-set cp=bin;%javaview_home%\jars\javaview.jar;%javaview_home%\jars\jvx.jar;%jep_home%\build
+rem # No need to edit below this line
+
+set jar=lib/SingSurf.jar
+set cp=classes;%javaview_home%\jars\javaview.jar;%javaview_home%\jars\jvx.jar;%jep_home%\build
 
 rem # Append trailing path separator to codebase param
 set jv_cb=%javaview_home%\
 
 rem # Launch SingSurf, should open a 3d display.
 
-rem #start javaw -jar %jar% -Xmx1024m codebase=%jv_cb%
-java -cp "%cp%" %MEM_SPEC% org.singsurf.singsurf.SingSurf3D codebase=%jv_cb%  %FONT_DEC%
+if exist %jar% (
+    echo "Using Jar file"
+	java -jar %jar% %MEM_SPEC% codebase=%jv_cb% %FONT_DEC%
+) else (
+    echo "Using class files"
+    java -cp "%cp%" %MEM_SPEC% org.singsurf.singsurf.SingSurf3D codebase=%jv_cb%  %FONT_DEC%
+)
+

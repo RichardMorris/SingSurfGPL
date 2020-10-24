@@ -1,12 +1,35 @@
 #! /bin/sh
+# Runs the singsurf mathematical visualisation program
+# Either set the JEP_HOME and JAVAVIEW_HOME environment variable or set them below.
 
-jep_home=C:/Users/rich/git/jep-java-gpl
-javaview_home=C:/Users/rich/bin/javaview
+# Set the two variables for the jep and javaview home directories
 
-#java -Xmx16g -jar lib/SingSurf.jar
+if [[ -z "${JEP_HOME}" ]]; then
+  jep_home=C:/Users/rich/git/jep-java-gpl
+else
+  jep_home="${JEP_HOME}"
+fi
 
-javaw -Xmx16g -cp "bin;$javaview_home/jars/javaview.jar;$javaview_home/jars/jvx.jar;$jep_home/build" org.singsurf.singsurf.SingSurf3D codebase=$javaview_home/ Font=Dialog-14 TextFont=Dialog-17
-#javaw -Xmx16g -cp "bin;$javaview_home/jars/javaview.jar;$javaview_home/jars/jvx.jar;$jep_home/build" org.singsurf.singsurf.SingSurf3D codebase=$javaview_home/ 
+if [[ -z "${JAVAVIEW_HOME}" ]]; then
+  javaview_home=C:/Users/rich/bin/javaview
+else
+  javaview_home="${JAVAVIEW_HOME}"
+fi
 
+# Specify fonts 
+FONT_SPEC="Font=Dialog-14 TextFont=Dialog-17"
 
-#C:\Program Files\Java\jdk1.8.0_201\bin\javaw.exe -Dfile.encoding=UTF-8 -classpath "C:\Users\rich\eclipse-workspace\SingSurfGPL\bin;C:\Users\rich\git\jep-java-gpl\lbin;C:\Users\rich\.p2\pool\plugins\org.junit_4.13.0.v20200204-1500.jar;C:\Users\rich\.p2\pool\plugins\org.hamcrest.core_1.3.0.v20180420-1519.jar;C:\Users\rich\bin\javaview\jars\javaview.jar;C:\Users\rich\bin\javaview\jars\jvx.jar" org.singsurf.singsurf.SingSurf3D Font=Dialog-14 TextFont=Dialog-17
+# Optional: memory allocation 
+# Default is 1GB, to allocate more space use -Xmx8g for 8 GB
+MEM_SPEC=-Xmx1g
+
+# Whether to use the jar file if it exists
+use_jar=true
+
+if $use_jar  && [ -f lib/SingSurf.jar ]  ; then
+   echo "SingSurf.jar found. Running jar version"
+   java $MEM_SPEC -jar lib/SingSurf.jar codebase=$javaview_home/ $FONT_SPEC
+else
+   echo "SingSurf.jar not found. Running class version "
+   java $MEM_SPEC -cp "classes;$javaview_home/jars/*;$jep_home/build" org.singsurf.singsurf.SingSurf3D codebase=$javaview_home/ $FONT_SPEC
+fi

@@ -1,32 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="jar" name="SingSurfGPL">
+<project default="compile" name="SingSurfGPL">
 
+	<!-- Locations for home directories of JEP and JavaView  -->
+    <property name="dir.javaview" value="${JAVAVIEW_HOME}"/>
+    <property name="dir.jep" value="${JEP_HOME}"/>
+	<!-- Locations of JUnit 4 jar files -->
+	<!--
+	<property name="junit.jars" value="C:\Users\rich\.p2\pool\plugins\org.junit_4.13.0.v20200204-1500.jar;C:\Users\rich\.p2\pool\plugins\org.hamcrest.core_1.3.0.v20180420-1519.jar" />
+	-->
+    <property name="junit.jars" value="${junit.jar}"/>
+	
     <property name="dir.buildfile" value="."/>
-    <property name="dir.out" value="./build"/>
-    <property name="dir.src" value="${dir.buildfile}/src"/>
-    <property name="dir.bin" value="${dir.buildfile}/bin"/> <!-- compiled .class files -->
-    <property name="dir.dist" value="./dist"/>				<!-- files for distribution -->
+    <property name="dir.src" value="${dir.buildfile}/src"/> <!-- source java files -->
+    <property name="dir.bin" value="${dir.buildfile}/classes"/> <!-- compiled .class files -->
+    <property name="dir.dist.base" value="./dist"/>				<!-- files for distribution -->
+    <property name="dir.dist" value="${dir.dist.base}/singsurf"/> <!-- everything goes in the singsurf dir so its unzips correctly -->
     <property name="dir.lib" value="${dir.dist}/lib"/>      <!-- jar files for distribution -->
 	
-    <property name="dir.javaview" value="C:/Users/rich/bin/javaview/"/>
     <property name="javaview.jar" value="${dir.javaview}/jars/javaview.jar"/>
     <property name="jvx.jar" value="${dir.javaview}/jars/jvx.jar"/>
 	
-    <property name="dir.jep" value="C:/Users/rich/git/jep-java-gpl"/>
     <property name="jep.jar" value="${dir.jep}/dist/jep-2.4.0.jar"/>
     <property name="jepext.jar" value="${dir.jep}/dist/ext-1.1.0.jar"/>
 	
-	<property name="cp.junit" value="C:\Users\rich\.p2\pool\plugins\org.junit_4.13.0.v20200204-1500.jar;C:\Users\rich\.p2\pool\plugins\org.hamcrest.core_1.3.0.v20180420-1519.jar" />
-    <property name="classpath" value="${cp.junit};${dir.jep}/lbin;${javaview.jar};${jvx.jar}"/>
+    <property name="classpath" value="${junit.jars};${dir.jep}/lbin;${javaview.jar};${jvx.jar}"/>
 	
-	<target name="clean">
+	<target name="clean" description="Clean out class file and distribution directories">
 		<delete includeemptydirs="true">
-		  <fileset dir="${dir.dist}" includes="**/*"/>
+		  <fileset dir="${dir.dist.base}" includes="**/*"/>
+		</delete>
+		<delete includeemptydirs="true">
+		  <fileset dir="${dir.bin}" includes="**/*"/>
 		</delete>
 	</target>
 	
-	<!-- Compiles with ensuring compatibility if JRE1_2HOME is set -->
-	<target name="compile">
+	<target name="init" description="Checks environment variables">
+		<fail message="use 'ant -DJEP_HOME=... -DJAVA_VIEWHOME=...' to specify location of Jep and Javaview directories directories" >
+		    <condition>
+		    	<and>
+		        	<not>
+		            	<isset property="JEP_HOME"/>
+		        	</not>
+		    		<not>
+			            <isset property="JAVAVIEW_HOME"/>
+			        </not>	    				    	
+		    	</and>
+		    </condition>
+		</fail>
+	</target>
+	
+	<target name="testjunit">
+		<echo message="JU=${junit.jars}"/>
+		<fail message="use 'ant -Djunit.jar=' to specify location of JUnit 4.0 jar and hamcrest jar"
+			unless="junit.jars" />
+	</target>
+	
+	<target name="compile" depends="init,testjunit" description="compile java classes">
 		<echo message="classpath=${classpath}"/>
 		<!-- <echoproperties /> -->
 		<!-- Create the build directory -->
@@ -43,6 +72,7 @@
 		       bootclasspath="${bootclasspath}"
 			excludes="**/JetExtractor.java, **/DiferentailFormTest.java, **/package-info.java, **/RayTrace.java, **/DiffForm.java" />
 
+		<!-- Copy other resources -->
 		<copy todir="${dir.bin}" includeEmptyDirs="false" verbose="true">
 			<fileset dir="${dir.src}" includes="**/messages.properties" />
 		</copy>
@@ -59,7 +89,7 @@
         </jar>
     </target>
     	
-	<target name="dependants">
+	<target name="dependants" depends="init" description="Copy in resources from other packages">
         <copy file="${dir.javaview}/jars/javaview.jar" todir="${dir.lib}"/>
         <copy file="${dir.javaview}/jars/jvx.jar" todir="${dir.lib}"/>
         <copy file="${jep.jar}" tofile="${dir.lib}/jep.jar"/>
@@ -75,19 +105,18 @@
 		</copy>
 	</target>
 	
-	<target name="dist">
+	<target name="distfiles"  >
         <copy todir="${dir.dist}">
 			<fileset dir="${dir.buildfile}" includes="README.md,asurf.sh,singsurf.sh,singsurf.bat" />
         </copy>
     </target>
 	
-	<target name="zip" depends="jar,dist" >
+	<target name="zip" depends="jar,distfiles" >
 
 	    <echo message="Creating zip files -----------------------" />
-	    <zip zipfile="singsurf.zip" basedir="${dir.dist}" />
+	    <zip zipfile="singsurf.zip" basedir="${dir.dist.base}" />
 
-	    <!-- clean up temporary files 
-	        <delete dir="disttemp" />-->
 	</target>
 
+	<target name="dist" description="Make everything required for distribution" depends="zip"/>
 </project>
