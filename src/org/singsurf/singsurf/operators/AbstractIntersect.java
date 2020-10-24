@@ -191,11 +191,11 @@ public abstract class AbstractIntersect extends AbstractOperator {
 		PdVector C = calculateIntersection(a,b);
 		if(C==null)
 		{
-			pairSolutions.put(p,new Integer(-1));
+			pairSolutions.put(p,-1);
 			return -1;
 		}
 		index = outGeom.addVertex(C);
-		pairSolutions.put(p,new Integer(index));
+		pairSolutions.put(p,index);
 		return index;
 	}
 

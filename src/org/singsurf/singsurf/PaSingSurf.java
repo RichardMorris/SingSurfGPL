@@ -121,15 +121,6 @@ abstract public class PaSingSurf extends JPanel {
 		System.out.println("Status " + arg0);
 	}
 
-	/**
-	 * Does clean-up when applet is destroyed by the browser. Here we just close and
-	 * dispose all our control windows.
-	 */
-
-	public void destroy() {
-		m_viewer.destroy();
-	}
-
 	/** Start viewer, e.g. start animation if requested */
 
 	public void start() {
@@ -150,7 +141,7 @@ abstract public class PaSingSurf extends JPanel {
 		// System.out.println("Stop viewer done");
 	}
 
-	/** Print info while initializing applet and viewer. */
+	/** Print info while initialising applet and viewer. */
 
 	@Override
 	public void paint(Graphics g) {

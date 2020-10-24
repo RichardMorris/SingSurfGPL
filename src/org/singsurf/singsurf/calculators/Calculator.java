@@ -232,6 +232,7 @@ public class Calculator {
 		}
 	}
 
+	/*
 	void extendDepVarsOld(Node eqn) throws ParseException
 	{
 		int oldSize = depVars.size();
@@ -244,6 +245,8 @@ public class Calculator {
 			allComs.add(com);
 		}
 	}
+	*/
+	
 	/**
 	 * Finds the MRpCommandLists, assigns references to definitions variables and parameters.
 	 * @throws ParseException
@@ -284,9 +287,9 @@ public class Calculator {
 				Parameter p = definition.getParameter(var.getName());
 				if(p==null)
 					p = definition.addParameter(var.getName());
-				var.setMValue(Scaler.getInstance(new Double(p.getVal())));
+				var.setMValue(Scaler.getInstance(p.getVal()));
 				int ref = mrpe.getVarRef(var);
-				paramRefs.put(p.getName(),new Integer(ref));
+				paramRefs.put(p.getName(),ref);
 			}
 		}
 		//mj.println(top);

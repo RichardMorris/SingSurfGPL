@@ -3,7 +3,6 @@ Created 24-May-2006 - Richard Morris
 */
 package org.singsurf.singsurf.geometries;
 
-import java.applet.Applet;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,7 +53,6 @@ public class GeomStore implements PvGeometryListenerIf {
     /** Reference to the main viewer */
     PvViewerIf viewer;
     /** Reference to main applet */
-    Applet applet;
     /** A list of geometries indexed by name */
     Map<String, PgGeometryIf> allGeoms = new HashMap<String, PgGeometryIf>();
     /** All projects which wish to know the complete list of geometries */
@@ -72,7 +70,6 @@ public class GeomStore implements PvGeometryListenerIf {
 
     public GeomStore(PvViewerIf viewer) {
 	this.viewer = viewer;
-	applet = viewer.getApplet();
 	PvDisplayIf[] disps = viewer.getDisplays();
 	for (int i = 0; i < disps.length; ++i) {
 	    if (!disps[i].hasGeometryListener(this))
@@ -371,8 +368,8 @@ public class GeomStore implements PvGeometryListenerIf {
 	String head = null;
 
 	String codeBase = PsConfig.getUserBase();
-	if (codeBase == null)
-	    codeBase = applet.getParameter("DefUrl");
+//	if (codeBase == null)
+//	    codeBase = applet.getParameter("DefUrl");
 	if (codeBase.endsWith(".")) // Hack to get it to work with jview which has /. at the end of codeBase
 	{
 	    head = codeBase + "/";

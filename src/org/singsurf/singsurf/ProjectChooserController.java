@@ -32,12 +32,12 @@ public class ProjectChooserController {
 	ProjectFactory factory;
 	AbstractClient currentProject;
 
-	public ProjectChooserController(SingSurf3D singSurf3D, PvViewer m_viewer, ProjectChooserModel model) {
+	public ProjectChooserController(SingSurf3D ssp, PvViewer m_viewer, ProjectChooserModel model) {
 		super();
-		this.ssp = singSurf3D;
+		this.ssp = ssp;
 		this.m_viewer = m_viewer;
 		this.model = model;
-		this.factory = new ProjectFactory(model, singSurf3D.store);
+		this.factory = new ProjectFactory(model, ssp.store);
 	}
 
 

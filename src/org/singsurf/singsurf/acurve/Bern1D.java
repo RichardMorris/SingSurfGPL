@@ -84,11 +84,11 @@ public class Bern1D {
 
 	   if(coeff[0] == 0.0)
 	   {
-	      return(new Double(l));
+	      return(l);
 	   }
 	   if(coeff[xord] == 0.0) /* This prevents corner points being found twice */
 	   {
-	      return(new Double(h)); 
+	      return(h); 
 	   }
 	   else if(getSign()!=0) return(null);
 	   
@@ -103,7 +103,7 @@ public class Bern1D {
 	            rootl = rootm;
 	         }
 	      }
-	   return new Double((1.0-rootm)*l + rootm*h);
+	   return ((1.0-rootm)*l + rootm*h);
 	/*
 	   return(rooth != 1.0 );  
 	*/

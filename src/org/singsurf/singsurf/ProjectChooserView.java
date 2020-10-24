@@ -136,8 +136,8 @@ public class ProjectChooserView extends java.awt.List implements ItemListener, M
 
 	@Override
 	public void mousePressed(MouseEvent event) {
-		int modifiers = event.getModifiers();
-		if ((modifiers & InputEvent.BUTTON3_MASK) == InputEvent.BUTTON3_MASK) {
+		int modifiers = event.getModifiersEx();
+		if ((modifiers & InputEvent.BUTTON3_DOWN_MASK) == InputEvent.BUTTON3_DOWN_MASK) {
 //			Component comp = this.getComponentAt(event.getPoint());
 		 
 			int i = this.getSelectedIndex();

@@ -80,13 +80,13 @@ public class RangeConfig extends PsDialog {
 	if (source == b_OK) {
 	    try {
 		Double d;
-		d = new Double(tf_min.getText());
+		d = Double.valueOf(tf_min.getText());
 		min = d.doubleValue();
-		d = new Double(tf_max.getText());
+		d = Double.valueOf(tf_max.getText());
 		max = d.doubleValue();
-		d = new Double(tf_smallStep.getText());
+		d = Double.valueOf(tf_smallStep.getText());
 		smallStep = d.doubleValue();
-		d = new Double(tf_bigStep.getText());
+		d = Double.valueOf(tf_bigStep.getText());
 		bigStep = d.doubleValue();
 	    } catch (NumberFormatException e) {
 		PsDebug.error("Number Format Error", this);

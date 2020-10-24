@@ -14,11 +14,8 @@ import java.awt.Choice;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
-import java.awt.DisplayMode;
 import java.awt.FileDialog;
 import java.awt.Frame;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
@@ -190,7 +187,7 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 
 		Menu newProj = new Menu("Examples");
 		mb.add(newProj);
-		for (ProjectType proj : this.controller.factory.projectTypes) {
+		for (ProjectType proj : controller.factory.projectTypes) {
 			if(proj.egPath.length()>0) {
 				Menu m = buildExamplesSubMenu(proj);
 				newProj.add(m);
@@ -289,20 +286,6 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 	 */
 
 	public static void main(String args[]) {
-		
-//		System.getenv().forEach((k,v)-> System.out.println(k+"\t"+v));
-		
-		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		for(GraphicsDevice dev:ge.getScreenDevices()) {
-			System.out.println(dev.toString());
-			System.out.println(dev.getDisplayMode());
-			
-			for(DisplayMode mode: dev.getDisplayModes()) {
-				System.out.println("\t"+dev.getDisplayMode());
-			}
-			System.out.println(dev.getDefaultConfiguration());
-			
-		}
 		PaSingSurf va = new SingSurf3D();
 		commonMain(va, args);
 	}
