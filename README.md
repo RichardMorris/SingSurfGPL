@@ -23,7 +23,7 @@ For example the intersection of a conical surface with the set defined by a plan
 
 ![Intersection of a cone with a plane](doc/cone_intersection_sml.png)
 
-It can be used to calculate non-polynomial curves. 
+This module can be used to calculate non-polynomial curves. 
 For example a super ellipse `pow(abs(x/a),p)+pow(abs(y/b),p)-1` 
 
 ![superellipse](doc/super_ellipse.png)
@@ -101,7 +101,7 @@ e.g. The profile of a surface, or parabolic lines
 
 There are some more specialised modules
 
-* Ridge Intersections: curves which depend on a surface and a vector field, for example the ridges of a surface 
+* **Ridge Intersections**: curves which depend on a surface and a vector field, for example the ridges of a surface 
 
 ![Ridges and sub-parabolic lines](doc/ridges.png)
 
@@ -111,7 +111,7 @@ There are some more specialised modules
 
 ![symmetry set](doc/symmetry_set.png)
 
-* Projective varieties: algebraic surfaces defined in real projective space, 
+* **Projective varieties**: algebraic surfaces defined in real projective space, 
 with options for stereographic projections and rotations in 4D
 
 ![Sarti's surface](doc/sarti.png)
@@ -134,7 +134,7 @@ This has a more flexible parser but is otherwise identical in operation.
 
 ## Installation and running
 
-###Source code release
+### Source code release
 The source code can be downloaded from [SingSurfGPL on github](https://github.com/RichardMorris/SingSurfGPL).
 
 For the git source code, there are three different main classes
@@ -145,7 +145,7 @@ For the git source code, there are three different main classes
 To compile first set environment variables for Jep, Javaview home directories and the Junit jar.
 Using 'bash' on linux use
 
-     export JEP_HOME=C:/User/rich/git/jep-java-gpl
+     export JEP_HOME=C:/Users/rich/git/jep-java-gpl
      export JAVAVIEW_HOME=C:/Users/rich/bin/javaview
      export JUNIT_JAR="C:\Users\rich\.p2\pool\plugins\org.junit_4.13.0.v20200204-1500.jar;C:\Users\rich\.p2\pool\plugins\org.hamcrest.core_1.3.0.v20180420-1519.jar"
 
@@ -172,7 +172,8 @@ Both versions have variables which can be set to change the amount of memory all
 
 ### Bundled release
 
-A zip file with an executable jar file and all necessary files is available from [singsurf.org](http://singsurf.org/singsurf/SingSurfPro.html). Once unpacked this can be run using a single line Java command.
+A zip file with an executable jar file and all necessary files is available from [singsurf.org](https://singsurf.org/singsurf/download.php). 
+Once unpacked this can be run using a single line Java command.
 This include the necessary Jep and JavaView files.
 
 Once unzipped the main SingSurf3D program can be used by running either

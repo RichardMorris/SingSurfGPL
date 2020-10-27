@@ -6,6 +6,7 @@
     <property name="dir.jep" value="${JEP_HOME}"/>
 	<!-- Locations of JUnit 4 jar files -->
 	<!--
+    <property name="dir.jep" value="C:/Users/rich/git/jep-java-gpl"/>
 	<property name="junit.jars" value="C:\Users\rich\.p2\pool\plugins\org.junit_4.13.0.v20200204-1500.jar;C:\Users\rich\.p2\pool\plugins\org.hamcrest.core_1.3.0.v20180420-1519.jar" />
 	-->
     <property name="junit.jars" value="${junit.jar}"/>
@@ -23,7 +24,7 @@
     <property name="jep.jar" value="${dir.jep}/dist/jep-2.4.0.jar"/>
     <property name="jepext.jar" value="${dir.jep}/dist/ext-1.1.0.jar"/>
 	
-    <property name="classpath" value="${junit.jars};${dir.jep}/lbin;${javaview.jar};${jvx.jar}"/>
+    <property name="classpath" value="${dir.jep}/lbin:${javaview.jar}:${jvx.jar};${junit.jars}"/>
 	
 	<target name="clean" description="Clean out class file and distribution directories">
 		<delete includeemptydirs="true">
@@ -50,7 +51,6 @@
 	</target>
 	
 	<target name="testjunit">
-		<echo message="JU=${junit.jars}"/>
 		<fail message="use 'ant -Djunit.jar=' to specify location of JUnit 4.0 jar and hamcrest jar"
 			unless="junit.jars" />
 	</target>
