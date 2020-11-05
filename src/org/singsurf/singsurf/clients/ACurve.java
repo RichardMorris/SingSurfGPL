@@ -72,7 +72,7 @@ public class ACurve extends AbstractClient {
     @Override
     public Definition createDefaultDef() {
 	Definition def1;
-	def1 = new Definition("ACurve", DefType.acurve, "");
+	def1 = new Definition("ACurve", DefType.acurve, "x^2-y^2;");
 	def1.add(new DefVariable("x", -1, 1));
 	def1.add(new DefVariable("y", -1, 1));
 	return def1;
@@ -229,7 +229,7 @@ public class ACurve extends AbstractClient {
 
 	EquationPolynomialConverter ec = new EquationPolynomialConverter(calc.getJep());
 	try {
-	    double[][] coeffs = ec.convert2D(calc.getRawEqns(), new String[] { localY.getName(), localX.getName() },
+	    double[][] coeffs = ec.convert2D(calc.getRawEqns(), new String[] { localX.getName(), localY.getName() },
 		    calc.getParams());
 
 	    resultGeom = plotter.calculate(coeffs, localX.getMin(), localX.getMax(), localY.getMin(), localY.getMax());
