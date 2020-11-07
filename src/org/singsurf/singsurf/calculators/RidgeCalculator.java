@@ -8,9 +8,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.lsmp.djep.djep.DSymbolTable;
-import org.lsmp.djep.djep.PartialDerivative;
 import org.lsmp.djep.matrixJep.MatrixJep;
-import org.lsmp.djep.matrixJep.MatrixVariable;
 import org.lsmp.djep.matrixJep.MatrixVariableI;
 import org.lsmp.djep.vectorJep.Dimensions;
 import org.lsmp.djep.xjep.XVariable;

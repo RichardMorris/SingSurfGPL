@@ -1,13 +1,10 @@
 package org.singsurf.singsurf.calculators;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.lsmp.djep.matrixJep.MatrixVariableFactory;
 import org.nfunk.jep.Variable;
-import org.singsurf.singsurf.jep.ExternalVariable;
 
 class SpecialVariableFactory extends MatrixVariableFactory {
 
