@@ -1,0 +1,22 @@
+<definition name="Parallel curve" type="genMap" opType="pcurve">
+// Parallel curve for 2D curves
+S + a N / sqrt(N.N);
+//N = Sxx - (Sxx . Sx ) Sx / (Sx .Sx);
+//Sxx = diff(Sx,x);
+N = Sx ^^ [0,0,1];
+Sx = diff(S,x);
+<variable name="x">
+<variable name="S" dim="3" type="pcurve">
+<parameter name="a" value="0.2">
+</definition>
+
+<definition name="Evolute" type="genMap" opType="pcurve">
+// Evolute of 2D curves
+S + (1/r) N / sqrt(N.N);
+r = abs((Sxx ^^ Sx ).[0,0,1]) / (sqrt(Sx . Sx)^3);
+N = Sxx - (Sxx . Sx ) Sx / (Sx .Sx);
+Sxx = diff(Sx,x);
+Sx = diff(S,x);
+<variable name="x">
+<variable name="S" dim="3" type="pcurve">
+</definition>

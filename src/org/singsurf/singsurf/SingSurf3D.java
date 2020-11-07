@@ -293,7 +293,7 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		String command = event.getActionCommand();
-		int colon = command.indexOf(':',0);
+		int colon = command.lastIndexOf(':');
 		
 //		StringTokenizer st = new StringTokenizer(command, ":");
 		String prefix = colon >=0 ? command.substring(0, colon) : command;
@@ -305,7 +305,7 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 		for (ProjectType proj : this.controller.factory.projectTypes) {
 			if (prefix.equals(proj.shortName)) {
 				try {
-					if (suffix == null) {
+					if (suffix == null || suffix.length()==0) {
 						controller.loadProject(proj.type);
 					} else {
 						for (Definition def : proj.defs) {

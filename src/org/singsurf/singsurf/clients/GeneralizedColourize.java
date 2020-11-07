@@ -11,8 +11,6 @@ import java.util.SortedSet;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.calculators.ChainedCalculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
@@ -23,31 +21,11 @@ public class GeneralizedColourize extends Colourize implements GeneralisedOperat
 	/** A choice of available inputs */
 	protected Choice ch_ingredient = new Choice();
 
-	public GeneralizedColourize(GeomStore store, String projName) {
-
-		super(store, projName);
-		if (getClass() == GeneralizedColourize.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public GeneralizedColourize(GeomStore store, Definition def) {
-		super(store, def.getName());
+		super(store, def);
 		if (getClass() == GeneralizedColourize.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Gen Map", DefType.genColour, "");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("z", "none"));
-		def.add(new DefVariable("S", "psurf"));
-		def.setOpType(DefType.psurf);
-		return def;
 	}
 
 	@Override

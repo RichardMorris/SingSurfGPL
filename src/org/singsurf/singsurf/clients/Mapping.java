@@ -19,19 +19,16 @@ import org.singsurf.singsurf.LmsPointSetMaterial;
 import org.singsurf.singsurf.LmsPolygonSetMaterial;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.ContinuityClip;
 import org.singsurf.singsurf.operators.SimpleCalcMap;
 import org.singsurf.singsurf.operators.SimpleMap;
 import org.singsurf.singsurf.operators.SphereClip;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
-
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgElementSet;
 import jv.geom.PgPointSet;
@@ -53,28 +50,11 @@ public class Mapping extends AbstractOperatorClient {
 
 	/********** Constructor *********/
 
-	public Mapping(GeomStore store, String name) {
-		super(store, name);
-		if (getClass() == Mapping.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public Mapping(GeomStore store, Definition def) {
 		super(store, def.getName());
 		if (getClass() == Mapping.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Mapping", DefType.mapping, "");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("z", "none"));
-		return def;
 	}
 
 	public void init(Definition def) {

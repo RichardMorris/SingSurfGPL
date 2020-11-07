@@ -24,24 +24,32 @@ public class ProjectFactory {
 		String shortName;
 		String egPath;
 		String className;
+		String defaultDef;
 		Class<?> clientClass; //, ipClass;
 		List<Definition> defs;
-		
-		public ProjectType(DefType type, String longName, String shortName, String egPath, String className) throws ClassNotFoundException, IOException {
+		int varient=0;
+		public ProjectType(DefType type, String longName, String shortName, String egPath, String className, String def) throws ClassNotFoundException, IOException {
 			super();
 			this.longName = longName;
 			this.shortName = shortName;
 			this.egPath = egPath;
 			this.className = className;
 			this.type = type;
+			this.defaultDef = def;
 			clientClass = Class.forName("org.singsurf.singsurf.clients." + className);
 //			ipClass = Class.forName("org.singsurf.singsurf.clients." + className + "_IP");
-			if(egPath.length()>0) {
+			if(defaultDef==null) {
+				System.out.println("Empty default def for "+type.getType()+" found ["+defaultDef+"]");				
+			}
+			
+			if(egPath!= null && egPath.length()>0) {
 				DefinitionReader ldr = store.loadDefs(egPath);
 				defs = ldr.getDefs();
 			}
-			else
+			else {
+				System.out.println("Empty def file for "+type.getType()+" found ["+egPath+"]");
 				defs = new ArrayList<>();
+			}
 		}
 	}
 
@@ -58,7 +66,13 @@ public class ProjectFactory {
 						SingSurfMessages.getString(name+".longName"),
 						SingSurfMessages.getString(name+".shortName"),
 						SingSurfMessages.getString(name+".egFile"),
-						SingSurfMessages.getString(name+".className"));
+						SingSurfMessages.getString(name+".className"),
+						SingSurfMessages.getString(name+".defaultDef")
+						);
+				if(SingSurfMessages.containsKey(name+".varient")) {
+					int varient = Integer.valueOf(SingSurfMessages.getString(name+".varient"));
+					pt.varient = varient;
+				}
 				projectTypes.add(pt);
 			} catch (ClassNotFoundException e) {
 //				System.err.println(e.toString());
@@ -98,6 +112,7 @@ public class ProjectFactory {
 			return null;
 		}
 	}
+
 	
 	/**
 	 * Builder for default def
@@ -106,14 +121,28 @@ public class ProjectFactory {
 	 */
 	public AbstractClient createProject(DefType defType) {
 		ProjectType type = this.getProjectType(defType);
+		Definition def = DefinitionReader.createLsmpDef(type.defaultDef);
+		return createProject(type,def);
+	}
+	/**
+	 * Builder for default def
+	 * @param defType
+	 * @return
+	 */
+	public AbstractClient createProjectOld(DefType defType) {
+		ProjectType type = this.getProjectType(defType);
 		String projName = model.getUniqueName(type.shortName );
 
 		Constructor<?> cons;
 		AbstractClient newsurf = null;
 		try {
-			cons = type.clientClass.getConstructor(new Class[] { GeomStore.class, String.class });
-			newsurf = (AbstractClient) cons.newInstance(new Object[] { store, projName });
-			
+			if(type.varient==0) {
+				cons = type.clientClass.getConstructor(new Class[] { GeomStore.class, String.class });
+				newsurf = (AbstractClient) cons.newInstance(new Object[] { store, projName });
+			} else {
+				cons = type.clientClass.getConstructor(new Class[] { GeomStore.class, String.class, Integer.class });
+				newsurf = (AbstractClient) cons.newInstance(new Object[] { store, projName, type.varient });				
+			}
 			return newsurf;
 		} catch (Exception e) {
 			Throwable cause = e.getCause();

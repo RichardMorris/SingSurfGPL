@@ -12,9 +12,7 @@ import org.lsmp.djep.matrixJep.MatrixJep;
 import org.lsmp.djep.matrixJep.MatrixPartialDerivative;
 import org.lsmp.djep.matrixJep.MatrixVariableFactory;
 import org.lsmp.djep.matrixJep.MatrixVariableI;
-import org.lsmp.djep.mrpe.MRpCommandList;
 import org.lsmp.djep.mrpe.MRpEval;
-import org.lsmp.djep.mrpe.MRpRes;
 import org.nfunk.jep.ParseException;
 import org.nfunk.jep.Variable;
 import org.singsurf.singsurf.definitions.DefType;
@@ -22,7 +20,6 @@ import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.jep.ExternalPartialDerivative;
 import org.singsurf.singsurf.jep.ExternalVariable;
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 /**
  * A calculator which depends on two ingredients.

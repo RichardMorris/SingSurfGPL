@@ -42,30 +42,47 @@ public class GeneralizedIntersection extends Intersection implements Generalised
 	Checkbox cbParamsFromTexture = new Checkbox("Parameters from texture",false);
 
  
-    public GeneralizedIntersection(GeomStore store, String projName) {
-	super(store, projName);
-	if (getClass() == GeneralizedIntersection.class) {
-	    init(this.createDefaultDef());
-	}
-    }
+//    public GeneralizedIntersection(GeomStore store, String projName) {
+//	super(store, projName);
+//	if (getClass() == GeneralizedIntersection.class) {
+//	    init(this.createDefaultDef());
+//	}
+//    }
+
+//    public GeneralizedIntersection(GeomStore store, String projName,Integer varient) {
+//	super(store, projName);
+//	if (getClass() == GeneralizedIntersection.class) {
+//	    init(this.createDefaultDef(varient));
+//	}
+//    }
 
     public GeneralizedIntersection(GeomStore store, Definition def) {
-	super(store, def.getName());
+	super(store, def);
 	if (getClass() == GeneralizedIntersection.class) {
 	    setDisplayEquation(def.getEquation());
 	    init(def);
 	}
     }
 
-    @Override
-    public Definition createDefaultDef() {
+//    @Override
+//    public Definition createDefaultDef() {
+//	Definition def;
+//	def = new Definition("Intersect", DefType.genInt, "S.[0,0,1];");
+//	def.add(new DefVariable("x", "none"));
+//	def.add(new DefVariable("y", "none"));
+//	def.add(new DefVariable("S", "psurf"));
+//	def.setOpType(DefType.psurf);
+//	return def;
+//    }
+
+    public Definition createDefaultDef(int varient) {
 	Definition def;
-	def = new Definition("Intersect", DefType.genInt, "");
+	def = new Definition("Intersect", DefType.genInt, "S;");
 	def.add(new DefVariable("x", "none"));
 	def.add(new DefVariable("y", "none"));
 	def.add(new DefVariable("z", "none"));
-	def.add(new DefVariable("S", "psurf"));
-	def.setOpType(DefType.psurf);
+	def.add(new DefVariable("S", "asurf"));
+	def.setOpType(DefType.asurf);
 	return def;
     }
 

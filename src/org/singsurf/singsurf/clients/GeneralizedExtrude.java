@@ -11,8 +11,6 @@ import java.util.SortedSet;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.calculators.ProductCalculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
@@ -23,30 +21,11 @@ public class GeneralizedExtrude extends Extrude implements GeneralisedOperator {
 	/** A choice of available inputs */
 	protected Choice ch_ingredient = new Choice();
 
-	public GeneralizedExtrude(GeomStore store, String projName) {
-
-		super(store, projName);
-		if (getClass() == GeneralizedExtrude.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public GeneralizedExtrude(GeomStore store, Definition def) {
-		super(store, def.getName());
+		super(store, def);
 		if (getClass() == GeneralizedExtrude.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Gen Extrude", DefType.genClip, "");
-		def.add(new DefVariable("t", -1,1,20));
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("S", "pcurve"));
-		def.setOpType(DefType.pcurve);
-		return def;
 	}
 
 	@Override

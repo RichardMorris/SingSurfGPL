@@ -17,6 +17,8 @@ public class DefType
 	 */
 	Dimensions outputDims;
 	Dimensions inputDims;
+	int varient=0;
+	
 	private DefType(String s) { 
 	    type = s; 
 	    inputDims = Dimensions.ONE;
@@ -46,12 +48,17 @@ public class DefType
 	//public static final DefType acurve3 = new DefType("acurve3",2);
 	public static final DefType intersect = new DefType("intersect",3,1);
 	public static final DefType genInt = new DefType("genInt",3,1);
+	public static final DefType genIntImp = new DefType("genIntImplicit",3,1);
 
 	public static final DefType clip = new DefType("clip",3,1);
 	public static final DefType genClip = new DefType("genClip",3,1);
 
 	public static final DefType mapping = new DefType("mapping",3,3);
 	public static final DefType genMap = new DefType("genMap",3,3);
+	public static final DefType genMapImp = new DefType("genMapImplicit",3,3);
+	public static final DefType genMapPC = new DefType("genMapPCurve",3,3);
+	
+	
 	
 	public static final DefType biMap = new DefType("biMap",3,3);
 	public static final DefType biInt = new DefType("biInt",2,1);
@@ -59,13 +66,17 @@ public class DefType
 	public static final DefType vfield = new DefType("vfield",3,3);
 	public static final DefType genVfield = new DefType("genVfield",3,3);
 
+	public static final DefType genVfieldImp = new DefType("genVfieldImplicit",3,3);
+
 	public static final DefType icurve = new DefType("icurve",3,3);
 	public static final DefType genicurve = new DefType("genICurve",3,3);
+	public static final DefType genicurveImp = new DefType("genICurveImplicit",3,3);
 
 	public static final DefType ridgeInt = new DefType("ridgeInt",3,1);
 
 	public static final DefType colour = new DefType("colour",3,3);
 	public static final DefType genColour = new DefType("genColour",3,3);
+	public static final DefType genColourImp = new DefType("genColourImplicit",3,3);
 
 	public static final DefType extrude = new DefType("extrude",2,3);
 	public static final DefType genExtrude = new DefType("genExtrude",2,3);
@@ -73,12 +84,12 @@ public class DefType
 	public static final DefType globals = new DefType("globals");
 
 	@Override
-	public String toString() { return type; }
+	public String toString() { return getType(); }
 	public static DefType get(String s)
 	{
 		if(s == null) return none;
 		for(DefType cur: knownTypes) {
-			if(s.equals(cur.type)) return(cur);
+			if(s.equals(cur.getType())) return(cur);
 		}
 		return none;
 	}
@@ -87,5 +98,8 @@ public class DefType
     }
 	public Dimensions getInputDims() {
 		return inputDims;
+	}
+	public String getType() {
+		return type;
 	}
 }

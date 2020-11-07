@@ -11,8 +11,6 @@ import java.util.SortedSet;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.calculators.BiChainedCalculator;
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
@@ -29,30 +27,11 @@ public class BiIntersection extends Intersection implements GeneralisedBiOperato
 	protected Choice ch_ingredient1 = new Choice();
 	protected Choice ch_ingredient2 = new Choice();
 
-	public BiIntersection(GeomStore store, String projName) {
-		super(store, projName);
-		if (getClass() == BiIntersection.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public BiIntersection(GeomStore store, Definition def) {
-		super(store, def.getName());
+		super(store, def);
 		if (getClass() == BiIntersection.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Intersect", DefType.biMap, "");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("R", "pcurve"));
-		def.add(new DefVariable("S", "pcurve"));
-		def.setOpType(DefType.pcurve);
-		return def;
 	}
 
 	@Override

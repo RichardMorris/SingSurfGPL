@@ -30,18 +30,23 @@ public class Globals extends AbstractClient {
 	/** A list of activeInputs **/
 	protected java.awt.List activeGeomNames = new java.awt.List(10, false);
 
-	public Globals(GeomStore store, String projName) {
-		super(store, projName);
-		init();
+	public Globals(GeomStore store, Definition def) {
+		super(store, def == null ? "Globals" : def.getName());
+		init(def);
 	}
+
+//	public Globals(GeomStore store, String projName) {
+//		super(store, projName);
+//		init();
+//	}
 
 	/**
 	 * 
 	 */
-	public void init() {
+	public void init(Definition def) {
 		super.init();
 		newParams = new LParamList(this);
-		Definition def = createDefaultDef();
+//		Definition def = createDefaultDef();
 		this.calc = new Calculator(def,0);
 		this.removeGeomButton.addActionListener(new ActionListener() {
 
@@ -49,12 +54,6 @@ public class Globals extends AbstractClient {
 			public void actionPerformed(ActionEvent e) {
 				removeGeom(activeGeomNames.getSelectedItem());
 			}} );
-	}
-
-
-	public Globals(GeomStore store, Definition def) {
-		super(store, def.getName());
-		init();
 	}
 
 	@Override
@@ -92,7 +91,6 @@ public class Globals extends AbstractClient {
 
 	}
 
-	@Override
 	public Definition createDefaultDef() {
 		return  new Definition("Globals", DefType.globals, "");
 	}

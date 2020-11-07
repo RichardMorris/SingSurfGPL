@@ -28,29 +28,6 @@ Sy = diff(S,y);
 <variable name="S" dim="3" type="psurf">
 </definition>
 
-<definition name="Parallel curve" type="genMap" opType="pcurve">
-// Parallel curve for 2D curves
-S + a N / sqrt(N.N);
-//N = Sxx - (Sxx . Sx ) Sx / (Sx .Sx);
-//Sxx = diff(Sx,x);
-N = Sx ^^ [0,0,1];
-Sx = diff(S,x);
-<variable name="x">
-<variable name="S" dim="3" type="pcurve">
-<parameter name="a" value="0.2">
-</definition>
-
-<definition name="Evolute" type="genMap" opType="pcurve">
-// Evolute of 2D curves
-S + (1/r) N / sqrt(N.N);
-r = abs((Sxx ^^ Sx ).[0,0,1]) / (sqrt(Sx . Sx)^3);
-N = Sxx - (Sxx . Sx ) Sx / (Sx .Sx);
-Sxx = diff(Sx,x);
-Sx = diff(S,x);
-<variable name="x">
-<variable name="S" dim="3" type="pcurve">
-</definition>
-
 <definition name="Focal Surface Sheet 1" type="genMap" opType="psurf">
 // Sheet 1 of a focal surface simple method
 S + 1/k1 N;
@@ -101,76 +78,4 @@ Sy = diff(S,y);
 <variable name="y">
 <variable name="S" dim="3" type="psurf">
 <parameter name="sign" value="-1">
-</definition>
-
-<definition name="Gauss map implicit" type="genMap" opType="asurf">
-// Calculate the intersection with an implicit surface
-N / sqrt(N.N);
-N = [Sx,Sy,Sz];
-Sx = diff(S,x);
-Sy = diff(S,y);
-Sz = diff(S,z);
-S;
-<variable name="S" type="asurf">
-<variable name="x">
-<variable name="y">
-<variable name="z">
-</definition>
-
-<definition name="Focal sheet implicit" type="genMap" opType="asurf">
-
-P - 1/k1 N;
-k1 = H + sign sqrt( H^2 - K );
-// K = ( l n - m^2 ) / ( E G - F^2 );
-// H = ( G l + E n - 2 F m ) / ( 2 E G - 2 F^2);
-
-K = Knumer/Kdenom;
-Knumer = +(fzz fyy - fyz fyz) fx^2
-+(fxx fzz - fxz fxz) fy^2
-+(fxx fyy - fxy fxy) fz^2
-+2(fxy fxz - fxx fyz) fy fz
-+2(fxy fyz - fyy fxz) fx fz
-+2(fxz fyz - fzz fxy) fx fy;
-Kdenom = NNlensq * NNlensq;
-
-H = Hnumer/Hdenom;
-Hnumer = fxx (fy^2+fz^2) + fyy (fx^2+fz^2) + fzz (fx^2+fy^2)
-- 2 fxy fx fy - 2 fxz fx fz - 2 fyz fy fz; 
-Hdenom = 2 NNlen * NNlensq;
-
-N = NN / NNlen;
-NNlen = sqrt(NNlensq);
-NNlensq = fx^2+fy^2+fz^2;
-NN = [fx,fy,fz];
-
-fxx = diff(fx,x);
-fxy = diff(fx,y);
-fxz = diff(fx,z);
-fyy = diff(fy,y);
-fyz = diff(fy,z);
-fzz = diff(fz,z);
-
-fx = diff(S,x);
-fy = diff(S,y);
-fz = diff(S,z);
-
-P = [x,y,z];
-<variable name="S" type="asurf">
-<variable name="x">
-<variable name="y">
-<variable name="z">
-<parameter name="sign" value="1">
-</definition>
-
-<definition name="Parallel implicit" type="genMap" opType="asurf">
-P + lambda N;
-N = NN / sqrt(NN.NN);
-NN = [diff(s,x),diff(S,y),diff(S,z)];
-P = [x,y,z];
-
-<variable name="S" type="asurf">
-<variable name="x">
-<variable name="y">
-<variable name="z">
-<parameter name="sign" value="1">
 </definition>

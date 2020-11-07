@@ -12,15 +12,12 @@ import java.awt.event.ItemEvent;
 import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.ColourCalcMap;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
-
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgElementSet;
 import jv.geom.PgPointSet;
@@ -42,13 +39,6 @@ public class Colourize extends AbstractOperatorClient {
 	Checkbox cbParamsFromTexture;
 
 	/********** Constructor *********/
-
-	public Colourize(GeomStore store, String name) {
-		super(store, name);
-		if (getClass() == Colourize.class) {
-			init(this.createDefaultDef());
-		}
-	}
 
 	public Colourize(GeomStore store, Definition def) {
 		super(store, def.getName());
@@ -207,16 +197,6 @@ public class Colourize extends AbstractOperatorClient {
 
 	@Override
 	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Colourize", DefType.colour, "");
-		def.add(new DefVariable("x", -1, 1));
-		def.add(new DefVariable("y", -1, 1));
-		def.add(new DefVariable("z", -1, 1));
-		return def;
 	}
 
 }

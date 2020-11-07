@@ -11,18 +11,15 @@ import java.util.SortedSet;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.calculators.RidgeCalculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.RidgeIntersectionOp;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
 import org.singsurf.singsurf.operators.vectorfields.EigenVectorField;
 import org.singsurf.singsurf.operators.vectorfields.MultipleVectorField;
-
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgPolygonSet;
 import jv.project.PgGeometryIf;
@@ -41,32 +38,11 @@ public class RidgeIntersection extends Intersection implements GeneralisedBiOper
  
 	Calculator directionCalculator;
 	
-	public RidgeIntersection(GeomStore store, String projName) {
-		super(store, projName);
-		if (getClass() == RidgeIntersection.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public RidgeIntersection(GeomStore store, Definition def) {
-		super(store, def.getName());
+		super(store, def);
 		if (getClass() == RidgeIntersection.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Intersect", DefType.ridgeInt, "");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("z", "none"));
-		def.add(new DefVariable("S", "psurf"));
-		def.add(new DefVariable("P", "vecField"));
-		def.add(new DefVariable("Q", "vecField"));
-		def.setOpType(DefType.psurf);
-		return def;
 	}
 
 	@Override

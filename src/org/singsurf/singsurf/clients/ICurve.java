@@ -13,13 +13,12 @@ import org.singsurf.singsurf.IntFractometer;
 import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.Parameter;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
 import org.singsurf.singsurf.operators.vectorfields.AbstractIntergralCurve;
 import org.singsurf.singsurf.operators.vectorfields.AbstractVectorField;
@@ -31,8 +30,6 @@ import org.singsurf.singsurf.operators.vectorfields.MidpointMethodIC;
 import org.singsurf.singsurf.operators.vectorfields.RC4MethodIC;
 import org.singsurf.singsurf.operators.vectorfields.SimpleCalcField;
 import org.singsurf.singsurf.operators.vectorfields.UnorientedVectorField;
-
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgPointSet;
 import jv.geom.PgPolygonSet;
@@ -85,29 +82,11 @@ public class ICurve extends AbstractOperatorClient {
 
 	/********** Constructor *********/
 
-	public ICurve(GeomStore store, String name) {
-		super(store, name);
-		if (getClass() == ICurve.class) {
-			init(this.createDefaultDef());
-
-		}
-	}
-
 	public ICurve(GeomStore store, Definition def) {
 		super(store, def.getName());
 		if (getClass() == ICurve.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("VField", DefType.vfield, "[x,y,z];");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("z", "none"));
-		return def;
 	}
 
 	public void init(Definition def) {

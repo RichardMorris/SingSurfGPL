@@ -63,16 +63,16 @@ public class GenICurve extends ICurve implements GeneralisedOperator {
 
 	protected Choice ch_start = new Choice();
 
-	public GenICurve(GeomStore store, String projName) {
-
-		super(store, projName);
-		if (getClass() == GenICurve.class) {
-			init(this.createDefaultDef());
-		}
-	}
+//	public GenICurve(GeomStore store, String projName) {
+//
+//		super(store, projName);
+//		if (getClass() == GenICurve.class) {
+//			init(this.createDefaultDef());
+//		}
+//	}
 
 	public GenICurve(GeomStore store, Definition def) {
-		super(store, def.getName());
+		super(store, def);
 		if (getClass() == GenICurve.class) {
 			init(def);
 		}

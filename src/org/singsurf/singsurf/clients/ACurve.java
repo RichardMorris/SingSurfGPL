@@ -21,7 +21,6 @@ import org.singsurf.singsurf.PuVariable;
 import org.singsurf.singsurf.acurve.AsurfException;
 import org.singsurf.singsurf.acurve.Plotter2D;
 import org.singsurf.singsurf.calculators.PolynomialCalculator;
-import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
@@ -55,27 +54,11 @@ public class ACurve extends AbstractClient {
 
     Plotter2D plotter;
 
-    public ACurve(GeomStore store, String name) {
-	super(store, name);
-	if (getClass() == ACurve.class) {
-	    init(createDefaultDef());
-	}
-    }
-
     public ACurve(GeomStore store, Definition def) {
-	super(store, def.getName());
-	if (getClass() == ACurve.class) {
-	    init(def);
-	}
-    }
-
-    @Override
-    public Definition createDefaultDef() {
-	Definition def1;
-	def1 = new Definition("ACurve", DefType.acurve, "x^2-y^2;");
-	def1.add(new DefVariable("x", -1, 1));
-	def1.add(new DefVariable("y", -1, 1));
-	return def1;
+		super(store, def.getName());
+		if (getClass() == ACurve.class) {
+		    init(def);
+		}
     }
 
     public void init(Definition def1) {
@@ -129,26 +112,7 @@ public class ACurve extends AbstractClient {
 	// return def.getOpt("coarse").getIntegerVal();
 	return Integer.parseInt(cbg_coarse.getSelectedCheckbox().getLabel());
     }
-
-    // public void setFine(int f){
-    // if(f==8)
-    // cbg_fine.setSelectedCheckbox(cb_fi_8);
-    // if(f==16)
-    // cbg_fine.setSelectedCheckbox(cb_fi_16);
-    // if(f==32)
-    // cbg_fine.setSelectedCheckbox(cb_fi_32);
-    // if(f==64)
-    // cbg_fine.setSelectedCheckbox(cb_fi_64);
-    // if(f==128)
-    // cbg_fine.setSelectedCheckbox(cb_fi_128);
-    // if(f==256)
-    // cbg_fine.setSelectedCheckbox(cb_fi_256);
-    // if(f==512)
-    // cbg_fine.setSelectedCheckbox(cb_fi_512);
-    // if(f==1024)
-    // cbg_fine.setSelectedCheckbox(cb_fi_1024);
-    // def.setOption("fine", f);
-    // }
+    
     @SuppressWarnings("unused")
     void checkDef(Definition def1) {
 	// DefVariable var =def.getVar(0);

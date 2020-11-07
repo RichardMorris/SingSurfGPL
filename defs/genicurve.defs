@@ -84,23 +84,3 @@ Sy = diff(S,y);
 <option name="method" value="Runge-Kutta 4"/>
 <option name="StartDir" value="Inwards"/>
 </definition>
-
-<definition name="Implicit" type="genICurve"  opType="asurf">
-[Sxx,Sxy,Sxz,Syy,Syz,Szz, Sx,Sy,Sz];
-Sxx = diff(Sx,x);
-Sxy = diff(Sx,y);
-Sxz = diff(Sx,z);
-Syy = diff(Sy,y);
-Syz = diff(Sy,z);
-Szz = diff(Sz,z);
-Sx = diff(S,x);
-Sy = diff(S,y);
-Sz = diff(S,z);
-
-<variable name="S" type="asurf">
-<variable name="x">
-<variable name="y">
-<variable name="z">
-<option name="colour" value="Red">
-<option name="orientation" value="Implicit">
-</definition>

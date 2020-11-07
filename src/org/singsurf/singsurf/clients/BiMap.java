@@ -11,8 +11,6 @@ import java.util.SortedSet;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.calculators.BiChainedCalculator;
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
@@ -24,41 +22,15 @@ public class BiMap extends Mapping implements GeneralisedBiOperator {
 	/** The variable corresponding to the ingredient */
 	// DefVariable ingredientVar;
 
-	/** A choice of avaliable inputs */
+	/** A choice of available inputs */
 	protected Choice ch_ingredient1 = new Choice();
 	protected Choice ch_ingredient2 = new Choice();
 
-	// /** Whether to project onto the given surface. */
-	// protected Checkbox cbProject = new Checkbox("Project onto
-	// surface",false);
-
-	/** The operator which performs the mapping */
-	// SimpleCalcMap projectionMap = null;
-
-	public BiMap(GeomStore store, String projName) {
-		super(store, projName);
-		if (getClass() == BiMap.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public BiMap(GeomStore store, Definition def) {
-		super(store, def.getName());
+		super(store, def);
 		if (getClass() == BiMap.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Intersect", DefType.biMap, "");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("R", "pcurve"));
-		def.add(new DefVariable("S", "pcurve"));
-		def.setOpType(DefType.pcurve);
-		return def;
 	}
 
 	@Override

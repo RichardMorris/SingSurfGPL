@@ -198,6 +198,7 @@ public class ProjectChooserController {
 		this.createProject(def);
 	}
 
+	/** Method called when no definition specified. */
 	public AbstractClient loadProject(DefType type) {
 		AbstractClient newsurf = factory.createProject(type);
 		model.addProject(newsurf);

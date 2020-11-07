@@ -11,10 +11,7 @@ import org.lsmp.djep.djep.DSymbolTable;
 import org.lsmp.djep.matrixJep.MatrixJep;
 import org.lsmp.djep.matrixJep.MatrixPartialDerivative;
 import org.lsmp.djep.matrixJep.MatrixVariableI;
-import org.lsmp.djep.mrpe.MRpCommandList;
 import org.lsmp.djep.mrpe.MRpEval;
-import org.lsmp.djep.mrpe.MRpRes;
-import org.lsmp.djep.vectorJep.Dimensions;
 import org.lsmp.djep.xjep.XVariable;
 import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.definitions.DefType;
@@ -22,8 +19,6 @@ import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.jep.ExternalPartialDerivative;
 import org.singsurf.singsurf.jep.ExternalVariable;
-import org.singsurf.singsurf.jepwrapper.DimensionVisitor;
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 /**
  * A calculator which depends on a set of ingredients.
@@ -71,6 +66,8 @@ public class ChainedCalculator extends Calculator {
 			return;
 		}
 		dependentVariable = var.get(0);
+		jepVar = new ExternalVariable(this, dependentVariable.getName(), type.getOutputDimensions());
+/*
 		if(type == DefType.psurf)
 		    jepVar = new ExternalVariable(this,dependentVariable.getName(),3);
 		else if(type == DefType.asurf)
@@ -80,6 +77,7 @@ public class ChainedCalculator extends Calculator {
             this.good = false;
             return;
 		}
+		*/
 		varFac.set(jepVar);
 		super.build();
 		if(!good) return;

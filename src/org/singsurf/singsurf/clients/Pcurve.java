@@ -10,12 +10,6 @@ import java.awt.event.ItemEvent;
 import java.util.Collections;
 import java.util.List;
 
-import jv.geom.PgPolygonSet;
-import jv.number.PuDouble;
-import jv.project.PgGeometryIf;
-import jv.vecmath.PdVector;
-import jv.vecmath.PiVector;
-
 import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.LmsPolygonSetMaterial;
 import org.singsurf.singsurf.PaSingSurf;
@@ -23,15 +17,19 @@ import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.PuVariable;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.calculators.Evaluator;
-import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.SphereClip;
 
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
+import jv.geom.PgPolygonSet;
+import jv.number.PuDouble;
+import jv.project.PgGeometryIf;
+import jv.vecmath.PdVector;
+import jv.vecmath.PiVector;
 
 /**
  * @author Rich Morris Created on 30-Mar-2005
@@ -44,13 +42,6 @@ public class Pcurve extends AbstractClient {
 	int globalSteps = 60;
 	DefVariable localX;
 	protected PgPolygonSet outCurve;
-
-	public Pcurve(GeomStore store, String name) {
-		super(store, name);
-		if (getClass() == Pcurve.class) {
-			init(this.createDefaultDef());
-		}
-	}
 
 	public Pcurve(GeomStore store, Definition def) {
 		super(store, def.getName());
@@ -71,14 +62,6 @@ public class Pcurve extends AbstractClient {
 		m_Clipping.setValue(100);
 		this.cbShowVert.setState(false);
 		loadDefinition(def1);
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def1;
-		def1 = new Definition("PCurve", DefType.pcurve, "");
-		def1.add(new DefVariable("x", -1, 1, 20));
-		return def1;
 	}
 
 	boolean checkDef(Definition def1) {

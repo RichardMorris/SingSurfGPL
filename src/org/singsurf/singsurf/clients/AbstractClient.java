@@ -175,7 +175,8 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 	/**
 	 * Constructor which just passes project name to super class. *
 	 * 
-	 * @param store
+	 * @param store Store to create new geometries
+	 * @param projName name of project
 	 */
 
 	public AbstractClient(GeomStore store, String projName) {
@@ -768,7 +769,7 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 		this.m_frame = frame;
 	}
 
-	public abstract Definition createDefaultDef();
+//	public abstract Definition createDefaultDef();
 
 	protected void loadFromDefOption(Definition def, String name, Fractometer fract) {
 		Option option = def.getOption(name);

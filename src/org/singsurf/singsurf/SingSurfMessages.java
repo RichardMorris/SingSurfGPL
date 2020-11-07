@@ -35,6 +35,9 @@ public class SingSurfMessages {
         }
     }
     
+    public static boolean containsKey(String key) {
+    	return RESOURCE_BUNDLE.containsKey(key);
+    }
     /**
      * Gets a message and uses that to format its arguments. 
      * @param key key to message which is a format string used by {@link MessageFormat#format(String, Object...)}

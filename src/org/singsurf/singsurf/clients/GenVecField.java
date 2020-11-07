@@ -12,19 +12,16 @@ import java.util.SortedSet;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.calculators.ChainedCalculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.TangentSpaceCalcMap;
 import org.singsurf.singsurf.operators.vectorfields.AbstractVectorField;
 import org.singsurf.singsurf.operators.vectorfields.CubicVectorField;
 import org.singsurf.singsurf.operators.vectorfields.UmbilicField;
-
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgElementSet;
 import jv.geom.PgPointSet;
@@ -61,30 +58,11 @@ public class GenVecField extends VecField implements GeneralisedOperator {
 
 	AbstractClient ingredient;
 
-	public GenVecField(GeomStore store, String projName) {
-
-		super(store, projName);
-		if (getClass() == GenVecField.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public GenVecField(GeomStore store, Definition def) {
-		super(store, def.getName());
+		super(store, def);
 		if (getClass() == GenVecField.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Gen VField", DefType.genVfield, "");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("S", "psurf"));
-		def.setOpType(DefType.psurf);
-		return def;
 	}
 
 	@Override
@@ -93,9 +71,9 @@ public class GenVecField extends VecField implements GeneralisedOperator {
 		ch_ingredient.addItemListener(this);
 		this.cbProject.addItemListener(this);
 		chOrientation.addItemListener(this);
+		super.init(def);
 		chOrientation.add(CUBIC);
 		chOrientation.add(RIDGE);
-		super.init(def);
 	}
 
 	@Override

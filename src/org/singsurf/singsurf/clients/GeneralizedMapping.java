@@ -11,8 +11,6 @@ import java.util.SortedSet;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.calculators.ChainedCalculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
@@ -28,33 +26,11 @@ public class GeneralizedMapping extends Mapping implements GeneralisedOperator {
 	/** A choice of avaliable inputs */
 	protected Choice ch_ingredient = new Choice();;
 
-//	Checkbox cbParamsFromTexture = new Checkbox("Parameters from texture",false);
-
-	public GeneralizedMapping(GeomStore store, String projName) {
-
-		super(store, projName);
-		if (getClass() == GeneralizedMapping.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public GeneralizedMapping(GeomStore store, Definition def) {
-		super(store, def.getName());
+		super(store, def);
 		if (getClass() == GeneralizedMapping.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Gen Map", DefType.genMap, "");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("z", "none"));
-		def.add(new DefVariable("S", "psurf"));
-		def.setOpType(DefType.psurf);
-		return def;
 	}
 
 	@Override

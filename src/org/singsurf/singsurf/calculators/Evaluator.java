@@ -1,14 +1,11 @@
 package org.singsurf.singsurf.calculators;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 import org.lsmp.djep.mrpe.MRpCommandList;
 import org.lsmp.djep.mrpe.MRpEval;
 import org.lsmp.djep.mrpe.MRpRes;
 import org.lsmp.djep.vectorJep.Dimensions;
-import org.lsmp.djep.vectorJep.values.MatrixValueI;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 
@@ -81,6 +78,7 @@ public class Evaluator {
 		double v[];
 		try {
 			for(int i=0;i<inputDim;++i) {
+				if(i>=variableRefs.length) continue;
 				if(variableRefs[i] >=0 )
 					mrpe.setVarValue(variableRefs[i],in[i]);
 			}

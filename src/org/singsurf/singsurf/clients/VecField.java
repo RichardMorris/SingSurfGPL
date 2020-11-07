@@ -20,21 +20,18 @@ import org.singsurf.singsurf.IntFractometer;
 import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.definitions.DefType;
-import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.Parameter;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
 import org.singsurf.singsurf.operators.vectorfields.AbstractVectorField;
 import org.singsurf.singsurf.operators.vectorfields.EigenVectorField;
 import org.singsurf.singsurf.operators.vectorfields.ImplicitVectorField;
 import org.singsurf.singsurf.operators.vectorfields.SimpleCalcField;
 import org.singsurf.singsurf.operators.vectorfields.UnorientedVectorField;
-
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgElementSet;
 import jv.geom.PgPointSet;
@@ -89,29 +86,11 @@ public class VecField extends AbstractOperatorClient {
 
 	/********** Constructor *********/
 
-	public VecField(GeomStore store, String name) {
-		super(store, name);
-		if (getClass() == VecField.class) {
-			init(this.createDefaultDef());
-
-		}
-	}
-
 	public VecField(GeomStore store, Definition def) {
 		super(store, def.getName());
 		if (getClass() == VecField.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("VField", DefType.vfield, "[x,y,z];");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("z", "none"));
-		return def;
 	}
 
 	public void init(Definition def) {
@@ -128,7 +107,7 @@ public class VecField extends AbstractOperatorClient {
 		chOrientation.add("Eigenvectors");
 		chOrientation.add("Implicit");		
 		chOrientation.addItemListener(this);
-
+		chOrientation.select("Oriented");
 
 		lengthParameter = new Parameter("length", 1.0);
 		this.lengthControl = new PuParameter(this, lengthParameter);

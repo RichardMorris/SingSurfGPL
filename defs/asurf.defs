@@ -3523,7 +3523,7 @@ y^3 + (x + y z)x = 0; //Ferrarese
 <option name="triangulate" value="true"/>
 </definition>
 
-<definition name="#BS: Bohemian Star" type="asurf">
+<definition name="Bohemian Star 2" type="asurf">
 
 y^4((x^2 + y^2 + z^2)^2 – 4(x^2 + z^2)) – (16x^2 z^2)(y^2 – 1) = 0; //Todesco
 <variable name="x" min="-7.14" max="7.03">
@@ -3540,7 +3540,7 @@ y^4((x^2 + y^2 + z^2)^2 – 4(x^2 + z^2)) – (16x^2 z^2)(y^2 – 1) = 0; //Tode
 <option name="triangulate" value="true"/>
 </definition>
 
-<definition name="#BSa: Bohemian Star" type="asurf">
+<definition name="Bohemian Star 3" type="asurf">
 y^4*((x^2 + y^2 + z^2)^2 - 4*r^2*(x^2+z^2))-16*r^2*x^2*z^2*(y^2 - r^2) = 0;
 <variable name="x" min="-7.14" max="7.03">
 <variable name="y" min="-7.13" max="7.04">
@@ -3556,7 +3556,7 @@ y^4*((x^2 + y^2 + z^2)^2 - 4*r^2*(x^2+z^2))-16*r^2*x^2*z^2*(y^2 - r^2) = 0;
 <option name="triangulate" value="true"/>
 </definition>
 
-<definition name="#BSb: Bohemian Star" type="asurf">
+<definition name="Bohemian Star 4" type="asurf">
 
 15x^3 + 18x^2z + 108x^2 – 16z^3 – 72z^2 + 792z – 1512 – 162y^2x + 18y^2z + 108; //UNKNOWN Ferrarese
 <variable name="x" min="-7.14" max="7.03">
@@ -3573,7 +3573,7 @@ y^4*((x^2 + y^2 + z^2)^2 - 4*r^2*(x^2+z^2))-16*r^2*x^2*z^2*(y^2 - r^2) = 0;
 <option name="triangulate" value="true"/>
 </definition>
 </group>
-<definition name="#BSa: Bohemian Star" type="asurf" opType="none">
+<definition name="Bohemian Star 5" type="asurf" opType="none">
 Y^4*((X^2 + Y^2 + Z^2)^2 
 - 4*r^2*(X^2+Z^2))-16*r^2*X^2*Z^2*(Y^2 - r^2) = 0;
 

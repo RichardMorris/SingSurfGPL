@@ -22,15 +22,6 @@ S . [a,b,c];
 <parameter name="c" value="0">
 </definition>
 
-<definition name="Intersect by surface" type="genInt" opType="asurf">
-// Calculate the intersection with an implicit surface
-S;
-<variable name="S" type="asurf">
-<variable name="x">
-<variable name="y">
-<variable name="z">
-</definition>
-
 <definition name="Parabolic line" type="genInt" opType="psurf">
 // The parabolic line on a surface
 l n - m^2;
@@ -46,52 +37,4 @@ Sy = diff(S,y);
 <variable name="S" type="psurf">
 <variable name="x">
 <variable name="y">
-</definition>
-
-<definition name="Profile asurf" type="genInt" opType="asurf">
-// Calculate the profile of an algebraic surface
-// wrt a particular direction (a,b,c)
-
-N . [a,b,c];
-N = [diff(S,x),diff(S,y),diff(S,z)];
-<variable name="S" type="asurf">
-<variable name="x">
-<variable name="y">
-<variable name="z">
-<parameter name="a" value="1">
-<parameter name="b" value="0">
-<parameter name="c" value="0">
-</definition>
-
-<definition name="parabolic line implicit" type="genInt" opType="asurf">
-// Parabolic line of an algebraic surface
-
-+(fzz fyy - fyz fyz) fx^2
-+(fxx fzz - fxz fxz) fy^2
-+(fxx fyy - fxy fxy) fz^2
-+2(fxy fxz - fxx fyz) fy fz
-+2(fxy fyz - fyy fxz) fx fz
-+2(fxz fyz - fzz fxy) fx fy;
-
-fxx = diff(fx,x);
-fxy = diff(fx,y);
-fxz = diff(fx,z);
-fyy = diff(fy,y);
-fyz = diff(fy,z);
-fzz = diff(fz,z);
-fx = diff(S,x);
-fy = diff(S,y);
-fz = diff(S,z);
-
-<variable name="S" min="0.0" max="0.0" type="asurf">
-<variable name="x" min="0.0" max="0.0" type="none">
-<variable name="y" min="0.0" max="0.0" type="none">
-<variable name="z" min="0.0" max="0.0" type="none">
-<option name="showFace" value="true">
-<option name="showEdge" value="false">
-<option name="showVert" value="false">
-<option name="showCurve" value="true">
-<option name="colour" value="Black">
-<option name="numItts" value="5">
-<option name="project" value="false">
 </definition>

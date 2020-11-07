@@ -11,7 +11,6 @@ import java.awt.Color;
 import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -39,18 +38,16 @@ import org.singsurf.singsurf.acurve.AsurfException;
 import org.singsurf.singsurf.asurf.BoxClevA;
 import org.singsurf.singsurf.asurf.BoxClevJavaView;
 import org.singsurf.singsurf.asurf.PlotAbstract.PlotMode;
-import org.singsurf.singsurf.calculators.PolynomialCalculator;
 import org.singsurf.singsurf.asurf.Region_info;
-import org.singsurf.singsurf.definitions.DefType;
+import org.singsurf.singsurf.calculators.PolynomialCalculator;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.jep.EquationPolynomialConverter;
-import org.singsurf.singsurf.operators.SimpleClip;
-
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
+import org.singsurf.singsurf.operators.SimpleClip;
 
 import jv.geom.PgElementSet;
 import jv.geom.PgPointSet;
@@ -93,65 +90,10 @@ public class ASurf extends AbstractClient {
 	Fractometer colourMin;
 	Fractometer colourMax;
 	
-	public ASurf(GeomStore store, String name, String defFile) {
-		super(store, name);
-		try {
-			java.util.List<Definition> defs = store.loadDefs(defFile).getDefs();
-			this.lsmpDefs = new Definition[defs.size()];
-			this.lsmpDefs = defs.toArray(this.lsmpDefs);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if (getClass() == ASurf.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
-	public ASurf(GeomStore store, String name) {
-		super(store, name);
-		if (getClass() == ASurf.class) {
-			Definition def = this.createDefaultDef();
-			def.setName(name);
-			init(def);
-		}
-	}
-
 	public ASurf(GeomStore store, Definition def) {
 		super(store, def.getName());
 		if (getClass() == ASurf.class) {
 			init(def);
-		}
-	}
-
-	public ASurf(GeomStore store, String name, String defFile, Definition initialDef) {
-		super(store, name);
-		try {
-			java.util.List<Definition> defs = store.loadDefs(defFile).getDefs();
-			this.lsmpDefs = new Definition[defs.size()];
-			this.lsmpDefs = defs.toArray(this.lsmpDefs);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if (getClass() == ASurf.class) {
-			init(initialDef);
-		}
-	}
-
-	public ASurf(GeomStore store, String name, String defFile, String model) {
-		super(store, model);
-		try {
-			java.util.List<Definition> defs = store.loadDefs(defFile).getDefs();
-			this.lsmpDefs = new Definition[defs.size()];
-			this.lsmpDefs = defs.toArray(this.lsmpDefs);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		if (getClass() == ASurf.class) {
-			Definition initialDef = getDef(model);
-			init(initialDef);
 		}
 	}
 
@@ -182,16 +124,6 @@ public class ASurf extends AbstractClient {
 		"Black",
 		"Grey",
 		"White");
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def1;
-		def1 = new Definition("ASurf", DefType.asurf, "");
-		def1.add(new DefVariable("x", -1.03, 1.02));
-		def1.add(new DefVariable("y", -1.04, 1.01));
-		def1.add(new DefVariable("z", -1.05, 1));
-		return def1;
 	}
 
 	public void init(Definition def1) {

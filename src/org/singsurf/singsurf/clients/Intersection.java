@@ -15,16 +15,14 @@ import java.util.List;
 import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.SimpleCalcIntersection;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
-
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgElementSet;
 import jv.geom.PgPointSet;
@@ -53,30 +51,13 @@ public class Intersection extends AbstractOperatorClient {
 
 	Choice chItts = new Choice();;
 
-	public Intersection(GeomStore store, String name) {
-		super(store, name);
-		if (getClass() == Intersection.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public Intersection(GeomStore store, Definition def) {
 		super(store, def == null ? "Intersection" : def.getName());
 		if (getClass() == Intersection.class) {
-			if (def == null)
-				def = createDefaultDef();
+//			if (def == null)
+//				def = createDefaultDef();
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Intersect", DefType.intersect, "");
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("z", "none"));
-		return def;
 	}
 
 	public void init(Definition def) {

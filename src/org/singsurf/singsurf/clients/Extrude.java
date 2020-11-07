@@ -17,19 +17,17 @@ import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.PuVariable;
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.AbstractExtrude;
 import org.singsurf.singsurf.operators.CalcExtrude;
 import org.singsurf.singsurf.operators.ContinuityClip;
 import org.singsurf.singsurf.operators.SphereClip;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
-
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgElementSet;
 import jv.geom.PgPointSet;
@@ -55,29 +53,11 @@ public class Extrude extends AbstractOperatorClient {
 
 	/********** Constructor *********/
 
-	public Extrude(GeomStore store, String name) {
-		super(store, name);
-		if (getClass() == Extrude.class) {
-			init(this.createDefaultDef());
-		}
-	}
-
 	public Extrude(GeomStore store, Definition def) {
 		super(store, def.getName());
 		if (getClass() == Extrude.class) {
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("Extrude", DefType.extrude, "");
-		def.add(new DefVariable("t", -1,1,20));
-		def.add(new DefVariable("x", "none"));
-		def.add(new DefVariable("y", "none"));
-		def.add(new DefVariable("z", "none"));
-		return def;
 	}
 
 	public void init(Definition def) {

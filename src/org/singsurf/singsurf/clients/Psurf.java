@@ -13,10 +13,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import jv.geom.PgElementSet;
-import jv.project.PgGeometryIf;
-import jv.vecmath.PdVector;
-
 import org.singsurf.singsurf.Fractometer;
 import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.LmsElementSetMaterial;
@@ -25,25 +21,24 @@ import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.PuVariable;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.calculators.Evaluator;
-import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.SphereClip;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
 
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
+import jv.geom.PgElementSet;
+import jv.project.PgGeometryIf;
+import jv.vecmath.PdVector;
 
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
 public class Psurf extends AbstractClient {
 	private static final long serialVersionUID = 1L;
-
-	// /** Default name for geometries **/
-	// private final String my_baseName = "psurf";
 
 	protected Fractometer m_Clipping;
 	int globalSteps = 40;
@@ -53,31 +48,17 @@ public class Psurf extends AbstractClient {
 	Fractometer colourMin;
 	Fractometer colourMax;
 
-	public Psurf(GeomStore store, String name) {
-		super(store, name);
-		if (getClass() == Psurf.class) {
-//	    setDisplayEquation(my_def);
-			init(createDefaultDef());
-		}
-	}
-
+	/**
+	 * Constructor when a definition is specified.
+	 * @param store
+	 * @param def
+	 */
 	public Psurf(GeomStore store, Definition def) {
 		super(store, def.getName());
-//	if (def == null)
-//	    def = createDefaultDef();
 		if (getClass() == Psurf.class) {
 			setDisplayEquation(def.getEquation());
 			init(def);
 		}
-	}
-
-	@Override
-	public Definition createDefaultDef() {
-		Definition def;
-		def = new Definition("PSurf", DefType.psurf, "");
-		def.add(new DefVariable("x", -1, 1));
-		def.add(new DefVariable("y", -1, 1));
-		return def;
 	}
 
 	public void init(Definition def) {
@@ -103,7 +84,6 @@ public class Psurf extends AbstractClient {
 			public void itemStateChanged(ItemEvent e) {
 				calc.setDerivDepth(getDerivDepthFromColour());
 			}});
-		// outSurf = store.aquireSurface("psurf");
 		loadDefinition(def);
 	}
 
@@ -123,8 +103,7 @@ public class Psurf extends AbstractClient {
 
 		String lname = this.getName();
 		def.setName(lname);
-		this.getInfoPanel().setTitle(lname);
-		
+		this.getInfoPanel().setTitle(lname);		
 		
 		calc = new Calculator(def, getDerivDepthFromColour());
 		calc.build();
