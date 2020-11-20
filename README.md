@@ -3,34 +3,43 @@ A mathematical curve and surface visualiser for singular surface and objects fro
 
 The program can calculate many of the objects found in Singularity theory and geometry:
 
+### Basic surfaces
+
 * **Algebraic curves** defined by a single polynomial equation in two variables. e.g. electric motor 
 `y^2(y^2-9)-x^2(x^2-10);`
 
 ![Electric motor](doc/electric_motor.png)
-* **Algebraic surfaces** defined by a single polynomial equation in three variables. e.g. a Chubs surface
+* **Algebraic surfaces** defined by a single polynomial equation in three variables. e.g. a Chub's surface
 `x^4 + y^4 + z^4 - x^2 - y^2 - z^2 + 0.5;`
             
-![Chubs surface](doc/chubs_surface.png)
-* **Parameterised curves** defined by a 3D vector expression in a single variable. e.g. a helix
+![Chub's surface](doc/chubs_surface.png)
+* **Parameterised curves** defined by a 3D vector expression in a single variable. e.g. a helix.
 `[cos(pi t), sin(pi t), t];`    
+
 ![Helix](doc/helix.png)
 * **Parameterised surfaces** defined by a 3D vector expression in two variables. e.g. a cross-cap
-`[x,x y,y^2]`          
+`[x,x y,y^2]`     
+     
 ![Cross cap](doc/cross_cap.png)
 
+###  Operators
+
+Operators act on the curves and surfaces producing new geometries
+
 * **Intersection** of surfaces with sets defined by another equation. 
-For example the intersection of a conical surface with the set defined by a plane `a x b y + cz =d`.
+For example the intersection of a conical surface with the set defined by a plane `a x b y + cz - d;`.
 
 ![Intersection of a cone with a plane](doc/cone_intersection_sml.png)
 
 This module can be used to calculate non-polynomial curves. 
-For example a super ellipse `pow(abs(x/a),p)+pow(abs(y/b),p)-1` 
+For example a super ellipse `pow(abs(x/a),p)+pow(abs(y/b),p)-1;` 
 
 ![superellipse](doc/super_ellipse.png)
 
 * **Clipping**, part of a surface inside a set define by an implicit equation, like the set inside a box 
-`min(min(min(xh-x,x-xl),min(yh-y,y-yl)),min(zh-z,z-zl))`,
+`min(min(min(xh-x,x-xl),min(yh-y,y-yl)),min(zh-z,z-zl));`,
 or clipped by a sphere `x^2+y^2+z^2-r^2`
+
 ![Clipped cross cap ](doc/cross_cap_clip.png)
 
 * **Mapping** from R^3 to R^3 defined by 3D vector equation in three variables. e.g. a rotation
@@ -54,10 +63,13 @@ Can be used to produce families of curves.
 
 ![Surface of revolution](doc/surface_of_revolution.png)
 	 
-Several of these models have versions where the equation of another curve or surface can be used as part of the definition
+### Dependent operators
 
-* **Generalised Mappings** where the equation depends on another surface. For example projection of a curve onto a surface.
-For example Gauss Map of a surface
+Several of these operators have versions where the equation depends on the definition of another curve or surface.
+For example the definition of curves, like the parabolic line, on a parameterised surface depends on the definition of the surface.
+
+* **Dependent Mappings** where the equation depends on another surface. For example projection of a curve onto a surface.
+For example the Gauss map of a surface
 
 ```
 	N / sqrt(N.N);   // Unit normal
@@ -66,8 +78,9 @@ For example Gauss Map of a surface
 	Sy = diff(S,y);  // Definition of S read from the input surface
 ```
 
-![cusp of gauss map](doc/cusp_of_gauss_map.png)
-* **Generalised Intersections** where the equation depends on the definition of another curve or surface. 
+![cusp of Gauss map](doc/cusp_of_gauss_map.png)
+
+* **Dependent Intersections** where the equation depends on the definition of another curve or surface. 
 e.g. The profile of a surface, or parabolic lines
 
 			// The profile of a surface
@@ -76,13 +89,13 @@ e.g. The profile of a surface, or parabolic lines
 
 ![Profile of a torus](doc/torus_profile_sml.png)
 
-* **Generalised Clipping**: e.g. the part of 	surface contained inside another already defined implicit surface
+* **Dependent Clipping**: e.g. the part of 	surface contained inside another already defined implicit surface
 
-* **Generalised Colourise**: colour by Gaussian or mean curvature
+* **Dependent Colourise**: colour by Gaussian or mean curvature
 
 ![Gauss curvature of a torus](doc/gauss_curvature.png)
 
-* **Generalised Extrude**: e.g. tangent developable of a curve, or envelope of normals
+* **Dependent Extrude**: e.g. tangent developable of a curve, or envelope of normals
 
 ```
         S + t T;            // Point on surface plus a multiple of unit tangent
@@ -91,11 +104,11 @@ e.g. The profile of a surface, or parabolic lines
 ```
 ![tangent developable](doc/tangent_developable.png)
 
-* **Generalised Vector Fields**: e.g. principle directions which are calculated using the definition of the input surface
+* **Dependent Vector Fields**: e.g. principle directions which are calculated using the definition of the input surface
 
 ![Principle directions](doc/principle_directions.png)
 
-* **Generalised Integrals Curves**: e.g. principle curves of a surface calculated using the definition of the input surface
+* **Dependent Integrals Curves**: e.g. principle curves of a surface calculated using the definition of the input surface
 
 ![principle curve](doc/principle_curves.png)
 
@@ -111,8 +124,8 @@ There are some more specialised modules
 
 ![symmetry set](doc/symmetry_set.png)
 
-* **Projective varieties**: algebraic surfaces defined in real projective space, 
-with options for stereographic projections and rotations in 4D
+* **Projective varieties**: algebraic surfaces defined in real projective three-space, 
+with options for stereographic projections and rotations in 4D.
 
 ![Sarti's surface](doc/sarti.png)
 
@@ -190,6 +203,11 @@ For best operation you should obtain a license file for the JavaView program. Th
 To obtain the file complete [JavaView registration](http://www.javaview.de/download/registration.html) and a file will be automatically
 sent to you. Once you have it place it in the `rsrc` sub-directory of the JavaView home directory or
 the `rsrc` sub-directory of the SingSurf home directory for the bundled release.
+
+### Running
+
+See [running](doc/running.md) for operating the program once its started.
+
 
 For any installation problems contact rich@singsurf.org.
 

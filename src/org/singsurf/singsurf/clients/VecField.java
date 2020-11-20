@@ -107,7 +107,6 @@ public class VecField extends AbstractOperatorClient {
 		chOrientation.add("Eigenvectors");
 		chOrientation.add("Implicit");		
 		chOrientation.addItemListener(this);
-		chOrientation.select("Oriented");
 
 		lengthParameter = new Parameter("length", 1.0);
 		this.lengthControl = new PuParameter(this, lengthParameter);

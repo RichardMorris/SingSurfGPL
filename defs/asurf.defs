@@ -1587,6 +1587,39 @@ x^4+y^4+z^4 + l (x^2+y^2+z^2)^2 + m a^2 (x^2+y^2+z^2) + n a^4;
 <option name="triangulate" value="true"/>
 </definition>
 
+<definition name="Wave surface" type="asurf" opType="none">
+
+(a^2x^2+b^2y^2+c^2z^2)(x^2+y^2+z^2)
+-(a^2b^2x^2+a^2c^2x^2+a^2b^2y^2+b^2c^2y^2+a^2c^2z^2+b^2c^2z^2)w^2+a^2b^2c^2w^4;
+<variable name="x" min="-0.9399999999999996" max="2.2300000000000004" steps="2" type="none">
+<variable name="y" min="-2.43" max="2.4400000000000004" steps="2" type="none">
+<variable name="z" min="-2.12" max="2.05" steps="2" type="none">
+<parameter name="a" value="1.0">
+<parameter name="b" value="0.4899999999999999">
+<parameter name="c" value="1.4579999999999997">
+<parameter name="w" value="1.0">
+<option name="coarse" value="128"/>
+<option name="singPower" value="4"/>
+<option name="facePower" value="8"/>
+<option name="edgePower" value="8"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="false"/>
+<option name="showVert" value="false"/>
+<option name="showCurve" value="false"/>
+<option name="showPoint" value="false"/>
+<option name="showBoundary" value="false"/>
+<option name="calcSkeleton" value="false"/>
+<option name="calcDgen" value="false"/>
+<option name="surfColour" value="Colours from XYZ"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="5.0"/>
+<option name="edgeColour" value="None"/>
+<option name="adaptiveMesh" value="true"/>
+<option name="refineByCurvature" value="true"/>
+<option name="triangulate" value="true"/>
+</definition>
+
+
 </group>
 
 <group name="Multiple singularities">

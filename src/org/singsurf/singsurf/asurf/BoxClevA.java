@@ -1,12 +1,13 @@
 package org.singsurf.singsurf.asurf;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.singsurf.singsurf.acurve.AsurfException;
 import org.singsurf.singsurf.acurve.Bern2D;
 
-public abstract class BoxClevA {
+public abstract class BoxClevA implements BoxCleverBean {
 
 	/************ Constants **********/
 	public static final int MAX_EDGE_LEVEL = 32768;
@@ -63,9 +64,9 @@ public abstract class BoxClevA {
 	public double curvatureLevel3 = 8.0;
 	public double curvatureLevel4 = 16.0;
 	protected double normlenlevel1 = 0.01;
-	protected Double normlenlevel2 = 0.001;
-	protected Double normlenlevel3 = 0.0001;
-	protected Double normlenlevel4 = 0.00001;
+	protected double normlenlevel2 = 0.001;
+	protected double normlenlevel3 = 0.0001;
+	protected double normlenlevel4 = 0.00001;
 
 	public int colortype=0;
 	float colourMin=-1f;
@@ -79,7 +80,7 @@ public abstract class BoxClevA {
 	public Facets facets;
 	public Plotter plotter;
 	Topology topology;
-	AbstractMeshCleaner cleaner;
+	protected AbstractMeshCleaner cleaner;
 	protected TriangulatorI triangulator;
 	protected Knitter knitter;
 	protected int parallel;
@@ -402,15 +403,15 @@ public abstract class BoxClevA {
 		this.normlenlevel1 = normlenlevel1;
 	}
 
-	public Double getNormlenlevel2() {
+	public double getNormlenlevel2() {
 		return normlenlevel2;
 	}
 
-	public void setNormlenlevel2(Double normlenlevel2) {
+	public void setNormlenlevel2(double normlenlevel2) {
 		this.normlenlevel2 = normlenlevel2;
 	}
 
-	public Double getNormlenlevel3() {
+	public double getNormlenlevel3() {
 		return normlenlevel3;
 	}
 
@@ -430,11 +431,11 @@ public abstract class BoxClevA {
 
 	protected abstract long getMemoryUsed();
 
-	abstract void triangulate_and_plot(Box_info box);
+	protected abstract void triangulate_and_plot(Box_info box);
 
-	abstract void facet_triangulate_plot_and_free(Box_info box, List<Face_info> faces);
+	protected abstract void facet_triangulate_plot_and_free(Box_info box, List<Face_info> faces);
 
-	abstract void report_progress(Box_info bigbox, double percent);
+	protected abstract void report_progress(Box_info bigbox, double percent);
 
 	protected final void print_vertex_count() {
 		System.out.println("\n---------------------------------------\n");
@@ -467,6 +468,159 @@ public abstract class BoxClevA {
 	 */
 	public int getNumIsolatedSings() {
 		return plotter.numIsolatedSings();
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public int getParallel() {
+		return parallel;
+	}
+
+	public void setParallel(int parallel) {
+		this.parallel = parallel;
+	}
+
+
+
+
+	@Override
+	public int getCourseRes() {
+		return RESOLUTION;
+	}
+
+	@Override
+	public void setCourseRes(int x) {
+		RESOLUTION = x;
+	}
+
+	@Override
+	public int getFineRes() {
+			return LINK_SING_LEVEL;
+	}
+
+	@Override
+	public void setFineRes(int x) {
+		LINK_SING_LEVEL = x;		
+	}
+
+	@Override
+	public int getFaceRes() {
+		return LINK_FACE_LEVEL;
+	}
+
+	@Override
+	public void setFaceRes(int x) {
+		LINK_FACE_LEVEL = x;		
+	}
+
+	@Override
+	public int getEdgeRes() {
+		return LINK_EDGE_LEVEL;
+	}
+
+	@Override
+	public void setEdgeRes(int x) {
+		LINK_EDGE_LEVEL = x;		
+	}
+
+//	@Override
+	public void setNormlenlevel3(double x) {
+		this.normlenlevel3 =x;
+	}
+
+//	@Override
+	public void setNormlenlevel4(double x) {
+		this.normlenlevel3 =x;
+	}
+
+//	@Override
+	public RegionBean getRegionBean() {
+		return this.globalRegion;
+	}
+
+	public void setRegion(Region_info r) {
+		this.globalRegion = r;
+	}
+	
+	public Region_info getRegion() {
+		return globalRegion;
+	}
+//	@Override
+	public void setRegionBean(RegionBean bean) {
+		this.globalRegion  = new Region_info(bean);
+	}
+
+	public double[][][] getCoeffs() { return AA; }
+	public void setCoeffs(double[][][] co) { AA = co; }
+	
+	@Override
+	public List<Double> getCoeffsAsList() {
+		List<Double> res = new ArrayList<>();
+
+		for(int i=0;i<AA.length;++i) {
+			for(int j=0;j<AA[0].length;++j) {
+				for(int k=0;k<AA[0][0].length;++k) {
+					res.add(AA[i][j][k]);
+				}
+			}
+		}
+		return res;
+	}
+
+	List<Double> coeffList;
+	int degX,degY,degZ;
+	@Override
+	public void setCoeffsAsList(List<Double> co) {
+		coeffList = co;
+	}
+
+	public void buildCoeffs() {
+		AA = new double[degX+1][degY+1][degZ+1];
+		int index=0;
+		for(int i=0;i<AA.length;++i) {
+			for(int j=0;j<AA[0].length;++j) {
+				for(int k=0;k<AA[0][0].length;++k) {
+					AA[i][j][k] = coeffList.get(index);
+					++index;
+				}
+			}
+		}
+		
+	}
+	@Override
+	public int getDegX() {
+		return AA.length-1;
+	}
+
+	@Override
+	public void setDegX(int n) {
+		degX=n;
+	}
+
+	@Override
+	public int getDegY() {
+		return AA[0].length-1;
+	}
+
+	@Override
+	public void setDegY(int n) {
+		degY=n;
+	}
+
+	@Override
+	public int getDegZ() {
+		return AA[0][0].length-1;
+	}
+
+	@Override
+	public void setDegZ(int n) {
+		degZ=n;
 	}
 
 

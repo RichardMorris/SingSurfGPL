@@ -17,8 +17,6 @@ public class DefType
 	 */
 	Dimensions outputDims;
 	Dimensions inputDims;
-	int varient=0;
-	
 	private DefType(String s) { 
 	    type = s; 
 	    inputDims = Dimensions.ONE;

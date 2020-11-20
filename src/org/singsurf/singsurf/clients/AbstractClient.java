@@ -769,8 +769,6 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 		this.m_frame = frame;
 	}
 
-//	public abstract Definition createDefaultDef();
-
 	protected void loadFromDefOption(Definition def, String name, Fractometer fract) {
 		Option option = def.getOption(name);
 		if(option==null) return;

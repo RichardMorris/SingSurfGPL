@@ -493,3 +493,36 @@ zrel = y;
 <option name="showEdge" value="true"/>
 <option name="showVert" value="false"/>
 </definition>
+
+<definition name="Rembs' surface" type="psurf" opType="none">
+[X,Y,Z];
+X = a (U cos(u) - dU sin(u));
+Y= - a (U sin(u) + dU cos(u));
+Z = v - a dV;
+a = 2 V / ((C + 1) ( U^2 - V^2) );
+dU = diff(U,x);
+U = cosh(u rtC) / rtC;
+dV = diff(V,y);
+V = cos(v rtC1) / rtC1;
+rtC = sqrt(C);
+rtC1 = sqrt(C+1);
+
+u = x; v = y;
+
+
+
+<variable name="x" min="-2.369999999999998" max="2.3699999999999997" steps="100" type="none">
+<variable name="y" min="-1.11" max="1.1107207345395915" steps="100" type="none">
+<parameter name="C" value="1.0">
+<option name="textureXmin" value="-2.369999999999998"/>
+<option name="textureXmax" value="2.3699999999999997"/>
+<option name="textureYmin" value="-1.11"/>
+<option name="textureYmax" value="1.1107207345395915"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="surfColour" value="Gaussian curvature"/>
+<option name="colourMinVal" value="-3.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="clipping" value="100.0"/>
+</definition>

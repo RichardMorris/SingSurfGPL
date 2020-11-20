@@ -299,7 +299,7 @@ public abstract class BoxClevThreaded extends Boxclev {
 	}
 
 	@Override
-	void facet_triangulate_plot_and_free(Box_info box,List<Face_info> faces) {
+	protected void facet_triangulate_plot_and_free(Box_info box,List<Face_info> faces) {
 		switch(parallel) {
 		case 1:
 			postProcessService.submit(new ContextRunnable(box,faces) );

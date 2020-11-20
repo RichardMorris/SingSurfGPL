@@ -27,7 +27,7 @@ public class ProjectFactory {
 		String defaultDef;
 		Class<?> clientClass; //, ipClass;
 		List<Definition> defs;
-		int varient=0;
+
 		public ProjectType(DefType type, String longName, String shortName, String egPath, String className, String def) throws ClassNotFoundException, IOException {
 			super();
 			this.longName = longName;
@@ -69,10 +69,6 @@ public class ProjectFactory {
 						SingSurfMessages.getString(name+".className"),
 						SingSurfMessages.getString(name+".defaultDef")
 						);
-				if(SingSurfMessages.containsKey(name+".varient")) {
-					int varient = Integer.valueOf(SingSurfMessages.getString(name+".varient"));
-					pt.varient = varient;
-				}
 				projectTypes.add(pt);
 			} catch (ClassNotFoundException e) {
 //				System.err.println(e.toString());
@@ -136,13 +132,9 @@ public class ProjectFactory {
 		Constructor<?> cons;
 		AbstractClient newsurf = null;
 		try {
-			if(type.varient==0) {
 				cons = type.clientClass.getConstructor(new Class[] { GeomStore.class, String.class });
 				newsurf = (AbstractClient) cons.newInstance(new Object[] { store, projName });
-			} else {
-				cons = type.clientClass.getConstructor(new Class[] { GeomStore.class, String.class, Integer.class });
-				newsurf = (AbstractClient) cons.newInstance(new Object[] { store, projName, type.varient });				
-			}
+			
 			return newsurf;
 		} catch (Exception e) {
 			Throwable cause = e.getCause();

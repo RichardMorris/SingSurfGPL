@@ -54,8 +54,6 @@ public class Intersection extends AbstractOperatorClient {
 	public Intersection(GeomStore store, Definition def) {
 		super(store, def == null ? "Intersection" : def.getName());
 		if (getClass() == Intersection.class) {
-//			if (def == null)
-//				def = createDefaultDef();
 			init(def);
 		}
 	}

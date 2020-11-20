@@ -35,18 +35,12 @@ public class Globals extends AbstractClient {
 		init(def);
 	}
 
-//	public Globals(GeomStore store, String projName) {
-//		super(store, projName);
-//		init();
-//	}
-
 	/**
 	 * 
 	 */
 	public void init(Definition def) {
 		super.init();
 		newParams = new LParamList(this);
-//		Definition def = createDefaultDef();
 		this.calc = new Calculator(def,0);
 		this.removeGeomButton.addActionListener(new ActionListener() {
 
@@ -89,10 +83,6 @@ public class Globals extends AbstractClient {
 	@Override
 	public void loadDefinition(Definition newdef) {
 
-	}
-
-	public Definition createDefaultDef() {
-		return  new Definition("Globals", DefType.globals, "");
 	}
 
 	@Override

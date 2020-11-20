@@ -3,7 +3,7 @@ Created 14 Jun 2010 - Richard Morris
 */
 package org.singsurf.singsurf.asurf;
 
-public class Region_info {
+public class Region_info implements RegionBean {
     final public double xmin;
     final public double xmax;
     final public double ymin;
@@ -26,6 +26,10 @@ public class Region_info {
 		this.xwid = xmax - xmin;
 		this.ywid = ymax - ymin;
 		this.zwid = zmax - zmin;
+	}
+
+	public Region_info(RegionBean bean) {
+		this(bean.getXMin(),bean.getXMax(),bean.getYMin(),bean.getYMax(),bean.getZMin(),bean.getZMax());
 	}
 
 	@Override
@@ -82,15 +86,57 @@ public class Region_info {
 		return res;
 	}
 
-//	public double[] calc_second_derivs_actual(BoxClevA boxClevA, Bern3DContext ctx, double[] relativePos) {
-//		double[] rel = ctx.calc_second_derivs_relative(relativePos);
-//		return boxClevA.calc_second_deriv_actual(rel);
-//	}
-//
-//
-//	public double[] calc_norm_actual(Bern3DContext ctx, double[] rel_pos) {
-//		double norm[] = ctx.calc_norm_relative(rel_pos);
-//		double[] res = calc_norm_actual(norm);
-//	    return res;
-//	}
+	@Override
+	public double getXMin() {
+		return xmin;
+	}
+
+	@Override
+	public void setXMin(double x) {
+	}
+
+	@Override
+	public double getXMax() {
+		return xmax;
+	}
+
+	@Override
+	public void setXMax(double x) {
+	}
+
+	@Override
+	public double getYMin() {
+		return ymin;
+	}
+
+	@Override
+	public void setYMin(double y) {
+	}
+
+	@Override
+	public double getYMax() {
+		return ymax;
+	}
+
+	@Override
+	public void setYMax(double y) {
+	}
+
+	@Override
+	public double getZMin() {
+		return zmin;
+	}
+
+	@Override
+	public void setZMin(double z) {
+	}
+
+	@Override
+	public double getZMax() {
+		return zmax;
+	}
+
+	@Override
+	public void setZMax(double z) {
+	}
 }

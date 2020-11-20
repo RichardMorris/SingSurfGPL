@@ -162,7 +162,7 @@ public abstract class Boxclev extends BoxClevA {
 	/**
 	 * @param string
 	 */
-	void report_progress(Box_info box, double percent) {
+	protected void report_progress(Box_info box, double percent) {
 		if(box!=null)
 			progress.put(box, percent);
 		long curtime = System.currentTimeMillis();
@@ -257,7 +257,7 @@ public abstract class Boxclev extends BoxClevA {
 		return true;
 	}
 
-	void triangulate_and_plot(Box_info box) {
+	protected void triangulate_and_plot(Box_info box) {
 		if (triangulate != 0)
 			triangulator.triangulate_facets(box);
 		else
@@ -271,7 +271,7 @@ public abstract class Boxclev extends BoxClevA {
 	}
 
 	@Override
-	void facet_triangulate_plot_and_free(Box_info box,List<Face_info> faces) {
+	protected void facet_triangulate_plot_and_free(Box_info box,List<Face_info> faces) {
 			facets.make_facets(box,faces);
 			if (triangulate != 0)
 				triangulator.triangulate_facets(box);
