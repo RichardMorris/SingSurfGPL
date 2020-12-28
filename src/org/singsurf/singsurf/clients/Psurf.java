@@ -221,6 +221,7 @@ public class Psurf extends AbstractClient {
 			return;
 		}
 		Evaluator ce = calc.createEvaluator();
+		calc.printEquationsAndVariables();
 		
 		// if(m_geom.getNumVertices()!= (localX.getSteps()+1)*(localY.getSteps()+1))
 		rebuildResultArray();
@@ -308,6 +309,8 @@ public class Psurf extends AbstractClient {
 		double l = dot(dxx,norm.m_data);
 		double m = dot(dxy,norm.m_data);
 		double n = dot(dyy,norm.m_data);
+//		System.out.printf("E %6.3f F %6.3f G %6.3f l %6.3f m %6.3f  n %6.3f%n",
+//				E,F,G,l,m,n);
 
 //		double K = ( l *n - m*m ) / ( E *G - F*F );
 		double H = ( G* l + E* n - 2 *F* m ) / ( 2 *E* G - 2 *F*F);
@@ -318,6 +321,7 @@ public class Psurf extends AbstractClient {
 		float bval = H > 0 ? 0 : 1;
 		float gclip = gval > 1 ? 1 : gval < 0 ? 0 : (float) gval;
 
+//		System.out.printf("H %6.3g r %6.3f g %6.3f b %6.3f%n", H,rval,gval,bval);
 		return new Color(rval,gclip,bval);
 	}
 

@@ -34,6 +34,7 @@ public class Psurf_IP extends SingSurf_IP {
 		p4.add(project.cbShowFace);
 		p4.add(project.cbShowEdge);
 		p4.add(project.cbShowVert);
+		p4.add(project.cbShowBoundary);
 		return p4;
 	}
 }

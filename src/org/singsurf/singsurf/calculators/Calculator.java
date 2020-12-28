@@ -62,8 +62,6 @@ public class Calculator {
 	/** The command list for subsequent equations */
 	List<MRpCommandList> allComs = new ArrayList<MRpCommandList>();
 
-	//MatrixNodeI firstDerivs[];
-	//MRpCommandList firstDerivComs[];
 	int derivDepth = 0;
 
 	/** The raw list of equations */
@@ -80,8 +78,39 @@ public class Calculator {
 	/** mrpe reference numbers for each parameter */
 	Map<String,Integer> paramRefs=new HashMap<String,Integer>();
 
+	static class StringList {
+		String [] data;
+
+		public StringList(String[] data) {
+			super();
+			this.data = data;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + Arrays.hashCode(data);
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			StringList other = (StringList) obj;
+			if (!Arrays.equals(data, other.data))
+				return false;
+			return true;
+		}		
+	}
+	
 	/** Index for derivatives */
-	Map<String [],Integer> derivativesIndex = new HashMap<String[],Integer>();
+	Map<StringList,Integer> derivativesIndex = new HashMap<>();
 
 	/** Equations for derivatives */
 	List<Node> derivivativeEquations = new ArrayList<Node>();
@@ -179,17 +208,17 @@ public class Calculator {
 		top = (MatrixNodeI) rawEqns.elementAt(rawEqns.size()-1);
 	}
 
-	void printEquationsAndVariables()
+	public void printEquationsAndVariables()
 	{
 		if(!good) { System.out.println("Calculator is corrupt: " + msg ); return;}
 		System.out.print("Top\t");
 		mj.println(top);
 		PrintVisitor pv = ((XJep) mj).getPrintVisitor();
 		pv.setMode(DPrintVisitor.PRINT_PARTIAL_EQNS,false);
-		for(String[] names:this.derivativesIndex.keySet()) {
+		for(StringList names:this.derivativesIndex.keySet()) {
 			int index = this.derivativesIndex.get(names);
-			for(int i=0;i<names.length;++i)
-				System.out.print("D"+names[i]);
+			for(int i=0;i<names.data.length;++i)
+				System.out.print("D"+names.data[i]);
 			System.out.print("\t");
 			mj.println(this.derivivativeEquations.get(index));
 		}
@@ -454,7 +483,7 @@ public class Calculator {
 	}
 
 	int getDerivative(String[] names) {
-		Integer index = derivativesIndex.get(names);
+		Integer index = derivativesIndex.get(new StringList(names));
 		if(index!=null) return index;
 		try {
 			Node node;
@@ -469,11 +498,12 @@ public class Calculator {
 				Node lower = derivivativeEquations.get(lowerIndex);
 				node = mj.differentiate(lower, names[names.length-1]);
 			}
-			derivivativeEquations.add(node);
+			Node cleaned = mj.simplify(node);
+			derivivativeEquations.add(cleaned);
 			int i = derivivativeEquations.size()-1;
-			derivativesIndex.put(names, i);
-			extendDepVars(node);
-			MRpCommandList com = mrpe.compile(node);
+			derivativesIndex.put(new StringList(names), i);
+			extendDepVars(cleaned);
+			MRpCommandList com = mrpe.compile(cleaned);
 			derivComs.add(i,com);
 			return i;
 		} catch (ParseException e) {
@@ -547,6 +577,14 @@ public class Calculator {
 		MatrixVariable var = (MatrixVariable) mj.getVar(name);
 		var.setDimensions(three);
 		return var;
+	}
+
+	public MatrixNodeI getTop() {
+		return top;
+	}
+
+	public List<Node> getDerivivativeEquations() {
+		return derivivativeEquations;
 	}
 
 }
