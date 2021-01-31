@@ -526,3 +526,27 @@ u = x; v = y;
 <option name="colourMaxVal" value="1.0"/>
 <option name="clipping" value="100.0"/>
 </definition>
+<definition name="Catenoid -  Helicoid" type="psurf" opType="none">
+// lambda = 0 and 1 give helicoids, lambda = 0.5 gives a catenoid
+c * [   cos(theta) sinh(v) sin(u) + sin(theta) cosh(v) cos(u),
+  - cos(theta) sinh(v) cos(u) + sin(theta) cosh(v) sin(u),
+  u cos(theta) +v sin(theta) ];
+u = pi y;
+v = x /c ;
+theta = pi lambda;
+<variable name="x" min="-1.0" max="1.0" steps="40" type="none">
+<variable name="y" min="-1.0" max="1.0" steps="40" type="none">
+<parameter name="lambda" value="1.0000000000000009">
+<parameter name="c" value="0.7000000000000001">
+<option name="textureXmin" value="-1.0"/>
+<option name="textureXmax" value="1.0"/>
+<option name="textureYmin" value="-1.0"/>
+<option name="textureYmax" value="1.0"/>
+<option name="showFace" value="true"/>
+<option name="showEdge" value="true"/>
+<option name="showVert" value="false"/>
+<option name="surfColour" value="Mean curvature"/>
+<option name="colourMinVal" value="-1.0"/>
+<option name="colourMaxVal" value="1.0"/>
+<option name="clipping" value="100.0"/>
+</definition>
