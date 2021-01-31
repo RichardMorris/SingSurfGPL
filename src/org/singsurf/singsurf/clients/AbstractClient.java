@@ -164,6 +164,8 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 	/** Whether changing variable or parameters force a redrawing of surface */
 	protected boolean autoUpdate = true;
 	public Font basicFont;
+	private Font baseFont;
+	private Font textFont;
 
 	/** Whether to do a fit display after constructing geoms. **/
 	// public static boolean doFitDisplay = false;
@@ -290,16 +292,16 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 			System.out.println("PjLC init");
 
 		taDef = new JTextArea("", 30, 10);
-		Font font = Font.decode(this.getParameter("Font"));
-		Font tafont = Font.decode(store.getParameter("TextFont"));
-		taDef.setFont(tafont);
+		baseFont = Font.decode(getParameter("Font"));
+		textFont = Font.decode(getParameter("TextFont"));
+		taDef.setFont(textFont);
 
 		if (defFileName != null) {
 			chDefs = new Choice();
 			loadDefs(defFileName);
 			chDefs.addItemListener(this);
 //			chDefs.select(getDefaultDefName());
-			chDefs.setFont(font);
+			chDefs.setFont(baseFont);
 		} else
 			chDefs = null;
 		bLoad = new Button("Load");

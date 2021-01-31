@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -176,6 +177,10 @@ abstract public class PaSingSurf extends JPanel {
 		// Create top level window of application containing the applet
 		PsMainFrame frame = new PsMainFrame(va, args);
 
+		for(Entry<Object, Object> p: System.getProperties().entrySet())  {
+			System.out.println(p.getKey()+"\t"+p.getValue());
+		}
+		
 		frame.setBounds(new Rectangle(100, 100, 1000, 850));
 		// frame.setBounds(new Rectangle(100, 5, 830, 550));
 		// frame.setIconImage(va.getToolkit().getImage("images/icon.gif"));

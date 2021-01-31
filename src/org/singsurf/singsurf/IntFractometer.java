@@ -25,7 +25,7 @@ public class IntFractometer extends Fractometer {
 
 	protected void adjustValue(int amount) {
 		setValue(this.value+scale * amount);
-		if(parent!=null) parent.update(this);
+		if(jvParent!=null) jvParent.update(this);
 	}
 
 	public int getIntValue() {

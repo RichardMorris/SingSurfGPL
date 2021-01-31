@@ -12,7 +12,6 @@ import org.singsurf.singsurf.LParamList;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Parameter;
 import org.singsurf.singsurf.definitions.ProjectComponents;

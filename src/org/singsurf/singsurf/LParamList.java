@@ -7,6 +7,7 @@ package org.singsurf.singsurf;
 
 import java.awt.BorderLayout;
 import java.awt.Choice;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -52,6 +53,8 @@ public class LParamList extends PsPanel implements ItemListener {
 	PsPanel inner = new PsPanel();
 	GridBagConstraints gbc = null;
 	Choice chDP;
+
+	private Label dpLbl;
 	
 	public LParamList(AbstractClient parent) {
 //		System.out.println("LParamList "+parent.getName()+" changed"+changed);
@@ -80,6 +83,10 @@ public class LParamList extends PsPanel implements ItemListener {
 		}
 		chDP.select(1);
 		chDP.addItemListener(this);
+		dpLbl = new Label("DP");
+		Font baseFont = Font.decode(System.getProperty("font"));
+		chDP.setFont(baseFont);
+		dpLbl.setFont(baseFont);
 		this.changed = true;
 		rebuild();
 	}
@@ -156,7 +163,7 @@ public class LParamList extends PsPanel implements ItemListener {
 				gbc.gridy++;
 			}
 			gbc.gridx = 0;
-			inner.add(new Label("DP"),gbc);
+			inner.add(dpLbl,gbc);
 			gbc.gridx++;
 			inner.add(chDP,gbc);
 

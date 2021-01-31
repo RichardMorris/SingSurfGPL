@@ -4,6 +4,7 @@
 package org.singsurf.singsurf;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Label;
 import java.awt.Panel;
 
@@ -34,7 +35,12 @@ public class PuVariable  extends PsObject {
 		stepsLabel = new Label(name+" steps");
 		stepsFract = new IntFractometer(steps,2);
 		stepsFract.setParent(this);
+		Font baseFont = Font.decode(System.getProperty("font"));
+		minLabel.setFont(baseFont);
+		maxLabel.setFont(baseFont);
+		stepsLabel.setFont(baseFont);
 	}
+
 	public double getMin() {
 		return minControl.getValue();
 	}

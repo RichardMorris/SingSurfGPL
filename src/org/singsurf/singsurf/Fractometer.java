@@ -6,6 +6,7 @@ package org.singsurf.singsurf;
 import java.awt.Button;
 import java.awt.Choice;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -39,9 +40,12 @@ public class Fractometer extends Panel {
 	
 	JTextField tf = new JTextField("0.0");
 	NumberFormat nf = null;
-	PsObject parent=null;
+	PsObject jvParent=null;
 
 	public Fractometer(double value) {
+		Font baseFont = Font.decode(System.getProperty("font"));
+		tf.setFont(baseFont);
+		this.setFont(baseFont);
 		nf = NumberFormat.getInstance();
 		nf.setMaximumFractionDigits(this.decimalPlaces);
 		nf.setMinimumFractionDigits(this.decimalPlaces);
@@ -139,14 +143,14 @@ public class Fractometer extends Panel {
 	protected void adjustValue(int amount) {
 		double scale = Math.pow(10,-decimalPlaces);
 		setValue(this.value+scale * amount);
-		if(parent!=null) parent.update(this);
+		if(jvParent!=null) jvParent.update(this);
 	}
 	
 	private double setValue(String text) {
 		try {
 			Number n = nf.parse(text);
 			setValue(n.doubleValue());
-			if(parent!=null) parent.update(this);
+			if(jvParent!=null) jvParent.update(this);
 		} catch (ParseException e) {
 			displayValue();
 		}
@@ -200,7 +204,8 @@ public class Fractometer extends Panel {
 	}
 	
 	public void setParent(PsObject parent) {
-		this.parent = parent;
+		this.jvParent = parent;
+//		setFont(parent.baseFont);
 	}
 	
 	@Override

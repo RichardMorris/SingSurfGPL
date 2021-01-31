@@ -6,6 +6,7 @@
 package org.singsurf.singsurf;
 
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Label;
 import java.awt.Panel;
 
@@ -25,7 +26,7 @@ public class PuParameter extends PsObject {
     private static final long serialVersionUID = 1L;
     Fractometer control;
     Label label;
-    PsObject parent;
+    PsObject jvParent;
     int ref = -1;
 
     /**
@@ -37,17 +38,21 @@ public class PuParameter extends PsObject {
      *                the parameter
      */
     public PuParameter(PsObject obj, Parameter p) {
-	parent = obj;
+	jvParent = obj;
 	label = new Label(p.getName());
 	control = new Fractometer(p.getVal());
 	control.setParent(this);
+	Font baseFont = Font.decode(System.getProperty("font"));
+	label.setFont(baseFont);
     }
 
     public PuParameter(PsObject obj, Option p) {
-	parent = obj;
+	jvParent = obj;
 	label = new Label(p.getName());
 	control = new Fractometer(p.getDoubleVal());
 	control.setParent(this);
+	Font baseFont = Font.decode(System.getProperty("font"));
+	label.setFont(baseFont);
     }
 
     @Override
@@ -58,7 +63,7 @@ public class PuParameter extends PsObject {
     @Override
     public boolean update(Object arg0) {
 	// System.out.println("Lparam update"+arg0.toString());
-	return parent.update(this);
+	return jvParent.update(this);
     }
 
     public Component getLabel() {

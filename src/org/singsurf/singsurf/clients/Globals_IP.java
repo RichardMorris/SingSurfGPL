@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.Font;
 import java.awt.Label;
 
+import org.singsurf.singsurf.LParamList;
+
 import jv.object.PsPanel;
 import jv.object.PsUpdateIf;
 import jv.objectGui.PsTabPanel;
@@ -12,7 +14,7 @@ import jv.project.PjProject_IP;
 
 public class Globals_IP extends PjProject_IP {
 	private static final long serialVersionUID = 1L;
-	Globals parent;
+	Globals globals;
 
 	/**
 	 * 
@@ -41,20 +43,26 @@ public class Globals_IP extends PjProject_IP {
 
 		super.setParent(par);
 
-		parent = (Globals) par;
-		parent.m_IP = this;
-		this.setFont(parent.basicFont);
-		this.getTitle().setFont(parent.basicFont.deriveFont(Font.BOLD));
+		globals = (Globals) par;
+		globals.m_IP = this;
+		this.setFont(globals.basicFont);
+		this.getTitle().setFont(globals.basicFont.deriveFont(Font.BOLD));
 		
 		setLayout(new BorderLayout());
 		
 		PsTabPanel tabPanel = new PsTabPanel();
 		add(tabPanel); // add tabbed panel like any other panel
 
-		tabPanel.addPanel("Main",getMainPanel());
-		tabPanel.addPanel("Geometries",getGeomPanel());
+		final PsPanel mainPanel = getMainPanel();
+		mainPanel.setFont(globals.basicFont);
+		tabPanel.addPanel("Main",mainPanel);
+		final PsPanel geomPanel = getGeomPanel();
+		geomPanel.setFont(globals.basicFont);
+		tabPanel.addPanel("Geometries",geomPanel);
 //		this.setLayout(new BorderLayout());
-		tabPanel.addPanel("Global Variables",parent.newParams);
+		final LParamList paramPanel = globals.newParams;
+		paramPanel.setFont(globals.basicFont);
+		tabPanel.addPanel("Global Variables",paramPanel);
 	}
 
 	protected PsPanel getMainPanel() {
@@ -65,21 +73,21 @@ public class Globals_IP extends PjProject_IP {
 	
 	protected PsPanel getGeomPanel() {
 		PsPanel p1 = new PsPanel();
-		Component comp = parent.activeGeomNames;
+		Component comp = globals.activeGeomNames;
 		p1.add(comp);
 		p1.add(new Label("With selected:"));
-		p1.add(parent.cbShowFace);
-		p1.add(parent.cbShowEdge);
-		p1.add(parent.cbShowVert);
-		p1.add(parent.cbShowCurves);
-		p1.add(parent.cbShowPoints);
-		p1.add(parent.cbShowBoundary);
+		p1.add(globals.cbShowFace);
+		p1.add(globals.cbShowEdge);
+		p1.add(globals.cbShowVert);
+		p1.add(globals.cbShowCurves);
+		p1.add(globals.cbShowPoints);
+		p1.add(globals.cbShowBoundary);
 
-		p1.addLabelComponent("surf colours: ",parent.chSurfColours);
-		p1.addLabelComponent("curves colours: ",parent.chCurveColours);
+		p1.addLabelComponent("surf colours: ",globals.chSurfColours);
+		p1.addLabelComponent("curves colours: ",globals.chCurveColours);
 
 		
-		p1.add( parent.removeGeomButton);
+		p1.add( globals.removeGeomButton);
 		
 		return p1;
 	}

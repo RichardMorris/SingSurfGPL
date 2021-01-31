@@ -57,27 +57,42 @@ public abstract class SingSurf_IP extends PjProject_IP {
 		p4 = getOptionPanel();
 
 		PsTabPanel tabPanel = new PsTabPanel();
+		tabPanel.setFont(project.basicFont);
 		add(tabPanel); // add tabbed panel like any other panel
-		tabPanel.addPanel("Definition", p1);
-		if (p2 != null)
+		if(p1 != null) {
+			p1.setFont(project.basicFont);
+			tabPanel.addPanel("Definition", p1);
+		}
+		if (p2 != null) {
+			p2.setFont(project.basicFont);
 			tabPanel.addPanel("Domain", p2);
-		if (p3 != null)
+		}
+		if (p3 != null) {
+			p3.setFont(project.basicFont);
 			tabPanel.addPanel("Parameters", p3);
+		}
 		if( project instanceof AbstractOperatorClient) {
-			tabPanel.addPanel("Inputs", getInputsPanel());
+			final PsPanel ip = getInputsPanel();
+			ip.setFont(project.basicFont);
+			tabPanel.addPanel("Inputs", ip);
 		}
 		
-		if (p4 != null)
+		if (p4 != null) {
+			p4.setFont(project.basicFont);
 			tabPanel.addPanel("Options", p4);
+		}
 		tabPanel.setVisible("Definition"); // select initially active panel
 
 		add(tabPanel, BorderLayout.CENTER);
 
 		PsPanel p5 = getSouthPanel();
+		p5.setFont(project.basicFont);
 		add(p5, BorderLayout.SOUTH);
-		
+
 		PsPanel p6 = getNorthPanel();
+		p6.setFont(project.basicFont);
 		add(p6,BorderLayout.NORTH);
+
 	}
 
 	protected PsPanel getNorthPanel() {
