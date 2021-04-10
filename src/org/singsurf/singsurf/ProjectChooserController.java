@@ -17,6 +17,7 @@ import org.singsurf.singsurf.definitions.DefinitionReader;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.SSGeomListener;
 
+import jv.loader.PgJvxLoader;
 import jv.loader.PgObjLoader;
 import jv.project.PgGeometryIf;
 import jv.project.PgJvxSrc;
@@ -308,6 +309,14 @@ public class ProjectChooserController {
 			}
 			else if(file.endsWith(".obj")) {
 				PgObjLoader loader = new PgObjLoader();
+				PgJvxSrc[] jvxs;
+				jvxs = loader.read(new BufferedReader(new FileReader(dir+file)));
+				for(PgJvxSrc jvx:jvxs) {
+					ssp.store.globals.addOrphan(jvx,file);
+				}
+			}
+			else if(file.endsWith(".jvx")) {
+				PgJvxLoader loader = new PgJvxLoader();
 				PgJvxSrc[] jvxs;
 				jvxs = loader.read(new BufferedReader(new FileReader(dir+file)));
 				for(PgJvxSrc jvx:jvxs) {

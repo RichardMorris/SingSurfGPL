@@ -331,8 +331,10 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 		System.out.println("Load from " + imagefilename);
 		
 		if(imagefilename.endsWith(".wrl")
+				|| imagefilename.endsWith(".jvx")
 				|| imagefilename.endsWith(".obj")) {
 			controller.loadModel(fd.getDirectory(),fd.getFile());
+			return;
 		}
 		controller.loadProjectFromFile(imagefilename);
 	}

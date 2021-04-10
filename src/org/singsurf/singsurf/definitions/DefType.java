@@ -81,6 +81,8 @@ public class DefType
 	public static final DefType p3 = new DefType("p3",2,3);
 	public static final DefType globals = new DefType("globals");
 
+	public static final DefType volcalc = new DefType("volcalc",3,3);
+
 	@Override
 	public String toString() { return getType(); }
 	public static DefType get(String s)
