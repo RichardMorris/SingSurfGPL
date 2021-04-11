@@ -5,6 +5,12 @@
  */
 package org.singsurf.singsurf.clients;
 
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Label;
+
+import javax.swing.Box;
+
 import jv.object.PsPanel;
 
 /**
@@ -43,8 +49,22 @@ public class VolCalc_IP extends SingSurf_IP {
 
 	@Override
 	protected PsPanel getDefinitionPanel() {
-		PsPanel p4 = new PsPanel();
-		p4.add(((VolCalc) project).output );
+		PsPanel p4 = new PsPanel(new GridLayout(0, 2));
+		p4.add(new Label("Volume"));
+		p4.add(((VolCalc) project).volume );
+		p4.add(new Label("Area"));
+		p4.add(((VolCalc) project).area );
+		p4.add(new Label("Cx"));
+		p4.add(((VolCalc) project).Cx );
+		p4.add(new Label("Cy"));
+		p4.add(((VolCalc) project).Cy );
+		p4.add(new Label("Cz"));
+		p4.add(((VolCalc) project).Cz );
+		p4.add(new  Box.Filler(
+				new Dimension((short) 0,(short) 0), 
+				new Dimension((short) 0,(short) 500),
+				new Dimension(Short.MAX_VALUE, Short.MAX_VALUE) ));
+
 		return p4;
 	}
 

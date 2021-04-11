@@ -27,10 +27,10 @@ x^2 + y^2 - 1;
 </definition>
 
 <definition name="Ellipsoid" type="asurf">
-a x^2+b y^2+c z^2 - 1;
+(x/a)^2+(y/b)^2+(z/c)^2 - 1;
 <parameter name="a" value="1" />
-<parameter name="b" value="3" />
-<parameter name="c" value="6" />
+<parameter name="b" value="0.5" />
+<parameter name="c" value="0.4" />
 <variable name="x" min="-1.04" max="1.03">
 <variable name="y" min="-1.03" max="1.04">
 <variable name="z" min="-1.02" max="1.05">

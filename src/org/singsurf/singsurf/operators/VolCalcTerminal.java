@@ -1,9 +1,5 @@
 package org.singsurf.singsurf.operators;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgElementSet;
@@ -16,53 +12,94 @@ public class VolCalcTerminal extends AbstractTerminal {
 	
 	enum Dir { X, Y , Z };
 	Dir dir = Dir.X;
+	
+	public static class VolInfo {
+		public double area;
+		public double volume;
+		public PdVector centroid;
+		double x;
+		double y;
+		double z;
+		
+		public VolInfo() {
+			area = 0;
+			volume = 0;
+			centroid = new PdVector(3);
+		}
+	}
 
 	@Override
 	public Object operateSurface(PgElementSet geom) throws EvaluationException {
 		
-		double sumOverAllFaces=0;
+		VolInfo volinfo = new VolInfo();
 		
 		geom.makeElementNormals();
+
 		for(int i=0;i<geom.getNumElements();++i) {
 			
-			sumOverAllFaces += operateTriangle(geom,i);
+			operateTriangle(geom,i,volinfo);
 			
 		}
-
-		return sumOverAllFaces;
+		volinfo.centroid.set(volinfo.x/ volinfo.volume, 
+				volinfo.y/ volinfo.volume, 
+				volinfo.z/ volinfo.volume);
+		return volinfo;
 	}
 
-	private double operateTriangle(PgElementSet geom,int i) {
+	private void operateTriangle(PgElementSet geom,int i,VolInfo volinfo) {
 		PiVector element = geom.getElement(i);
 		PdVector normal = geom.getElementNormal(i);
 		if(element.getSize()!=3) {
-			return 0;
+			return;
 		}
 		PdVector A = geom.getVertex(element.getEntry(0));
 		PdVector B = geom.getVertex(element.getEntry(1));
 		PdVector C = geom.getVertex(element.getEntry(2));
-		System.out.printf("A (%6.2f,%6.2f,%6.2f) B (%6.2f,%6.2f,%6.2f) C (%6.2f,%6.2f,%6.2f)\n",
-				A.getFirstEntry(),A.getEntry(1),A.getLastEntry(),
-				B.getFirstEntry(),B.getEntry(1),B.getLastEntry(),
-				C.getFirstEntry(),C.getEntry(1),C.getLastEntry()
-				);
-		PdVector AB = PdVector.subNew(B, A);
-		PdVector AC = PdVector.subNew(C, A);
-		PdVector norm = PdVector.crossNew(AB, AC);
-		double len = norm.length();
-		double area = Math.abs(len/2);
+		final double ax = A.getFirstEntry();
+		final double bx = B.getFirstEntry();
+		final double cx = C.getFirstEntry();
+		final double ay = A.getEntry(1);
+		final double by = B.getEntry(1);
+		final double cy = C.getEntry(1);
+		final double az = A.getLastEntry();
+		final double bz = B.getLastEntry();
+		final double cz = C.getLastEntry();
+//		System.out.printf("A (%6.2f,%6.2f,%6.2f) B (%6.2f,%6.2f,%6.2f) C (%6.2f,%6.2f,%6.2f)\n",
+//				ax,ay,az,
+//				bx,by,bz,
+//				cx,cy,cz
+//				);
+//		PdVector AB = PdVector.subNew(B, A);
+//		PdVector AC = PdVector.subNew(C, A);
+//		PdVector norm = PdVector.crossNew(AB, AC);
+//		double len = norm.length();
+//		double area = Math.abs(len/2);
 		
+		final double area = geom.getAreaOfElement(i);
+		volinfo.area += area;
+				// 
+		final double nx = normal.getFirstEntry();
+		final double ny = normal.getEntry(1);
+		final double nz = normal.getLastEntry();
+		double fa = ax * nx;
+		double fb = bx * nx;
+		double fc = cx * nx;
 		
-		norm.normalize();
-		if(A.dot(norm)<0)
-			norm.invert();
-		// 
-		double fa = A.getFirstEntry() * norm.getFirstEntry();
-		double fb = B.getFirstEntry() * norm.getFirstEntry();
-		double fc = C.getFirstEntry() * norm.getFirstEntry();
+		volinfo.volume += area * (fa + fb + fc) / 3;
+		double Cx = 1.0/12 * area * nx * (ax*ax + bx*bx + cx*cx + ax*bx + bx*cx + cx*ax);
+		double Cy = 1.0/12 * area * ny * (ay*ay + by*by + cy*cy + ay*by + by*cy + cy*ay);
+		double Cz = 1.0/12 * area * nz * (az*az + bz*bz + cz*cz + az*bz + bz*cz + cz*az);
 		
-		double res = area * (fa + fb + fc) / 3;
-		return res;
+		double fA = 0.5 * ax * ax * nx;
+		double fB = 0.5 * bx * bx * nx;
+		double fC = 0.5 * cx * cx * nx;
+		double total = 1./3 * area * (fA + fB + fC);
+//		System.out.printf("N (%5.2f,%5.2f,%5.2f), C (%6.3f,%6.3f,%6.3f) area %6.3f alt %6.3f%n",
+//				nx,ny,nz,Cx,Cy,Cz,area,total);
+		volinfo.x += Cx;
+		volinfo.y += Cy;
+		volinfo.z += Cz;
+		
 	}
 
 	@Override

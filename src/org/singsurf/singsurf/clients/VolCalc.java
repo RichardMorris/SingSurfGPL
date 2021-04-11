@@ -6,6 +6,7 @@
 package org.singsurf.singsurf.clients;
 
 import java.awt.TextField;
+import java.text.DecimalFormat;
 
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.calculators.Calculator;
@@ -15,6 +16,7 @@ import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
 import org.singsurf.singsurf.operators.VolCalcTerminal;
+import org.singsurf.singsurf.operators.VolCalcTerminal.VolInfo;
 
 import jv.project.PgGeometryIf;
 
@@ -27,7 +29,11 @@ public class VolCalc extends AbstractOperatorClient {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	TextField output;
+	TextField volume;
+	TextField area;
+	TextField Cx;
+	TextField Cy;
+	TextField Cz;
 
 	/********** Constructor *********/
 
@@ -39,7 +45,10 @@ public class VolCalc extends AbstractOperatorClient {
 	}
 
 	public void calculate() {
-//		equationChanged(taDef.getText());
+		String name = this.ch_inputSurf.getSelectedItem();
+		PgGeometryIf input = store.getGeom(name);
+		calculate(input);
+
 	}
 
 	public void init(Definition def) {
@@ -54,7 +63,11 @@ public class VolCalc extends AbstractOperatorClient {
 	@Override
 	public void loadDefinition(Definition newdef) {
 		
-		output = new TextField();
+		volume = new TextField();
+		area = new TextField();
+		Cx = new TextField();
+		Cy = new TextField();
+		Cz = new TextField();
 	}
 
 	@Override
@@ -77,10 +90,25 @@ public class VolCalc extends AbstractOperatorClient {
 			return;
 		}
 		PgGeometryIf input = store.getGeom(name);
+		calculate(input);
+	}
+
+	/**
+	 * @param input
+	 */
+	public void calculate(PgGeometryIf input) {
+		DecimalFormat fmt = new DecimalFormat();
+		fmt.setMaximumFractionDigits(6);
 		VolCalcTerminal vct = new VolCalcTerminal();
 		try {
-			double volume = (Double) vct.operate(input);
-			output.setText("Volume "+volume);
+			VolCalcTerminal.VolInfo volinfo =  (VolInfo) vct.operate(input);
+			volume.setText(fmt.format(volinfo.volume));
+			area.setText(fmt.format(volinfo.area));
+			Cx.setText(fmt.format(volinfo.centroid.getEntry(0)));
+			Cy.setText(fmt.format(volinfo.centroid.getEntry(1)));
+			Cz.setText(fmt.format(volinfo.centroid.getEntry(2)));
+
+			
 		} catch (UnSuportedGeometryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -111,6 +139,17 @@ public class VolCalc extends AbstractOperatorClient {
 	@Override
 	public void displayGeom(GeomPair p, PgGeometryIf result) {
 		
+	}
+
+	@Override
+	public void calcGeom(GeomPair p) {
+		calculate(p.getInput());
+	}
+
+	@Override
+	public void calcGeoms() {
+		// TODO Auto-generated method stub
+		super.calcGeoms();
 	}
 
 
