@@ -24,9 +24,9 @@ public class Facet_info {
 	}
     
 	public boolean matches_derivs(Sol_info sol) {
-		if(dx * sol.dx < 0) return false;
-		if(dy * sol.dy < 0) return false;
-		if(dz * sol.dz < 0) return false;
+		if(dx * sol.getDx() < 0) return false;
+		if(dy * sol.getDy() < 0) return false;
+		if(dz * sol.getDz() < 0) return false;
 		return true;
 	}
 	
@@ -96,12 +96,12 @@ public class Facet_info {
 		
 		Facet_sol s1 = this.sols;
 		while(s1!=null) {
-			if(s1.sol.dx>0) x_pos = true;
-			if(s1.sol.dx<0) x_neg = true;
-			if(s1.sol.dy>0) y_pos = true;
-			if(s1.sol.dy<0) y_neg = true;
-			if(s1.sol.dz>0) z_pos = true;
-			if(s1.sol.dz<0) z_neg = true;
+			if(s1.sol.getDx()>0) x_pos = true;
+			if(s1.sol.getDx()<0) x_neg = true;
+			if(s1.sol.getDy()>0) y_pos = true;
+			if(s1.sol.getDy()<0) y_neg = true;
+			if(s1.sol.getDz()>0) z_pos = true;
+			if(s1.sol.getDz()<0) z_neg = true;
 			s1 = s1.next;
 		}
 		dx = x_pos == x_neg ? 0 : (x_pos ? 1 : -1);
@@ -174,12 +174,12 @@ public class Facet_info {
 		
 		Facet_sol s1 = this.sols;
 		while(s1!=null) {
-			if(sigx * s1.sol.dx < 0) return false;
-			if(sigy * s1.sol.dy < 0) return false;
-			if(sigz * s1.sol.dz < 0) return false;
-			if(sigx ==0) sigx = s1.sol.dx;
-			if(sigy ==0) sigy = s1.sol.dy;
-			if(sigz ==0) sigz = s1.sol.dz;
+			if(sigx * s1.sol.getDx() < 0) return false;
+			if(sigy * s1.sol.getDy() < 0) return false;
+			if(sigz * s1.sol.getDz() < 0) return false;
+			if(sigx ==0) sigx = s1.sol.getDx();
+			if(sigy ==0) sigy = s1.sol.getDy();
+			if(sigz ==0) sigz = s1.sol.getDz();
 			s1 = s1.next;
 		}
 		return true;

@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * Set of inputs and ingredients for a project.
+ */
 public class ProjectComponents {
 	String name;
 	List<String> inputs = new ArrayList<>();

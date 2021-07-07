@@ -57,7 +57,6 @@ public class DefType
 	public static final DefType genMapPC = new DefType("genMapPCurve",3,3);
 	
 	
-	
 	public static final DefType biMap = new DefType("biMap",3,3);
 	public static final DefType biInt = new DefType("biInt",2,1);
 

@@ -4,8 +4,6 @@ import java.util.ListIterator;
 
 public class Topology {
 	Box_info whole_box;
-	
-	
 
 	public Topology(Box_info whole_box) {
 	    super();

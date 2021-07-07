@@ -20,6 +20,7 @@ public class VolCalcTerminal extends AbstractTerminal {
 		double x;
 		double y;
 		double z;
+		double vol2;
 		
 		public VolInfo() {
 			area = 0;
@@ -40,6 +41,8 @@ public class VolCalcTerminal extends AbstractTerminal {
 			operateTriangle(geom,i,volinfo);
 			
 		}
+		
+		System.out.printf("Volumes %9.6f %9.6f%n",volinfo.volume,volinfo.vol2);
 		volinfo.centroid.set(volinfo.x/ volinfo.volume, 
 				volinfo.y/ volinfo.volume, 
 				volinfo.z/ volinfo.volume);
@@ -69,23 +72,43 @@ public class VolCalcTerminal extends AbstractTerminal {
 //				bx,by,bz,
 //				cx,cy,cz
 //				);
-//		PdVector AB = PdVector.subNew(B, A);
-//		PdVector AC = PdVector.subNew(C, A);
-//		PdVector norm = PdVector.crossNew(AB, AC);
-//		double len = norm.length();
+		PdVector AB = PdVector.subNew(B, A);
+		PdVector AC = PdVector.subNew(C, A);
+		PdVector norm = PdVector.crossNew(AB, AC);
+		norm.normalize();
+		double dot = norm.dot(normal);
+		final double nx = normal.getFirstEntry();
+		final double ny = normal.getEntry(1);
+		final double nz = normal.getLastEntry();
+
+		if(dot < 0) {
+			System.out.println("neg dot" + dot);
+			System.out.printf("N (%6.3f,%6.3f,%6.3f), C (%6.3f,%6.3f,%6.3f)"
+					+ "%n",
+			nx,ny,nz,norm.getFirstEntry(),norm.getEntry(1),norm.getLastEntry()
+			);
+			
+		}
+		if(Math.abs(dot)-1.0 >1e-6) {
+			System.out.println("non unitary dot" + dot);
+
+			System.out.printf("N (%6.3f,%6.3f,%6.3f), C (%6.3f,%6.3f,%6.3f)"
+					+ "%n",
+			nx,ny,nz,norm.getFirstEntry(),norm.getEntry(1),norm.getLastEntry()
+			);
+
+		}
 //		double area = Math.abs(len/2);
 		
 		final double area = geom.getAreaOfElement(i);
 		volinfo.area += area;
 				// 
-		final double nx = normal.getFirstEntry();
-		final double ny = normal.getEntry(1);
-		final double nz = normal.getLastEntry();
 		double fa = ax * nx;
 		double fb = bx * nx;
 		double fc = cx * nx;
 		
-		volinfo.volume += area * (fa + fb + fc) / 3;
+		final double v1 = area * (fa + fb + fc) / 3;
+		volinfo.volume += v1;
 		double Cx = 1.0/12 * area * nx * (ax*ax + bx*bx + cx*cx + ax*bx + bx*cx + cx*ax);
 		double Cy = 1.0/12 * area * ny * (ay*ay + by*by + cy*cy + ay*by + by*cy + cy*ay);
 		double Cz = 1.0/12 * area * nz * (az*az + bz*bz + cz*cz + az*bz + bz*cz + cz*az);
@@ -99,7 +122,10 @@ public class VolCalcTerminal extends AbstractTerminal {
 		volinfo.x += Cx;
 		volinfo.y += Cy;
 		volinfo.z += Cz;
-		
+	
+		double det = PdVector.det(A, B, C)/6;
+		double v2 = A.dot(PdVector.crossNew(B, C))/6;
+		volinfo.vol2 += v2;
 	}
 
 	@Override

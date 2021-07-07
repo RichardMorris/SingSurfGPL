@@ -374,11 +374,11 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 			cbShowFace.setState(surf.isShowingElements());
 			cbShowEdge.setState(surf.isShowingEdges());
 			cbShowVert.setState(surf.isShowingVertices());
-			this.cbShowFace.setEnabled(true);
-			this.cbShowEdge.setEnabled(true);
-			this.cbShowVert.setEnabled(true);
-			this.cbShowPoints.setEnabled(false);
-			this.cbShowCurves.setEnabled(false);
+			cbShowFace.setEnabled(true);
+			cbShowEdge.setEnabled(true);
+			cbShowVert.setEnabled(true);
+			cbShowCurves.setEnabled(false);
+			cbShowPoints.setEnabled(false);
 			
 			if(surf.hasElementColors()) {
 				chSurfColours.select("Unchanged");								
@@ -412,7 +412,7 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 		} else if(geom instanceof PgPolygonSet) {
 			PgPolygonSet surf = (PgPolygonSet) geom;
 			cbShowCurves.setState(surf.isShowingPolygons());
-			cbShowPoints.setState(surf.isShowingVertices());
+			cbShowVert.setState(surf.isShowingVertices());
 			this.cbShowFace.setEnabled(false);
 			this.cbShowEdge.setEnabled(false);
 			this.cbShowVert.setEnabled(true);

@@ -116,7 +116,7 @@ public class BoxSolver {
 		} else if (count == 2) {
 			/* Only add links whose derivs match */
 
-			if (matchNodes(nodes.get(0),nodes.get(1)) && (nodes.get(0).sol.dx != 0 || nodes.get(0).sol.dy != 0 || nodes.get(0).sol.dz != 0)) {
+			if (matchNodes(nodes.get(0),nodes.get(1)) && (nodes.get(0).sol.getDx() != 0 || nodes.get(0).sol.getDy() != 0 || nodes.get(0).sol.getDz() != 0)) {
 				box.add_node_link(nodes.get(0), nodes.get(1));
 				doReduce = false;
 			}
@@ -126,7 +126,7 @@ public class BoxSolver {
 
 			boolean flagReduce = false;
 			for (i = 0; i < 4; ++i)
-				if (nodes.get(i).sol.dx == 0 && nodes.get(i).sol.dy == 0 && nodes.get(i).sol.dz == 0)
+				if (nodes.get(i).sol.getDx() == 0 && nodes.get(i).sol.getDy() == 0 && nodes.get(i).sol.getDz() == 0)
 					flagReduce = true;
 
 			if (flagReduce) {
@@ -287,9 +287,8 @@ public class BoxSolver {
 
 	private void fillSolWith3Dres(Sol_info sol, Solve3DresultWithSig conv_res) {
 		sol.setRoots(conv_res.x, conv_res.y, conv_res.z);
-		sol.dx = conv_res.sig_x;
-		sol.dy = conv_res.sig_y;
-		sol.dz = conv_res.sig_z;
+		sol.setDerivs(conv_res);
+
 		sol.conv_failed = !conv_res.good;
 		sol.setValue(conv_res.f_val);
 		if(Double.isFinite(conv_res.i_val)) {
@@ -436,9 +435,7 @@ public class BoxSolver {
 		// Try converging to a singularity, it may fail
 		signStr = SignTest.BuildNodeSigns2(nodes);
 		sol = new Sol_info(BOX, box.xl, box.yl, box.zl, box.denom, pos_x, pos_y, pos_z);
-		sol.dx = f1;
-		sol.dy = f2;
-		sol.dz = f3;
+		sol.setDerivs(f1, f2, f3);
 		Solve3DresultWithSig conv_res = boxgen.converger.converge_sing(new BoxPos(pos_x, pos_y, pos_z), bb, dx, dy, dz,
 				f1, f2, f3);
 		int nzero = (conv_res.sig_x == 0 ? 1 : 0) + (conv_res.sig_y == 0 ? 1 : 0) + (conv_res.sig_z == 0 ? 1 : 0);
@@ -523,18 +520,18 @@ public class BoxSolver {
 			 * BoxClevA.log.printf("ERR: Linking 3 unmatched\n"); print_sol(nodes[i].sol);
 			 * print_sol(node_j.sol); print_sol(node_k.sol);
 			 */
-			if (node_i.sol.dx == node_j.sol.dx && node_i.sol.dx == node_k.sol.dx)
+			if (node_i.sol.getDx() == node_j.sol.getDx() && node_i.sol.getDx() == node_k.sol.getDx())
 				matchedX = true;
-			if (node_i.sol.dy == node_j.sol.dy && node_i.sol.dy == node_k.sol.dy)
+			if (node_i.sol.getDy() == node_j.sol.getDy() && node_i.sol.getDy() == node_k.sol.getDy())
 				matchedY = true;
-			if (node_i.sol.dz == node_j.sol.dz && node_i.sol.dz == node_k.sol.dz)
+			if (node_i.sol.getDz() == node_j.sol.getDz() && node_i.sol.getDz() == node_k.sol.getDz())
 				matchedZ = true;
 
 			if (matchedX && matchedY) {
-				if (node_i.sol.dz == 0) {
+				if (node_i.sol.getDz() == 0) {
 					box.add_node_link_simple(node_i, node_j);
 					box.add_node_link_simple(node_i, node_k);
-				} else if (node_j.sol.dz == 0) {
+				} else if (node_j.sol.getDz() == 0) {
 					box.add_node_link_simple(node_i, node_j);
 					box.add_node_link_simple(node_j, node_k);
 				} else {
@@ -544,10 +541,10 @@ public class BoxSolver {
 				done[i] = done[j] = done[k];
 				unmatched = 0;
 			} else if (matchedX && matchedZ) {
-				if (node_i.sol.dy == 0) {
+				if (node_i.sol.getDy() == 0) {
 					box.add_node_link_simple(node_i, node_j);
 					box.add_node_link_simple(node_i, node_k);
-				} else if (node_j.sol.dy == 0) {
+				} else if (node_j.sol.getDy() == 0) {
 					box.add_node_link_simple(node_i, node_j);
 					box.add_node_link_simple(node_j, node_k);
 				} else {
@@ -557,10 +554,10 @@ public class BoxSolver {
 				done[i] = done[j] = done[k];
 				unmatched = 0;
 			} else if (matchedY && matchedZ) {
-				if (node_i.sol.dx == 0) {
+				if (node_i.sol.getDx() == 0) {
 					box.add_node_link_simple(node_i, node_j);
 					box.add_node_link_simple(node_i, node_k);
-				} else if (node_j.sol.dx == 0) {
+				} else if (node_j.sol.getDx() == 0) {
 					box.add_node_link_simple(node_i, node_j);
 					box.add_node_link_simple(node_j, node_k);
 				} else {
@@ -572,13 +569,13 @@ public class BoxSolver {
 			} else if (matchedX) {
 				/* or (0,1,-1) -- (0,1,0) -- (-1,1,0) */
 
-				if (node_i.sol.dx != 0 && node_i.sol.dy == 0 && node_i.sol.dz == 0) {
+				if (node_i.sol.getDx() != 0 && node_i.sol.getDy() == 0 && node_i.sol.getDz() == 0) {
 					box.add_node_link_simple(node_i, node_j);
 					box.add_node_link_simple(node_i, node_k);
-				} else if (node_j.sol.dx != 0 && node_j.sol.dy == 0 && node_j.sol.dz == 0) {
+				} else if (node_j.sol.getDx() != 0 && node_j.sol.getDy() == 0 && node_j.sol.getDz() == 0) {
 					box.add_node_link_simple(node_j, node_i);
 					box.add_node_link_simple(node_j, node_k);
-				} else if (node_k.sol.dx != 0 && node_k.sol.dy == 0 && node_k.sol.dz == 0) {
+				} else if (node_k.sol.getDx() != 0 && node_k.sol.getDy() == 0 && node_k.sol.getDz() == 0) {
 					box.add_node_link_simple(node_k, node_i);
 					box.add_node_link_simple(node_k, node_j);
 				} else {
@@ -596,13 +593,13 @@ public class BoxSolver {
 			} else if (matchedY) {
 				/* or (0,1,-1) -- (0,1,0) -- (-1,1,0) */
 
-				if (node_i.sol.dx == 0 && node_i.sol.dz == 0 && node_i.sol.dy != 0) {
+				if (node_i.sol.getDx() == 0 && node_i.sol.getDz() == 0 && node_i.sol.getDy() != 0) {
 					box.add_node_link_simple(node_i, node_j);
 					box.add_node_link_simple(node_i, node_k);
-				} else if (node_j.sol.dx == 0 && node_j.sol.dz == 0 && node_j.sol.dy != 0) {
+				} else if (node_j.sol.getDx() == 0 && node_j.sol.getDz() == 0 && node_j.sol.getDy() != 0) {
 					box.add_node_link_simple(node_j, node_i);
 					box.add_node_link_simple(node_j, node_k);
-				} else if (node_k.sol.dx == 0 && node_k.sol.dz == 0 && node_k.sol.dy != 0) {
+				} else if (node_k.sol.getDx() == 0 && node_k.sol.getDz() == 0 && node_k.sol.getDy() != 0) {
 					box.add_node_link_simple(node_k, node_i);
 					box.add_node_link_simple(node_k, node_j);
 				} else {
@@ -620,13 +617,13 @@ public class BoxSolver {
 			} else if (matchedZ) {
 				/* or (0,1,-1) -- (0,1,0) -- (-1,1,0) */
 
-				if (node_i.sol.dx == 0 && node_i.sol.dy == 0 && node_i.sol.dz != 0) {
+				if (node_i.sol.getDx() == 0 && node_i.sol.getDy() == 0 && node_i.sol.getDz() != 0) {
 					box.add_node_link_simple(node_i, node_j);
 					box.add_node_link_simple(node_i, node_k);
-				} else if (node_j.sol.dx == 0 && node_j.sol.dy == 0 && node_j.sol.dz != 0) {
+				} else if (node_j.sol.getDx() == 0 && node_j.sol.getDy() == 0 && node_j.sol.getDz() != 0) {
 					box.add_node_link_simple(node_j, node_i);
 					box.add_node_link_simple(node_j, node_k);
-				} else if (node_k.sol.dx == 0 && node_k.sol.dy == 0 && node_k.sol.dz != 0) {
+				} else if (node_k.sol.getDx() == 0 && node_k.sol.getDy() == 0 && node_k.sol.getDz() != 0) {
 					box.add_node_link_simple(node_k, node_i);
 					box.add_node_link_simple(node_k, node_j);
 				} else {
@@ -641,19 +638,19 @@ public class BoxSolver {
 				}
 				done[i] = done[j] = done[k];
 				unmatched = 0;
-			} else if (node_i.sol.dx == 0 && node_i.sol.dy == 0 && node_i.sol.dz == 0) {
+			} else if (node_i.sol.getDx() == 0 && node_i.sol.getDy() == 0 && node_i.sol.getDz() == 0) {
 				BoxClevA.log.printf("ERR: link_sing: matching 000\n");
 				box.add_node_link_simple(node_i, node_j);
 				box.add_node_link_simple(node_i, node_k);
 				done[i] = done[j] = done[k];
 				unmatched = 0;
-			} else if (node_j.sol.dx == 0 && node_j.sol.dy == 0 && node_j.sol.dz == 0) {
+			} else if (node_j.sol.getDx() == 0 && node_j.sol.getDy() == 0 && node_j.sol.getDz() == 0) {
 				BoxClevA.log.printf("ERR: link_sing: matching 000\n");
 				box.add_node_link_simple(node_j, node_i);
 				box.add_node_link_simple(node_j, node_k);
 				done[i] = done[j] = done[k];
 				unmatched = 0;
-			} else if (node_k.sol.dx == 0 && node_k.sol.dy == 0 && node_k.sol.dz == 0) {
+			} else if (node_k.sol.getDx() == 0 && node_k.sol.getDy() == 0 && node_k.sol.getDz() == 0) {
 				BoxClevA.log.printf("ERR: link_sing: matching 000\n");
 				box.add_node_link_simple(node_k, node_i);
 				box.add_node_link_simple(node_k, node_j);
@@ -680,11 +677,11 @@ public class BoxSolver {
 				final Node_info node1 = nodes.get(order[1]);
 				final Node_info node2 = nodes.get(order[2]);
 				final Node_info node3 = nodes.get(order[3]);
-				if (node0.sol.dx == 0)
+				if (node0.sol.getDx() == 0)
 					mat = dx;
-				else if (node0.sol.dy == 0)
+				else if (node0.sol.getDy() == 0)
 					mat = dy;
-				else if (node0.sol.dz == 0)
+				else if (node0.sol.getDz() == 0)
 					mat = dz;
 
 				ddx = mat.diffX();
@@ -722,9 +719,7 @@ public class BoxSolver {
 							mat);
 					sol.setRoots(cres.x, cres.y, cres.z);
 					sol.conv_failed = !cres.good;
-					sol.dx = node0.sol.dx;
-					sol.dy = node0.sol.dy;
-					sol.dz = node0.sol.dz;
+					sol.setDerivs(node0.sol);
 					box.add_sing(sol);
 
 					midnode = new Node_info(sol);
@@ -889,12 +884,12 @@ public class BoxSolver {
 				if (done[i] || done[j])
 					continue;
 				Node_info node_j = nodes.get(j);
-				if (matchNodes(node_i,node_j) && (node_i.sol.dx != 0 || node_i.sol.dy != 0 || node_i.sol.dz != 0)) {
+				if (matchNodes(node_i,node_j) && (node_i.sol.getDx() != 0 || node_i.sol.getDy() != 0 || node_i.sol.getDz() != 0)) {
 					if (PRINT_LINK_SING) {
 						BoxClevA.log.printf("ERR: Linking nodes fdcs: %d and %d done %d %d\n", i, j, done[i], done[j]);
 					}
-					if (converged_to_sing && ((sol.dx == 0 && node_i.sol.dx == 0)
-							|| (sol.dy == 0 && node_i.sol.dy == 0) || (sol.dz == 0 && node_i.sol.dz == 0)))
+					if (converged_to_sing && ((sol.getDx() == 0 && node_i.sol.getDx() == 0)
+							|| (sol.getDy() == 0 && node_i.sol.getDy() == 0) || (sol.getDz() == 0 && node_i.sol.getDz() == 0)))
 						continue;
 
 					box.add_node_link_simple(node_i, node_j);
@@ -917,7 +912,7 @@ public class BoxSolver {
 
 				for (i = 0; i < num_nodes; ++i) {
 					Node_info node_i = nodes.get(i);
-					if (node_i.sol.dx == 0 && node_i.sol.dy == 0 && node_i.sol.dz == 0)
+					if (node_i.sol.getDx() == 0 && node_i.sol.getDy() == 0 && node_i.sol.getDz() == 0)
 						zero_index = i;
 				}
 				vec = box.calc_pos_in_box(node_zero.sol);
@@ -993,23 +988,23 @@ public class BoxSolver {
 			if (done[i])
 				continue;
 			Node_info node_i = nodes.get(i);
-			if ((node_i.sol.dx == 0 && node_i.sol.dy == 0) || (node_i.sol.dx == 0 && node_i.sol.dz == 0)
-					|| (node_i.sol.dy == 0 && node_i.sol.dz == 0))
+			if ((node_i.sol.getDx() == 0 && node_i.sol.getDy() == 0) || (node_i.sol.getDx() == 0 && node_i.sol.getDz() == 0)
+					|| (node_i.sol.getDy() == 0 && node_i.sol.getDz() == 0))
 				continue;
 			for (j = 0; j < num_nodes; ++j) {
 				if (j == i)
 					continue;
 				Node_info node_j = nodes.get(j);
-				if (node_j.sol.dx == 0 && node_j.sol.dy == 0 && node_j.sol.dz == 0)
+				if (node_j.sol.getDx() == 0 && node_j.sol.getDy() == 0 && node_j.sol.getDz() == 0)
 					continue;
 				if (SameFace(node_i.sol, node_j.sol))
 					continue;
-				if (node_i.sol.dx == 0) {
-					if (node_j.sol.dx != 0)
+				if (node_i.sol.getDx() == 0) {
+					if (node_j.sol.getDx() != 0)
 						continue;
-					if (node_j.sol.dy != 0 && node_j.sol.dy != node_i.sol.dy)
+					if (node_j.sol.getDy() != 0 && node_j.sol.getDy() != node_i.sol.getDy())
 						continue;
-					if (node_j.sol.dz != 0 && node_j.sol.dz != node_i.sol.dz)
+					if (node_j.sol.getDz() != 0 && node_j.sol.getDz() != node_i.sol.getDz())
 						continue;
 					if (PRINT_LINK_SING) {
 						BoxClevA.log.printf("Linking nodes2a %d and %d done %d %d\n", i, j, done[i], done[j]);
@@ -1018,12 +1013,12 @@ public class BoxSolver {
 					done[i] = done[j] = true;
 					break;
 				}
-				if (node_i.sol.dy == 0) {
-					if (node_j.sol.dy != 0)
+				if (node_i.sol.getDy() == 0) {
+					if (node_j.sol.getDy() != 0)
 						continue;
-					if (node_j.sol.dx != 0 && node_j.sol.dx != node_i.sol.dx)
+					if (node_j.sol.getDx() != 0 && node_j.sol.getDx() != node_i.sol.getDx())
 						continue;
-					if (node_j.sol.dz != 0 && node_j.sol.dz != node_i.sol.dz)
+					if (node_j.sol.getDz() != 0 && node_j.sol.getDz() != node_i.sol.getDz())
 						continue;
 					if (PRINT_LINK_SING) {
 						BoxClevA.log.printf("'Linking nodes2b %d and %d done %d %d\n", i, j, done[i], done[j]);
@@ -1032,12 +1027,12 @@ public class BoxSolver {
 					done[i] = done[j] = true;
 					break;
 				}
-				if (node_i.sol.dz == 0) {
-					if (node_j.sol.dz != 0)
+				if (node_i.sol.getDz() == 0) {
+					if (node_j.sol.getDz() != 0)
 						continue;
-					if (node_j.sol.dx != 0 && node_j.sol.dx != node_i.sol.dx)
+					if (node_j.sol.getDx() != 0 && node_j.sol.getDx() != node_i.sol.getDx())
 						continue;
-					if (node_j.sol.dy != 0 && node_j.sol.dy != node_i.sol.dy)
+					if (node_j.sol.getDy() != 0 && node_j.sol.getDy() != node_i.sol.getDy())
 						continue;
 					if (PRINT_LINK_SING) {
 						BoxClevA.log.printf("Linking nodes2c %d and %d done %d %d\n", i, j, done[i], done[j]);
@@ -1051,7 +1046,7 @@ public class BoxSolver {
 
 		for (i = 0; i < num_nodes; ++i) {
 			Node_info node_i = nodes.get(i);
-			if (node_i.sol.dx == 0 && node_i.sol.dy == 0 && node_i.sol.dz == 0) {
+			if (node_i.sol.getDx() == 0 && node_i.sol.getDy() == 0 && node_i.sol.getDz() == 0) {
 
 				for (j = 0; j < num_nodes; ++j) {
 					if (j == i)
@@ -1120,7 +1115,7 @@ public class BoxSolver {
 		if (count < 6)
 			return false;
 		for (i = 0; i < count; ++i) {
-			if (nodes.get(i).sol.dx == 0 && nodes.get(i).sol.dy == 0 && nodes.get(i).sol.dz == 0)
+			if (nodes.get(i).sol.getDx() == 0 && nodes.get(i).sol.getDy() == 0 && nodes.get(i).sol.getDz() == 0)
 				++num_all_zero;
 		}
 		if (num_all_zero < 6)
@@ -1143,9 +1138,7 @@ public class BoxSolver {
 		pos_z /= count;
 
 		sol = make_sol3(BOX, box.xl, box.yl, box.zl, box.denom, pos_x, pos_y, pos_z);
-		sol.dx = 0;
-		sol.dy = 0;
-		sol.dz = 0;
+		sol.setDerivs(0, 0, 0);
 
 		find_known_sing(sol);
 
@@ -1405,9 +1398,7 @@ public class BoxSolver {
 			Solve3DresultWithSig cres = boxgen.converger.converge_sing(new BoxPos(0.5, 0.5, 0.5), bb, mat1, mat2, mat3,
 					mat1 != null ? 0 : 1, mat2 != null ? 0 : 1, mat3 != null ? 0 : 1);
 			fillSolWith3Dres(sol, cres);
-			sol.dx = f1;
-			sol.dy = f2;
-			sol.dz = f3;
+			sol.setDerivs(f1, f2, f3);
 			if (PRINT_LINK_CROSSCAP)
 				BoxClevA.log.printf("link_sing_many_zeros conv %b%n", flag);
 			if (!cres.good)
@@ -1525,12 +1516,12 @@ public class BoxSolver {
 	}
 
 	private boolean matchNodes(Node_info A,Node_info B) {
-		return ((A.sol.dx == B.sol.dx) && (A.sol.dy == B.sol.dy)
-				&& (A.sol.dz == B.sol.dz));
+		return ((A.sol.getDx() == B.sol.getDx()) && (A.sol.getDy() == B.sol.getDy())
+				&& (A.sol.getDz() == B.sol.getDz()));
 	}
 
 	public void printResults() {
-		System.out.printf("Fail counts P %d Q %d R %d S %d T %d U %d V %d W %d%n", failCountP, failCountQ, failCountR,
+		System.out.printf("BoxSolver Fail counts P %d Q %d R %d S %d T %d U %d V %d W %d%n", failCountP, failCountQ, failCountR,
 				failCountS, failCountT, failCountU, failCountV, failCountW);
 	}
 

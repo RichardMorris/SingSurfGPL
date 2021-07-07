@@ -65,12 +65,12 @@ public class Chain_info {
 		int sigx = 0, sigy = 0, sigz = 0;
 
 		for(Sol_info sol:sols) {
-			if(sigx * sol.dx < 0) return false;
-			if(sigy * sol.dy < 0) return false;
-			if(sigz * sol.dz < 0) return false;
-			if(sigx ==0) sigx = sol.dx;
-			if(sigy ==0) sigy = sol.dy;
-			if(sigz ==0) sigz = sol.dz;
+			if(sigx * sol.getDx() < 0) return false;
+			if(sigy * sol.getDy() < 0) return false;
+			if(sigz * sol.getDz() < 0) return false;
+			if(sigx ==0) sigx = sol.getDx();
+			if(sigy ==0) sigy = sol.getDy();
+			if(sigz ==0) sigz = sol.getDz();
 		}
 		return true;	
 	}

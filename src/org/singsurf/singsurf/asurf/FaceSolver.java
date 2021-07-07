@@ -214,9 +214,7 @@ public class FaceSolver {
 	private void fillSolWith2Dres(Sol_info sol, Solve2DresultWithSig cres) {
 		sol.conv_failed = !cres.good;
 		sol.setRoots(cres.x, cres.y);
-		sol.dx = cres.sig_x;
-		sol.dy = cres.sig_y;
-		sol.dz = cres.sig_z;
+		sol.setDerivs(cres.sig_x,cres.sig_y,cres.sig_z);
 		sol.setValue(cres.f_val);
 	}
 
@@ -261,7 +259,12 @@ public class FaceSolver {
 
 		List<Sol_info> sols =  face.get_all_sols_on_edges();
 		count = sols.size();
-		
+
+		final Sol_info sol0 = count > 0 ? sols.get(0) : null;
+		final Sol_info sol1 = count > 1 ? sols.get(1) : null;
+		final Sol_info sol2 = count > 2 ? sols.get(2) : null;
+		final Sol_info sol3 = count > 3 ? sols.get(3) : null;
+
 		if (PRINT_LINK_FACE_ALL) {
 			BoxClevA.log.printf("ERR: link_face: ");
 			BoxClevA.log.print(face.type);
@@ -269,60 +272,58 @@ public class FaceSolver {
 					count, f1, f2, f3);
 		}
 
-		boolean reduce_face = false;
 		switch (count) {
 		case 0:
-			if (f1 == 0 || f2 == 0 || f3 == 0) {
-				reduce_face = true;
-			}
 			break;
 		case 1:
 			break;
 		case 2:
 			if (f1 == 0 && f2 == 0 && f3 == 0)
-				reduce_face = true;
+				break;
 
-			else if (PairTest(sols, 0, 1) && MatchDeriv(sols, 0, f1, f2, f3)) {
-				face.include_link(sols.get(0), sols.get(1));
-			} else
-				reduce_face = true;
+			if (sol0.match_derivs(sol1) 
+					&& sol0.match_derivs(f1, f2, f3)) {
+				face.include_link(sol0, sol1);
+				return;
+			}
 			break;
 		case 3:
-			reduce_face = true;
 			break;
 		case 4:
 
-			if (f1 == 0 && f2 == 0 && f3 == 0)
-				reduce_face = true;
-			else if (PairTest(sols, 0, 1) && PairTest(sols, 2, 3)) {
-				if (PairTest(sols, 0, 2))
-					reduce_face = true;
-				else if (StraddleDeriv(sols.get(0), sols.get(2), f1, f2, f3)) {
-					face.include_link(sols.get(0), sols.get(1));
-					face.include_link(sols.get(2), sols.get(3));
-				} else
-					reduce_face = true;
-			} else if (PairTest(sols, 0, 2) && PairTest(sols, 1, 3)) {
-				if (StraddleDeriv(sols.get(0), sols.get(1), f1, f2, f3)) {
-					face.include_link(sols.get(0), sols.get(2));
-					face.include_link(sols.get(1), sols.get(3));
-				} else
-					reduce_face = true;
-			} else if (PairTest(sols, 0, 3) && PairTest(sols, 1, 2)) {
-				if (StraddleDeriv(sols.get(0), sols.get(1), f1, f2, f3)) {
-					face.include_link(sols.get(0), sols.get(3));
-					face.include_link(sols.get(1), sols.get(2));
-				} else
-					reduce_face = true;
-			} else
-				reduce_face = true;
+			if (f1 == 0 && f2 == 0 && f3 == 0) {
+			}
+			else {
+				if (sol0.match_derivs(sol1) && sol2.match_derivs(sol3)) {
+					if (sol0.match_derivs(sol2)) {
+						
+					}
+					else if (straddleDeriv(sol0, sol2, f1, f2, f3)) {
+						face.include_link(sol0, sol1);
+						face.include_link(sol2, sol3);
+						return;
+					} 
+
+				} else if (sol0.match_derivs(sol2) && sol1.match_derivs(sol3)) {
+					if (straddleDeriv(sol0, sol1, f1, f2, f3)) {
+						face.include_link(sol0, sol2);
+						face.include_link(sol1, sol3);
+						return;
+					}
+
+				} else if (sol0.match_derivs(sol3) && sol1.match_derivs(sol2)) {
+					if (straddleDeriv(sol0, sol1, f1, f2, f3)) {
+						face.include_link(sol0, sol3);
+						face.include_link(sol1, sol2);
+						return;
+					}
+				}
+			}
 			break;
 		default:
-			reduce_face = true;
 			break;
 		}
 
-		if (reduce_face) {
 			if (face.denom < boxclev.LINK_FACE_LEVEL) {
 				// String s = big_face.toString();
 				ReduceFace(big_face, face, bb, dx, dy, dz, d2, internal, f1, f2, f3);
@@ -350,7 +351,6 @@ public class FaceSolver {
 					break;
 				}
 			}
-		}
 		// fini_link_face:
 	}
 
@@ -418,11 +418,11 @@ public class FaceSolver {
 			throw new AsurfException("Bad face type");
 		}
 
-		x_face = this.calcDerivFace(face, dx,dxx,dxy,dxz);
+		x_face = calcDerivFace(face, dx,dxx,dxy,dxz);
 		if(x_face.count_sol()<2) return;
-		y_face = this.calcDerivFace(face, dy, dxy,dyy,dyz);
+		y_face = calcDerivFace(face, dy, dxy,dyy,dyz);
 		if(y_face.count_sol()<2) return;
-		z_face = this.calcDerivFace(face, dz, dxz,dyz,dzz);
+		z_face = calcDerivFace(face, dz, dxz,dyz,dzz);
 		if(z_face.count_sol()<2) return;
 		
 		// Determinant of the 2D Hessian of the face
@@ -452,10 +452,6 @@ public class FaceSolver {
 		derivTest(dc, x_face, dx, f1, z_face, dz, f3);
 		derivTest(dc, y_face, dy, f2, z_face, dz, f3);
 
-		// DerivTest(dc,x_face,x_count,x_sols,dx,f1, y_face,y_count,y_sols,dy,f2);
-		// DerivTest(dc,x_face,x_count,x_sols,dx,f1, z_face,z_count,z_sols,dz,f3);
-		// DerivTest(dc,y_face,y_count,y_sols,dy,f2, z_face,z_count,z_sols,dz,f3);
-
 //		if (dc.DerivFlag) {
 //			if (PRINT_LINKFACE04) {
 //				BoxClevA.log.printf("ERR: DerivFlag %d\n", dc.DerivFlag);
@@ -473,8 +469,7 @@ public class FaceSolver {
 //			return;
 //		}
 		Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, dx, dy, dz, d2);
-//		Solve2DresultWithSig cres = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb, dx, dy, dz, f1,
-//				f2, f3);
+
 		fillSolWith2Dres(nodesol, conv);
 		if (!conv.good) {
 			if (PRINT_LINKFACE04) {
@@ -502,8 +497,11 @@ public class FaceSolver {
 			BoxClevA.log.printf("ERR: link_face: count %d f1 %d f2 %d f3 %d\n", 2, f1, f2, f3);
 			BoxClevA.log.print(face);
 		}
-		if (PairTest(sols, 0, 1)) {
-			face.include_link(sols.get(0), sols.get(1));
+		final Sol_info sol0 = sols.get(0);
+		final Sol_info sol1 = sols.get(1);
+		
+		if (sol0.match_derivs(sol1)) {
+			face.include_link(sol0, sol1);
 			return;
 		}
 
@@ -512,20 +510,21 @@ public class FaceSolver {
 		dxSign = f1;
 		dySign = f2;
 		dzSign = f3;
-		if (sols.get(0).dx == sols.get(1).dx)
-			dxSign = sols.get(0).dx;
-		if (sols.get(0).dy == sols.get(1).dy)
-			dySign = sols.get(0).dy;
-		if (sols.get(0).dz == sols.get(1).dz)
-			dzSign = sols.get(0).dz;
+		if (sol0.getDx() == sol1.getDx())
+			dxSign = sol0.getDx();
+		if (sol0.getDy() == sol1.getDy())
+			dySign = sol0.getDy();
+		if (sol0.getDz() == sol1.getDz())
+			dzSign = sol0.getDz();
 
 		int zeroCount = (dxSign == 0 ? 1 : 0) + (dySign == 0 ? 1 : 0) + (dzSign == 0 ? 1 : 0);
 		/*
 		 * f1 = f1a; f2 = f2a; f3 = f3a;
 		 */
 		/* do we want a duplicate node */
-		if (zeroCount == 3 || sols.get(0).dx == 0 || sols.get(0).dy == 0 || sols.get(0).dz == 0 || sols.get(1).dx == 0
-				|| sols.get(1).dy == 0 || sols.get(1).dz == 0) {
+		if (zeroCount == 3 
+				|| sol0.getDx() == 0 || sol0.getDy() == 0 || sol0.getDz() == 0 
+				|| sol1.getDx() == 0 || sol1.getDy() == 0 || sol1.getDz() == 0) {
 			Solve2DresultWithSig res2;
 
 			Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
@@ -539,8 +538,8 @@ public class FaceSolver {
 
 			}
 			face.add_node(nodesol);
-			face.include_link(sols.get(0), nodesol);
-			face.include_link(sols.get(1), nodesol);
+			face.include_link(sol0, nodesol);
+			face.include_link(sol1, nodesol);
 			if (PRINT_LINKFACE04) {
 				BoxClevA.log.printf("ERR: link_face2sols: All three zero conv %d\n", res2);
 				BoxClevA.log.print(face.print_face_brief());
@@ -559,9 +558,7 @@ public class FaceSolver {
 			Solve2DresultWithSig res2 = boxgen.converger.converge_node(fp, bb, dx, dy, dz, dxSign, dySign, dzSign);
 			fillSolWith2Dres(nodesol, res2);
 			if (!res2.good) {
-				nodesol.dx = f1; // Assumption about linking may be incorrect
-				nodesol.dy = f2;
-				nodesol.dz = f3;
+				nodesol.setDerivs(f1,f2,f3); // Assumption about linking may be incorrect
 				Solve2DresultWithSig res3 = boxgen.converger.converge_node(fp, bb, dx, dy, dz, f1, f2, f3);
 
 				if (!res3.good) {
@@ -577,8 +574,8 @@ public class FaceSolver {
 
 			}
 			face.add_node(nodesol);
-			face.include_link(sols.get(0), nodesol);
-			face.include_link(sols.get(1), nodesol);
+			face.include_link(sol0, nodesol);
+			face.include_link(sol1, nodesol);
 			return;
 
 		}
@@ -588,29 +585,31 @@ public class FaceSolver {
 		Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
 		Solve2DresultWithSig res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, f1, f2, f3);
 		fillSolWith2Dres(nodesol, res2);
-		if (!res2.good) {
+		if (!res2.good) { 
 			if (failCountJ++ == 0) {
 				BoxClevA.log.println("ERR: link_face2: default conv failed J");
 				BoxClevA.log.println(nodesol);
 			}
 		}
 		face.add_node(nodesol);
-		face.include_link(sols.get(0), nodesol);
-		face.include_link(sols.get(1), nodesol);
+		face.include_link(sol0, nodesol);
+		face.include_link(sol1, nodesol);
 		}
 	}
 
 	private void link_face2sols_2_deriv(Face_info face, List<Sol_info> sols, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz,
 			Bern2D d2, int f1, int f2, int f3, Face_context fc, int dxSign, int dySign, int dzSign)
 			throws AsurfException {
-		Solve2DresultWithSig res1 = null, res2 = null, resBoth = null;
+		Solve2DresultWithSig res1 = null, res2 = null, resBoth = null; 
 		double vec1[], vec2[], dist1, dist2, dist3, dist4;
 		FacePos fp = calcMidPoint(fc);
 		Sol_info nodeA = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
 		Sol_info nodeB = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
 		Sol_info nodeC = MakeNode(face, fp.x, fp.y, dxSign, dySign, dzSign, dx, dy, dz, d2);
-		vec1 = face.calc_pos_on_face(sols.get(0));
-		vec2 = face.calc_pos_on_face(sols.get(1));
+		final Sol_info sol0 = sols.get(0);
+		final Sol_info sol1 = sols.get(1);
+		vec1 = face.calc_pos_on_face(sol0);
+		vec2 = face.calc_pos_on_face(sol1);
 		if (dxSign == 0 && dySign == 0) {
 			resBoth = boxgen.converger.converge_node_two_deriv(fp, bb, dx, dy, dz, 0, 0, dzSign);
 			res1 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 0, 1, 1);
@@ -627,10 +626,10 @@ public class FaceSolver {
 			res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 1, 1, 0);
 		}
 		if (resBoth.good) {
-			fillSolWith2Dres(nodeC, resBoth);
+			fillSolWith2Dres(nodeC, resBoth); 
 			face.add_node(nodeC);
-			face.include_link(sols.get(0), nodeC);
-			face.include_link(sols.get(1), nodeC);
+			face.include_link(sol0, nodeC);
+			face.include_link(sol1, nodeC);
 			return;
 		}
 
@@ -653,62 +652,74 @@ public class FaceSolver {
 				+ (vec2[1] - nodeB.getRoot2()) * (vec2[1] - nodeB.getRoot2()));
 		if (dist1 < dist2 && dist4 < dist3) {
 			if (dxSign == 0 && dySign == 0) {
-				nodeA.dx = 0;
-				nodeB.dx = sols.get(1).dx;
-				nodeA.dy = sols.get(0).dy;
-				nodeB.dy = 0;
-				nodeA.dz = nodeB.dz = dzSign;
+				nodeA.setDerivs(0,sol0.getDy(), dzSign);
+				nodeB.setDerivs(sol1.getDx(),0, dzSign);				
+//				nodeA.dx = 0;
+//				nodeA.dy = sols.get(0).getDy();
+//				nodeB.dx = sols.get(1).getDx();
+//				nodeB.dy = 0;
+//				nodeA.dz = nodeB.dz = dzSign;
 			}
 			if (dxSign == 0 && dzSign == 0) {
-				nodeA.dx = 0;
-				nodeB.dx = sols.get(1).dx;
-				nodeA.dy = nodeB.dy = dySign;
-				nodeA.dz = sols.get(0).dz;
-				nodeB.dz = 0;
+				nodeA.setDerivs(0, dySign, sol0.getDz());
+				nodeB.setDerivs(sol1.getDx(), dySign, 0);				
+//				nodeA.dx = 0;
+//				nodeB.dx = sols.get(1).getDx();
+//				nodeA.dy = nodeB.dy = dySign;
+//				nodeA.dz = sols.get(0).getDz();
+//				nodeB.dz = 0;
 			}
 			if (dySign == 0 && dzSign == 0) {
-				nodeA.dx = nodeB.dx = dxSign;
-				nodeA.dy = 0;
-				nodeB.dy = sols.get(1).dy;
-				nodeA.dz = sols.get(0).dz;
-				nodeB.dz = 0;
+				nodeA.setDerivs(dxSign, 0, sol0.getDz());
+				nodeB.setDerivs(dxSign, sol1.getDy(),0);				
+//				nodeA.dx = nodeB.dx = dxSign;
+//				nodeA.dy = 0;
+//				nodeB.dy = sols.get(1).getDy();
+//				nodeA.dz = sols.get(0).getDz();
+//				nodeB.dz = 0;
 			}
 			face.add_node(nodeA);
 			face.add_node(nodeB);
-			face.include_link(sols.get(0), nodeA);
+			face.include_link(sol0, nodeA);
 			face.include_link(nodeA, nodeB);
-			face.include_link(nodeB, sols.get(1));
+			face.include_link(nodeB, sol1);
 		} else if (dist1 > dist2 && dist4 > dist3) {
 			if (dxSign == 0 && dySign == 0) {
-				nodeA.dx = 0;
-				nodeB.dx = sols.get(0).dx;
-				nodeA.dy = sols.get(1).dy;
-				nodeB.dy = 0;
-				nodeA.dz = nodeB.dz = dzSign;
+				nodeA.setDerivs(0,sol1.getDy(), dzSign);
+				nodeB.setDerivs(sol0.getDx(),0, dzSign);				
+//				nodeA.dx = 0;
+//				nodeB.dx = sols.get(0).getDx();
+//				nodeA.dy = sols.get(1).getDy();
+//				nodeB.dy = 0;
+//				nodeA.dz = nodeB.dz = dzSign;
 			}
 			if (dxSign == 0 && dzSign == 0) {
-				nodeA.dx = 0;
-				nodeB.dx = sols.get(0).dx;
-				nodeA.dy = nodeB.dy = dySign;
-				nodeA.dz = sols.get(1).dz;
-				nodeB.dz = 0;
+				nodeA.setDerivs(0, dySign, sol1.getDz());
+				nodeB.setDerivs(sol0.getDx(), dySign, 0);				
+//				nodeA.dx = 0;
+//				nodeB.dx = sols.get(0).getDx();
+//				nodeA.dy = nodeB.dy = dySign;
+//				nodeA.dz = sols.get(1).getDz();
+//				nodeB.dz = 0;
 			}
 			if (dySign == 0 && dzSign == 0) {
-				nodeA.dx = nodeB.dx = dxSign;
-				nodeA.dy = 0;
-				nodeB.dy = sols.get(0).dy;
-				nodeA.dz = sols.get(1).dz;
-				nodeB.dz = 0;
+				nodeA.setDerivs(dxSign, 0, sol1.getDz());
+				nodeB.setDerivs(dxSign, sol0.getDy(), 0);				
+//				nodeA.dx = nodeB.dx = dxSign;
+//				nodeA.dy = 0;
+//				nodeB.dy = sols.get(0).getDy();
+//				nodeA.dz = sols.get(1).getDz();
+//				nodeB.dz = 0;
 			}
 			face.add_node(nodeA);
 			face.add_node(nodeB);
-			face.include_link(sols.get(1), nodeA);
+			face.include_link(sol1, nodeA);
 			face.include_link(nodeA, nodeB);
-			face.include_link(nodeB, sols.get(0));
+			face.include_link(nodeB, sol0);
 		} else {
 			if (PRINT_LINKFACE04) {
-				BoxClevA.log.println(sols.get(0));
-				BoxClevA.log.println(sols.get(1));
+				BoxClevA.log.println(sol0);
+				BoxClevA.log.println(sol1);
 				BoxClevA.log.println(nodeA);
 				BoxClevA.log.println(nodeB);
 			}
@@ -723,8 +734,8 @@ public class FaceSolver {
 			}
 
 			face.add_node(nodeB);
-			face.include_link(sols.get(0), nodeB);
-			face.include_link(sols.get(1), nodeB);
+			face.include_link(sol0, nodeB);
+			face.include_link(sol1, nodeB);
 		}
 		if (PRINT_LINKFACE04) {
 			BoxClevA.log.printf("ERR: link_face2sols: added two nodes %d %d %d %d %d\n", f1, f2, f3, res1, res2);
@@ -741,19 +752,19 @@ public class FaceSolver {
 //			BoxClevA.log.println(sols.get(1).toStringNorm(boxclev));
 		}
 		int bit_swaps = 0;
-		if (sols.get(0).dx != sols.get(1).dx)
+		if (sols.get(0).getDx() != sols.get(1).getDx())
 			++bit_swaps;
-		if (sols.get(0).dy != sols.get(1).dy)
+		if (sols.get(0).getDy() != sols.get(1).getDy())
 			++bit_swaps;
-		if (sols.get(0).dz != sols.get(1).dz)
+		if (sols.get(0).getDz() != sols.get(1).getDz())
 			++bit_swaps;
 		FacePos fp = calcMidPoint(fc);
 
-		int dx1 = sols.get(0).dx, dy1 = sols.get(0).dy, dz1 = sols.get(0).dz;
+		int dx1 = sols.get(0).getDx(), dy1 = sols.get(0).getDy(), dz1 = sols.get(0).getDz();
 		int pos = 1;
 		Sol_info last_sol = sols.get(0);
 		Sol_info nodesol = null;
-		if (sols.get(0).dx != sols.get(1).dx) {
+		if (sols.get(0).getDx() != sols.get(1).getDx()) {
 			interp(fc, sols.get(0), sols.get(1), pos, bit_swaps);
 			nodesol = MakeNode(face, fp.x, fp.y, 0, dy1, dz1, dx, dy, dz, d2);
 			nodesol.conv_failed = true;
@@ -763,7 +774,7 @@ public class FaceSolver {
 			++pos;
 			dx1 = -dx1;
 		}
-		if (sols.get(0).dy != sols.get(1).dy) {
+		if (sols.get(0).getDy() != sols.get(1).getDy()) {
 			interp(fc, sols.get(0), sols.get(1), pos, bit_swaps);
 			nodesol = MakeNode(face, fp.x, fp.y, dx1, 0, dz1, dx, dy, dz, d2);
 			nodesol.conv_failed = true;
@@ -773,7 +784,7 @@ public class FaceSolver {
 			++pos;
 			dy1 = -dy1;
 		}
-		if (sols.get(0).dz != sols.get(1).dz) {
+		if (sols.get(0).getDz() != sols.get(1).getDz()) {
 			interp(fc, sols.get(0), sols.get(1), pos, bit_swaps);
 			nodesol = MakeNode(face, fp.x, fp.y, dx1, dy1, 0, dx, dy, dz, d2);
 			nodesol.conv_failed = true;
@@ -834,13 +845,13 @@ public class FaceSolver {
 		Solve2DresultWithSig res1;
 		char signStr[] = new char[80];
 
-		int sig_x = sols.get(0).dx, sig_y = sols.get(0).dy, sig_z = sols.get(0).dz;
+		int sig_x = sols.get(0).getDx(), sig_y = sols.get(0).getDy(), sig_z = sols.get(0).getDz();
 		for (int i = 0; i < 4; ++i) {
-			if (sols.get(i).dx != sig_x)
+			if (sols.get(i).getDx() != sig_x)
 				sig_x = 0;
-			if (sols.get(i).dy != sig_y)
+			if (sols.get(i).getDy() != sig_y)
 				sig_y = 0;
-			if (sols.get(i).dz != sig_z)
+			if (sols.get(i).getDz() != sig_z)
 				sig_z = 0;
 		}
 		// sig_x = f1; sig_y = f2; sig_z = f3;
@@ -882,9 +893,9 @@ public class FaceSolver {
 			// vec[0],vec[1],val);
 			// BoxClevA.log.printf("[%9.6f, %9.6f] %9.6f dx %9.6f %9.6f %9.6f%n",
 			// vec[0],vec[1],val,dfdx,dfdy,dfdz);
-			int f1a = solA.dx == solB.dx ? solA.dx : 0;
-			int f2a = solA.dy == solB.dy ? solA.dy : 0;
-			int f3a = solA.dz == solB.dz ? solA.dz : 0;
+			int f1a = solA.getDx() == solB.getDx() ? solA.getDx() : 0;
+			int f2a = solA.getDy() == solB.getDy() ? solA.getDy() : 0;
+			int f3a = solA.getDz() == solB.getDz() ? solA.getDz() : 0;
 			Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1a, f2a, f3a, dx, dy, dz, d2);
 			Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb, dx, dy, dz,
 					f1a, f2a, f3a);
@@ -920,9 +931,9 @@ public class FaceSolver {
 			pos_x /= 2;
 			pos_y /= 2;
 
-			int f1a = solA.dx == solB.dx ? solA.dx : 0;
-			int f2a = solA.dy == solB.dy ? solA.dy : 0;
-			int f3a = solA.dz == solB.dz ? solA.dz : 0;
+			int f1a = solA.getDx() == solB.getDx() ? solA.getDx() : 0;
+			int f2a = solA.getDy() == solB.getDy() ? solA.getDy() : 0;
+			int f3a = solA.getDz() == solB.getDz() ? solA.getDz() : 0;
 
 			Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1a, f2a, f3a, dx, dy, dz, d2);
 			Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb, dx, dy, dz,
@@ -1019,7 +1030,7 @@ public class FaceSolver {
 
 		DerivContext dc = new DerivContext(face,dx,dy,dz);
 		Sol_info nodesol;
-		if (PairTest(sols, 0, 1) && PairTest(sols, 2, 3) && !PairTest(sols, 0, 2)) {
+		if (sols.get(0).match_derivs(sols.get(1)) && sols.get(2).match_derivs(sols.get(3)) && !sols.get(0).match_derivs(sols.get(2))) {
 			dc.DerivFlag = true;
 			derivTest(dc, x_face, dx, f1, y_face, dy, f2);
 			derivTest(dc, x_face, dx, f1, z_face, dz, f3);
@@ -1040,7 +1051,7 @@ public class FaceSolver {
 				face.include_link(sols.get(2), sols.get(3));
 				return; // goto fini_link_face;
 			}
-		} else if (PairTest(sols, 0, 2) && PairTest(sols, 1, 3) && !PairTest(sols, 0, 1)) {
+		} else if (sols.get(0).match_derivs(sols.get(2)) && sols.get(1).match_derivs(sols.get(3)) && !sols.get(0).match_derivs(sols.get(1))) {
 			dc.DerivFlag = true;
 			derivTest(dc, x_face, dx, f1, y_face, dy, f2);
 			derivTest(dc, x_face, dx, f1, z_face, dz, f3);
@@ -1059,7 +1070,7 @@ public class FaceSolver {
 				face.include_link(sols.get(1), sols.get(3));
 				return;
 			}
-		} else if (PairTest(sols, 0, 3) && PairTest(sols, 1, 2) && !PairTest(sols, 0, 1)) {
+		} else if (sols.get(0).match_derivs(sols.get(3)) && sols.get(1).match_derivs(sols.get(2)) && !sols.get(0).match_derivs(sols.get(1))) {
 			dc.DerivFlag = true;
 			derivTest(dc, x_face, dx, f1, y_face, dy, f2);
 			derivTest(dc, x_face, dx, f1, z_face, dz, f3);
@@ -1218,37 +1229,37 @@ public class FaceSolver {
 		double vec[] = new double[2], pos_x = 0.0, pos_y = 0.0;
 		int Aind = -1, Bind = -1, Cind = -1, Dind = -1;
 
-		if (PairTest(sols, 0, 1)) {
+		if (sols.get(0).match_derivs(sols.get(1))) {
 			Aind = 0;
 			Bind = 1;
 			Cind = 2;
 			Dind = 3;
 		}
-		if (PairTest(sols, 0, 2)) {
+		if (sols.get(0).match_derivs(sols.get(2))) {
 			Aind = 0;
 			Bind = 2;
 			Cind = 1;
 			Dind = 3;
 		}
-		if (PairTest(sols, 0, 3)) {
+		if (sols.get(0).match_derivs(sols.get(3))) {
 			Aind = 0;
 			Bind = 3;
 			Cind = 1;
 			Dind = 2;
 		}
-		if (PairTest(sols, 1, 2)) {
+		if (sols.get(1).match_derivs(sols.get(2))) {
 			Aind = 1;
 			Bind = 2;
 			Cind = 0;
 			Dind = 3;
 		}
-		if (PairTest(sols, 1, 3)) {
+		if (sols.get(1).match_derivs(sols.get(3))) {
 			Aind = 1;
 			Bind = 3;
 			Cind = 0;
 			Dind = 2;
 		}
-		if (PairTest(sols, 2, 3)) {
+		if (sols.get(2).match_derivs(sols.get(3))) {
 			Aind = 2;
 			Bind = 3;
 			Cind = 0;
@@ -1256,7 +1267,7 @@ public class FaceSolver {
 		}
 		if (Aind != -1) {
 			face.include_link(sols.get(Aind), sols.get(Bind));
-			if (PairTest(sols, Cind, Dind)) {
+			if (sols.get(Cind).match_derivs(sols.get(Dind))) {
 				face.include_link(sols.get(Cind), sols.get(Dind));
 				return;
 			}
@@ -1270,9 +1281,9 @@ public class FaceSolver {
 			pos_x += vec[0];
 			pos_y += vec[1];
 
-			int sgnx = solC.dx == solD.dx ? solC.dx : 0;
-			int sgny = solC.dy == solD.dy ? solC.dy : 0;
-			int sgnz = solC.dz == solD.dz ? solC.dz : 0;
+			int sgnx = solC.getDx() == solD.getDx() ? solC.getDx() : 0;
+			int sgny = solC.getDy() == solD.getDy() ? solC.getDy() : 0;
+			int sgnz = solC.getDz() == solD.getDz() ? solC.getDz() : 0;
 
 			Sol_info nodesol = MakeNode(face, pos_x, pos_y, sgnx, sgny, sgnz, dx, dy, dz, d2);
 			Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb2, dx, dy,
@@ -1299,35 +1310,35 @@ public class FaceSolver {
 			switch (face.type) {
 			case FACE_LL:
 			case FACE_RR:
-				if (sols.get(i).dy == 1 && sols.get(i).dz == 1)
+				if (sols.get(i).getDy() == 1 && sols.get(i).getDz() == 1)
 					Aind = i;
-				if (sols.get(i).dy == 1 && sols.get(i).dz == -1)
+				if (sols.get(i).getDy() == 1 && sols.get(i).getDz() == -1)
 					Bind = i;
-				if (sols.get(i).dy == -1 && sols.get(i).dz == 1)
+				if (sols.get(i).getDy() == -1 && sols.get(i).getDz() == 1)
 					Cind = i;
-				if (sols.get(i).dy == -1 && sols.get(i).dz == -1)
+				if (sols.get(i).getDy() == -1 && sols.get(i).getDz() == -1)
 					Dind = i;
 				break;
 			case FACE_FF:
 			case FACE_BB:
-				if (sols.get(i).dx == 1 && sols.get(i).dz == 1)
+				if (sols.get(i).getDx() == 1 && sols.get(i).getDz() == 1)
 					Aind = i;
-				if (sols.get(i).dx == 1 && sols.get(i).dz == -1)
+				if (sols.get(i).getDx() == 1 && sols.get(i).getDz() == -1)
 					Bind = i;
-				if (sols.get(i).dx == -1 && sols.get(i).dz == 1)
+				if (sols.get(i).getDx() == -1 && sols.get(i).getDz() == 1)
 					Cind = i;
-				if (sols.get(i).dx == -1 && sols.get(i).dz == -1)
+				if (sols.get(i).getDx() == -1 && sols.get(i).getDz() == -1)
 					Dind = i;
 				break;
 			case FACE_DD:
 			case FACE_UU:
-				if (sols.get(i).dx == 1 && sols.get(i).dy == 1)
+				if (sols.get(i).getDx() == 1 && sols.get(i).getDy() == 1)
 					Aind = i;
-				if (sols.get(i).dx == 1 && sols.get(i).dy == -1)
+				if (sols.get(i).getDx() == 1 && sols.get(i).getDy() == -1)
 					Bind = i;
-				if (sols.get(i).dx == -1 && sols.get(i).dy == 1)
+				if (sols.get(i).getDx() == -1 && sols.get(i).getDy() == 1)
 					Cind = i;
-				if (sols.get(i).dx == -1 && sols.get(i).dy == -1)
+				if (sols.get(i).getDx() == -1 && sols.get(i).getDy() == -1)
 					Dind = i;
 				break;
 			default:
@@ -1358,12 +1369,12 @@ public class FaceSolver {
 					}
 				}
 
-				if (sols.get(Aind).dx != 0 && sols.get(Aind).dx == sols.get(Cind).dx)
-					nodesol.dx = sols.get(Aind).dx;
-				if (sols.get(Aind).dy != 0 && sols.get(Aind).dy == sols.get(Cind).dy)
-					nodesol.dy = sols.get(Aind).dy;
-				if (sols.get(Aind).dz != 0 && sols.get(Aind).dz == sols.get(Cind).dz)
-					nodesol.dz = sols.get(Aind).dz;
+				if (sols.get(Aind).getDx() != 0 && sols.get(Aind).getDx() == sols.get(Cind).getDx())
+					nodesol.setDx(sols.get(Aind).getDx());
+				if (sols.get(Aind).getDy() != 0 && sols.get(Aind).getDy() == sols.get(Cind).getDy())
+					nodesol.setDy(sols.get(Aind).getDy());
+				if (sols.get(Aind).getDz() != 0 && sols.get(Aind).getDz() == sols.get(Cind).getDz())
+					nodesol.setDz(sols.get(Aind).getDz());
 
 				face.add_node(nodesol);
 				face.include_link(sols.get(Aind), nodesol);
@@ -1387,12 +1398,12 @@ public class FaceSolver {
 					}
 				}
 
-				if (sols.get(Bind).dx != 0 && sols.get(Bind).dx == sols.get(Dind).dx)
-					nodesol.dx = sols.get(Bind).dx;
-				if (sols.get(Bind).dy != 0 && sols.get(Bind).dy == sols.get(Dind).dy)
-					nodesol.dy = sols.get(Bind).dy;
-				if (sols.get(Bind).dz != 0 && sols.get(Bind).dz == sols.get(Dind).dz)
-					nodesol.dz = sols.get(Bind).dz;
+				if (sols.get(Bind).getDx() != 0 && sols.get(Bind).getDx() == sols.get(Dind).getDx())
+					nodesol.setDx(sols.get(Bind).getDx());
+				if (sols.get(Bind).getDy() != 0 && sols.get(Bind).getDy() == sols.get(Dind).getDy())
+					nodesol.setDy(sols.get(Bind).getDy());
+				if (sols.get(Bind).getDz() != 0 && sols.get(Bind).getDz() == sols.get(Dind).getDz())
+					nodesol.setDz(sols.get(Bind).getDz());
 
 				face.add_node(nodesol);
 				face.include_link(sols.get(Bind), nodesol);
@@ -1423,12 +1434,12 @@ public class FaceSolver {
 					}
 				}
 
-				if (sols.get(Aind).dx != 0 && sols.get(Aind).dx == sols.get(Bind).dx)
-					nodesol.dx = sols.get(Aind).dx;
-				if (sols.get(Aind).dy != 0 && sols.get(Aind).dy == sols.get(Bind).dy)
-					nodesol.dy = sols.get(Aind).dy;
-				if (sols.get(Aind).dz != 0 && sols.get(Aind).dz == sols.get(Bind).dz)
-					nodesol.dz = sols.get(Aind).dz;
+				if (sols.get(Aind).getDx() != 0 && sols.get(Aind).getDx() == sols.get(Bind).getDx())
+					nodesol.setDx(sols.get(Aind).getDx());
+				if (sols.get(Aind).getDy() != 0 && sols.get(Aind).getDy() == sols.get(Bind).getDy())
+					nodesol.setDy(sols.get(Aind).getDy());
+				if (sols.get(Aind).getDz() != 0 && sols.get(Aind).getDz() == sols.get(Bind).getDz())
+					nodesol.setDz(sols.get(Aind).getDz());
 
 				face.add_node(nodesol);
 				face.include_link(sols.get(Aind), nodesol);
@@ -1451,12 +1462,12 @@ public class FaceSolver {
 					}
 				}
 
-				if (sols.get(Cind).dx != 0 && sols.get(Cind).dx == sols.get(Dind).dx)
-					nodesol.dx = sols.get(Cind).dx;
-				if (sols.get(Cind).dy != 0 && sols.get(Cind).dy == sols.get(Dind).dy)
-					nodesol.dy = sols.get(Cind).dy;
-				if (sols.get(Cind).dz != 0 && sols.get(Cind).dz == sols.get(Dind).dz)
-					nodesol.dz = sols.get(Cind).dz;
+				if (sols.get(Cind).getDx() != 0 && sols.get(Cind).getDx() == sols.get(Dind).getDx())
+					nodesol.setDx(sols.get(Cind).getDx());
+				if (sols.get(Cind).getDy() != 0 && sols.get(Cind).getDy() == sols.get(Dind).getDy())
+					nodesol.setDy(sols.get(Cind).getDy());
+				if (sols.get(Cind).getDz() != 0 && sols.get(Cind).getDz() == sols.get(Dind).getDz())
+					nodesol.setDz(sols.get(Cind).getDz());
 
 				face.add_node(nodesol);
 				face.include_link(sols.get(Cind), nodesol);
@@ -1518,9 +1529,7 @@ public class FaceSolver {
 		Sol_info temp;
 
 		temp = new Sol_info(face.type, face.xl, face.yl, face.zl, face.denom, res.x, res.y);
-		temp.dx = res.sig_x;
-		temp.dy = res.sig_y;
-		temp.dz = res.sig_z;
+		temp.setDerivs(res.sig_x,res.sig_y,res.sig_z);
 		return (temp);
 	}
 
@@ -1529,21 +1538,11 @@ public class FaceSolver {
 		Sol_info temp;
 
 		temp = new Sol_info(face.type, face.xl, face.yl, face.zl, face.denom, pos_x, pos_y);
-		temp.dx = f1;
-		temp.dy = f2;
-		temp.dz = f3;
+		temp.setDerivs(f1, f2, f3);
 		if (Boxclev.USE_2ND_DERIV) {
 			calc_2nd_derivs(temp, dx, dy, dz, d2);
 		}
 		return (temp);
-	}
-
-	private boolean MatchDeriv(List<Sol_info> sols, int a, int f1, int f2, int f3) {
-		return sols.get(a).match_derivs(f1, f2, f3);
-	}
-
-	private boolean PairTest(List<Sol_info> sols, int a, int b) {
-		return sols.get(a).match_derivs(sols.get(b));
 	}
 
 	private void ReduceFace(Face_info big_face, Face_info face, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, Bern2D d2,
@@ -1622,10 +1621,10 @@ public class FaceSolver {
 		combine_links(face);
 	}
 
-	private boolean StraddleDeriv(Sol_info A, Sol_info B, int f1, int f2, int f3) {
-		return (f1 != 0 || (A.dx == 1 && B.dx == -1) || (A.dx == -1 && B.dx == 1))
-				&& (f2 != 0 || (A.dy == 1 && B.dy == -1) || (A.dy == -1 && B.dy == 1))
-				&& (f3 != 0 || (A.dz == 1 && B.dz == -1) || (A.dz == -1 && B.dz == 1));
+	private boolean straddleDeriv(Sol_info A, Sol_info B, int f1, int f2, int f3) {
+		return (f1 != 0 || (A.getDx() == 1 && B.getDx() == -1) || (A.getDx() == -1 && B.getDx() == 1))
+				&& (f2 != 0 || (A.getDy() == 1 && B.getDy() == -1) || (A.getDy() == -1 && B.getDy() == 1))
+				&& (f3 != 0 || (A.getDz() == 1 && B.getDz() == -1) || (A.getDz() == -1 && B.getDz() == 1));
 	}
 
 	private Face_info calcDerivFace(DerivContext dc, Bern2D bb) throws AsurfException {
@@ -1653,7 +1652,7 @@ public class FaceSolver {
 	}
 
 	public void printResults() {
-		System.out.printf("Fail counts A %d B %d C %d D %d E %d F %d G %d H %d I %d J %d K %d L %d M %d%n", failCountA,
+		System.out.printf("FaceSolver Fail counts A %d B %d C %d D %d E %d F %d G %d H %d I %d J %d K %d L %d M %d%n", failCountA,
 				failCountB, failCountC, failCountD, failCountE, failCountF, failCountG, failCountH, failCountI,
 				failCountJ, failCountK, failCountL, failCountM);
 		System.out.printf("N %d O %d %n", 

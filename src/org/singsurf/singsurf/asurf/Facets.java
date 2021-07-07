@@ -456,24 +456,24 @@ public class Facets {
 		fs8 = fs4.next;
 		if(fs8 == null ) fs8 = f2.sols;
 
-		if(fs1.sol.dx == fs2.sol.dx 
-				&& fs1.sol.dy == fs2.sol.dy
-				&& fs1.sol.dz == fs2.sol.dz )
+		if(fs1.sol.getDx() == fs2.sol.getDx() 
+				&& fs1.sol.getDy() == fs2.sol.getDy()
+				&& fs1.sol.getDz() == fs2.sol.getDz() )
 		{
-			if(fs1.sol.dx == 0 && fs1.sol.dy != 0 && fs1.sol.dz != 0 )
+			if(fs1.sol.getDx() == 0 && fs1.sol.getDy() != 0 && fs1.sol.getDz() != 0 )
 			{
-				test1 = fs5.sol.dx;
-				test2 = fs6.sol.dx;
+				test1 = fs5.sol.getDx();
+				test2 = fs6.sol.getDx();
 			}
-			else if(fs1.sol.dx != 0 && fs1.sol.dy == 0 && fs1.sol.dz != 0 )
+			else if(fs1.sol.getDx() != 0 && fs1.sol.getDy() == 0 && fs1.sol.getDz() != 0 )
 			{
-				test1 = fs5.sol.dy;
-				test2 = fs6.sol.dy;
+				test1 = fs5.sol.getDy();
+				test2 = fs6.sol.getDy();
 			}
-			else if(fs1.sol.dx != 0 && fs1.sol.dy != 0 && fs1.sol.dz == 0 )
+			else if(fs1.sol.getDx() != 0 && fs1.sol.getDy() != 0 && fs1.sol.getDz() == 0 )
 			{
-				test1 = fs5.sol.dz;
-				test2 = fs6.sol.dz;
+				test1 = fs5.sol.getDz();
+				test2 = fs6.sol.getDz();
 			}
 			else
 			{
@@ -485,24 +485,24 @@ public class Facets {
 			orient_error = 2;
 		}
 
-		if(fs3.sol.dx == fs4.sol.dx 
-				&& fs3.sol.dy == fs4.sol.dy
-				&& fs3.sol.dz == fs4.sol.dz )
+		if(fs3.sol.getDx() == fs4.sol.getDx() 
+				&& fs3.sol.getDy() == fs4.sol.getDy()
+				&& fs3.sol.getDz() == fs4.sol.getDz() )
 		{
-			if(fs3.sol.dx == 0 && fs3.sol.dy != 0 && fs3.sol.dz != 0 )
+			if(fs3.sol.getDx() == 0 && fs3.sol.getDy() != 0 && fs3.sol.getDz() != 0 )
 			{
-				test3 = fs7.sol.dx;
-				test4 = fs8.sol.dx;
+				test3 = fs7.sol.getDx();
+				test4 = fs8.sol.getDx();
 			}
-			else if(fs3.sol.dx != 0 && fs3.sol.dy == 0 && fs3.sol.dz != 0 )
+			else if(fs3.sol.getDx() != 0 && fs3.sol.getDy() == 0 && fs3.sol.getDz() != 0 )
 			{
-				test3 = fs7.sol.dy;
-				test4 = fs8.sol.dy;
+				test3 = fs7.sol.getDy();
+				test4 = fs8.sol.getDy();
 			}
-			else if(fs3.sol.dx != 0 && fs3.sol.dy != 0 && fs3.sol.dz == 0 )
+			else if(fs3.sol.getDx() != 0 && fs3.sol.getDy() != 0 && fs3.sol.getDz() == 0 )
 			{
-				test3 = fs7.sol.dz;
-				test4 = fs8.sol.dz;
+				test3 = fs7.sol.getDz();
+				test4 = fs8.sol.getDz();
 			}
 			else
 			{
@@ -1255,7 +1255,7 @@ public class Facets {
 		}
 
 		public DerivSig(Sol_info sol) {
-			this(sol.dx,sol.dy,sol.dz);
+			this(sol.getDx(),sol.getDy(),sol.getDz());
 		}
 
 		@Override
@@ -1291,7 +1291,7 @@ public class Facets {
 		 * @return
 		 */
 		public boolean weekMatch(Sol_info sol) {
-			if(dx * sol.dx <0 || dy * sol.dy <0 || dz * sol.dz <0) 
+			if(dx * sol.getDx() <0 || dy * sol.getDy() <0 || dz * sol.getDz() <0) 
 				return false;
 			return true;
 		}
@@ -1333,7 +1333,7 @@ public class Facets {
 		Set<DerivSig> weeksigs = new HashSet<DerivSig>();
 
 		for(Sol_info sol:f1.solsItt()) {
-			if(sol.dx!=0 && sol.dy!=0 && sol.dz!=0)
+			if(sol.getDx()!=0 && sol.getDy()!=0 && sol.getDz()!=0)
 				sigs.add(new DerivSig(sol));
 			else
 				weeksigs.add(new DerivSig(sol));
@@ -2799,13 +2799,13 @@ public class Facets {
 			Facet_info facet1 = new Facet_info();
 		
 			Sol_info s1 = new Sol_info(Key3D.BOX,1, 0, 0, 8, 0);
-			s1.dx = 0; s1.dy = 0; s1.dz =0;
+			s1.setDerivs(0, 0, 0);
 			Sol_info s2 = new Sol_info(Key3D.BOX,2, 0, 0, 8, 0);
-			s2.dx = 0; s2.dy = 1; s2.dz =1;
+			s2.setDerivs(0, 1, 1);
 			Sol_info s3 = new Sol_info(Key3D.BOX,3, 0, 0, 8, 0);
-			s3.dx = -1; s3.dy = 1; s3.dz =1;
+			s3.setDerivs(-1,1,1);
 			Sol_info s4 = new Sol_info(Key3D.BOX,4, 0, 0, 8, 0);
-			s4.dx = -1; s4.dy = 1; s4.dz =-1;
+			s4.setDerivs(-1,1,-1);
 		
 			facet1.addSol(s4);
 			facet1.addSol(s3);
@@ -2827,17 +2827,17 @@ public class Facets {
 			Facet_info facet1 = new Facet_info();
 		
 			Sol_info s1 = new Sol_info(Key3D.BOX,1, 0, 0, 8, 0);
-			s1.dx = 0; s1.dy = -1; s1.dz =1;
+			s1.setDerivs(0, -1, 1);
 			Sol_info s2 = new Sol_info(Key3D.BOX,2, 0, 0, 8, 0);
-			s2.dx = -1; s2.dy = -1; s2.dz =1;
+			s2.setDerivs(-1,-1,1);
 			Sol_info s3 = new Sol_info(Key3D.BOX,3, 0, 0, 8, 0);
-			s3.dx = -1; s3.dy = 0; s3.dz =1;
+			s3.setDerivs(-1, 0, 1);
 			Sol_info s4 = new Sol_info(Key3D.BOX,4, 0, 0, 8, 0);
-			s4.dx = -1; s4.dy = 1; s4.dz =1;
+			s4.setDerivs(-1, 1, 1);
 			Sol_info s5 = new Sol_info(Key3D.BOX,5, 0, 0, 8, 0);
-			s5.dx = 0; s5.dy = 1; s5.dz =1;
+			s5.setDerivs(0, 1, 1);
 			Sol_info s6 = new Sol_info(Key3D.BOX,6, 0, 0, 8, 0);
-			s6.dx = 1; s6.dy = 0; s6.dz =1;
+			s6.setDerivs(1, 0, 1);
 		
 			facet1.addSol(s6);
 			facet1.addSol(s5);

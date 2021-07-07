@@ -206,15 +206,14 @@ public abstract class BoxClevThreaded extends Boxclev {
 
 		
 		if(!knitFacets || this.littleFacets || this.parallel ==0 ) {
-		final BoxGenerator gen = new BoxGenerator(this,new Bern3DContext(this.b3context),box, bb);
-		Thread thread = new Thread( gen, "GenBox");
-		thread.start();
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
+			final BoxGenerator gen = new BoxGenerator(this,new Bern3DContext(this.b3context),box, bb);
+			Thread thread = new Thread( gen, "GenBox");
+			thread.start();
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		else {
 			for(int i=0;i<8;++i) {
@@ -255,6 +254,10 @@ public abstract class BoxClevThreaded extends Boxclev {
 				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			}
+			
+			for(int i=0;i<8;++i) {
+				generators[i].PrintResults();
 			}
 		}
 		return (true);

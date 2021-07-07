@@ -6,13 +6,10 @@ package org.singsurf.singsurf.acurve;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.nfunk.jep.function.Binomial;
 import org.singsurf.singsurf.asurf.Face_info;
 
-import org.nfunk.jep.function.Binomial;
-
 public class Bern2D {
-	private static final boolean NOT_DEF = false;
-
 	public final int xord;
 	public final int yord;
 	private double[] coeffs;
@@ -590,19 +587,9 @@ public class Bern2D {
 		return(aa);
 	}
 
+	/** a*c - b*b */
 	public static Bern2D symetricDet2D(Bern2D a,Bern2D b,Bern2D c)
 	{
-	if(NOT_DEF) {
-		Bern2D ac,bb,sub;
-		
-		ac = multiplyBern2D(a,c);
-		bb = multiplyBern2D(b,b);
-		sub = 	subtractBern2D(ac,bb);
-	System.err.print("ac\n");
-	System.err.print(ac);
-	System.err.print(bb);
-	System.err.print(sub);
-	}	
 		return
 			subtractBern2D(
 				multiplyBern2D(a,c),

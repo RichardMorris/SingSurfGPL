@@ -385,17 +385,17 @@ public final class SignTest {
 		}
 		for(i=0;i<count;++i)
 		{
-			if(     bn[i].sol.dx >  0) testStr[i*4+0] = '+';
-			else if(bn[i].sol.dx == 0) testStr[i*4+0] = '0';
-			else if(bn[i].sol.dx <  0) testStr[i*4+0] = '-';
+			if(     bn[i].sol.getDx() >  0) testStr[i*4+0] = '+';
+			else if(bn[i].sol.getDx() == 0) testStr[i*4+0] = '0';
+			else if(bn[i].sol.getDx() <  0) testStr[i*4+0] = '-';
 	
-			if(     bn[i].sol.dy >  0) testStr[i*4+1] = '+';
-			else if(bn[i].sol.dy == 0) testStr[i*4+1] = '0';
-			else if(bn[i].sol.dy <  0) testStr[i*4+1] = '-';
+			if(     bn[i].sol.getDy() >  0) testStr[i*4+1] = '+';
+			else if(bn[i].sol.getDy() == 0) testStr[i*4+1] = '0';
+			else if(bn[i].sol.getDy() <  0) testStr[i*4+1] = '-';
 	
-			if(     bn[i].sol.dz >  0) testStr[i*4+2] = '+';
-			else if(bn[i].sol.dz == 0) testStr[i*4+2] = '0';
-			else if(bn[i].sol.dz <  0) testStr[i*4+2] = '-';
+			if(     bn[i].sol.getDz() >  0) testStr[i*4+2] = '+';
+			else if(bn[i].sol.getDz() == 0) testStr[i*4+2] = '0';
+			else if(bn[i].sol.getDz() <  0) testStr[i*4+2] = '-';
 			testStr[i*4+3] = '|';
 		}
 		testStr[count*4] = '\0';
@@ -409,17 +409,17 @@ public final class SignTest {
 	
 		for(i=0;i<count;++i)
 		{
-			if(     bn[i].sol.dx >  0) testStr[i*4+0] = '+';
-			else if(bn[i].sol.dx == 0) testStr[i*4+0] = '0';
-			else if(bn[i].sol.dx <  0) testStr[i*4+0] = '-';
+			if(     bn[i].sol.getDx() >  0) testStr[i*4+0] = '+';
+			else if(bn[i].sol.getDx() == 0) testStr[i*4+0] = '0';
+			else if(bn[i].sol.getDx() <  0) testStr[i*4+0] = '-';
 	
-			if(     bn[i].sol.dy >  0) testStr[i*4+1] = '+';
-			else if(bn[i].sol.dy == 0) testStr[i*4+1] = '0';
-			else if(bn[i].sol.dy <  0) testStr[i*4+1] = '-';
+			if(     bn[i].sol.getDy() >  0) testStr[i*4+1] = '+';
+			else if(bn[i].sol.getDy() == 0) testStr[i*4+1] = '0';
+			else if(bn[i].sol.getDy() <  0) testStr[i*4+1] = '-';
 	
-			if(     bn[i].sol.dz >  0) testStr[i*4+2] = '+';
-			else if(bn[i].sol.dz == 0) testStr[i*4+2] = '0';
-			else if(bn[i].sol.dz <  0) testStr[i*4+2] = '-';
+			if(     bn[i].sol.getDz() >  0) testStr[i*4+2] = '+';
+			else if(bn[i].sol.getDz() == 0) testStr[i*4+2] = '0';
+			else if(bn[i].sol.getDz() <  0) testStr[i*4+2] = '-';
 			testStr[i*4+3] = '|';
 		}
 		//testStr[count*4-1] = '\0';
@@ -438,17 +438,17 @@ public final class SignTest {
 	
 		for(i=0;i<count;++i)
 		{
-			if(     bn[i].dx >  0) testStr[i*4+0] = '+';
-			else if(bn[i].dx == 0) testStr[i*4+0] = '0';
-			else if(bn[i].dx <  0) testStr[i*4+0] = '-';
+			if(     bn[i].getDx() >  0) testStr[i*4+0] = '+';
+			else if(bn[i].getDx() == 0) testStr[i*4+0] = '0';
+			else if(bn[i].getDx() <  0) testStr[i*4+0] = '-';
 	
-			if(     bn[i].dy >  0) testStr[i*4+1] = '+';
-			else if(bn[i].dy == 0) testStr[i*4+1] = '0';
-			else if(bn[i].dy <  0) testStr[i*4+1] = '-';
+			if(     bn[i].getDy() >  0) testStr[i*4+1] = '+';
+			else if(bn[i].getDy() == 0) testStr[i*4+1] = '0';
+			else if(bn[i].getDy() <  0) testStr[i*4+1] = '-';
 	
-			if(     bn[i].dz >  0) testStr[i*4+2] = '+';
-			else if(bn[i].dz == 0) testStr[i*4+2] = '0';
-			else if(bn[i].dz <  0) testStr[i*4+2] = '-';
+			if(     bn[i].getDz() >  0) testStr[i*4+2] = '+';
+			else if(bn[i].getDz() == 0) testStr[i*4+2] = '0';
+			else if(bn[i].getDz() <  0) testStr[i*4+2] = '-';
 			testStr[i*4+3] = '|';
 		}
 		testStr[count*4] = '\0';
@@ -461,17 +461,17 @@ public final class SignTest {
 		
 		for(Node_info node:nodes)
 		{		
-			if(     node.sol.dx >  0) testStr[i*4+0] = '+';
-			else if(node.sol.dx == 0) testStr[i*4+0] = '0';
-			else if(node.sol.dx <  0) testStr[i*4+0] = '-';
+			if(     node.sol.getDx() >  0) testStr[i*4+0] = '+';
+			else if(node.sol.getDx() == 0) testStr[i*4+0] = '0';
+			else if(node.sol.getDx() <  0) testStr[i*4+0] = '-';
 	
-			if(     node.sol.dy >  0) testStr[i*4+1] = '+';
-			else if(node.sol.dy == 0) testStr[i*4+1] = '0';
-			else if(node.sol.dy <  0) testStr[i*4+1] = '-';
+			if(     node.sol.getDy() >  0) testStr[i*4+1] = '+';
+			else if(node.sol.getDy() == 0) testStr[i*4+1] = '0';
+			else if(node.sol.getDy() <  0) testStr[i*4+1] = '-';
 	
-			if(     node.sol.dz >  0) testStr[i*4+2] = '+';
-			else if(node.sol.dz == 0) testStr[i*4+2] = '0';
-			else if(node.sol.dz <  0) testStr[i*4+2] = '-';
+			if(     node.sol.getDz() >  0) testStr[i*4+2] = '+';
+			else if(node.sol.getDz() == 0) testStr[i*4+2] = '0';
+			else if(node.sol.getDz() <  0) testStr[i*4+2] = '-';
 			testStr[i*4+3] = '|';
 			++i;
 		}
@@ -491,17 +491,17 @@ public final class SignTest {
 	
 		for(i=0;i<count;++i)
 		{
-			if(     bn.get(i).dx >  0) testStr[i*4+0] = '+';
-			else if(bn.get(i).dx == 0) testStr[i*4+0] = '0';
-			else if(bn.get(i).dx <  0) testStr[i*4+0] = '-';
+			if(     bn.get(i).getDx() >  0) testStr[i*4+0] = '+';
+			else if(bn.get(i).getDx() == 0) testStr[i*4+0] = '0';
+			else if(bn.get(i).getDx() <  0) testStr[i*4+0] = '-';
 	
-			if(     bn.get(i).dy >  0) testStr[i*4+1] = '+';
-			else if(bn.get(i).dy == 0) testStr[i*4+1] = '0';
-			else if(bn.get(i).dy <  0) testStr[i*4+1] = '-';
+			if(     bn.get(i).getDy() >  0) testStr[i*4+1] = '+';
+			else if(bn.get(i).getDy() == 0) testStr[i*4+1] = '0';
+			else if(bn.get(i).getDy() <  0) testStr[i*4+1] = '-';
 	
-			if(     bn.get(i).dz >  0) testStr[i*4+2] = '+';
-			else if(bn.get(i).dz == 0) testStr[i*4+2] = '0';
-			else if(bn.get(i).dz <  0) testStr[i*4+2] = '-';
+			if(     bn.get(i).getDz() >  0) testStr[i*4+2] = '+';
+			else if(bn.get(i).getDz() == 0) testStr[i*4+2] = '0';
+			else if(bn.get(i).getDz() <  0) testStr[i*4+2] = '-';
 			testStr[i*4+3] = '|';
 		}
 		testStr[count*4] = '\0';

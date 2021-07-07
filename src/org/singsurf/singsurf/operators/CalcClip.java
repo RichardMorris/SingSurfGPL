@@ -6,6 +6,10 @@ import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.vecmath.PdVector;
 
+/**
+ * Clipping operator using a calculator for 
+ * calculation function value
+ */
 public class CalcClip extends IntersectionClip {
 
     

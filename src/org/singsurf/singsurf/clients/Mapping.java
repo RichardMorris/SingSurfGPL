@@ -350,6 +350,8 @@ public class Mapping extends AbstractOperatorClient {
 			emat.showEles = cbShowFace.getState();
 			emat.showEdge = cbShowEdge.getState();
 			emat.showVerts = cbShowVert.getState();
+			emat.showBnd = cbShowBoundary.getState();
+			
 			switch(chSurfColours.getSelectedItem()) {
 			case "Unchanged":
 				emat.showEleCols = true;
@@ -385,7 +387,7 @@ public class Mapping extends AbstractOperatorClient {
 		} else if(mat instanceof LmsPolygonSetMaterial) {
 			LmsPolygonSetMaterial pmat = (LmsPolygonSetMaterial) mat;
 			pmat.showPolys = cbShowCurves.getState();
-			pmat.showVerts = cbShowPoints.getState();
+			pmat.showVerts = cbShowVert.getState();
 			
 			switch(chCurveColours.getSelectedItem()) {
 			case "Unchanged":
@@ -439,10 +441,6 @@ public class Mapping extends AbstractOperatorClient {
 		LmsPointSetMaterial mat = this.materials.get(inputName);
 		mat.apply(output);
 		store.geomApperenceChanged(output);
-	}
-
-	public String makeCGIstring() {
-		return null;
 	}
 
 	@Override

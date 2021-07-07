@@ -3,12 +3,14 @@ Created 14 Jun 2010 - Richard Morris
  */
 package org.singsurf.singsurf.asurf;
 
+import org.singsurf.singsurf.asurf.Converger.Solve3DresultWithSig;
+
 public final class Sol_info {
 	public static final int UNPLOTTED_VERTEX = -1;
 	
 	public int xl,yl,zl,denom;
 	private double root,root2,root3;
-	public int dx,dy,dz; 
+	private int dx,dy,dz; 
 //	public short dxx,dxy,dxz,dyy,dyz,dzz;
 	public Key3D type;
 	public boolean status=false; 
@@ -117,7 +119,7 @@ public final class Sol_info {
 	 * @return
 	 */
 	public int num_zero_derivs() {
-		int res = (dx==0 ? 1 : 0) + (dy==0 ? 1 : 0) + (dz==0 ? 1 : 0);
+		int res = (getDx()==0 ? 1 : 0) + (getDy()==0 ? 1 : 0) + (getDz()==0 ? 1 : 0);
 		return res;
 	}
 	
@@ -127,7 +129,7 @@ public final class Sol_info {
 	 * @return
 	 */
 	public boolean match_derivs(Sol_info sol) {
-		return dx == sol.dx && dy == sol.dy && dz == sol.dz;
+		return getDx() == sol.getDx() && getDy() == sol.getDy() && getDz() == sol.getDz();
 	}
 	
 	/* get the values for the roots, inverse of calc_pos */
@@ -173,7 +175,7 @@ public final class Sol_info {
 		sb.append(String.format(" (%2d,%2d,%2d)/%2d",
 				xl,yl,zl,denom));
 		sb.append(String.format("\tdx %2d %2d %2d ",
-				dx,dy,dz ));
+				getDx(),getDy(),getDz() ));
 
 		if(conv_failed) 
 			sb.append("f ");
@@ -229,7 +231,7 @@ public final class Sol_info {
 	}
 
 	public boolean match_derivs(int f1, int f2, int f3) {
-		return dx == f1 && dy == f2 && dz == f3;
+		return getDx() == f1 && getDy() == f2 && getDz() == f3;
 	}
 
 	public double[] calc_pos_actual(Region_info region,Bern3DContext ctx) {
@@ -285,9 +287,9 @@ public final class Sol_info {
 	
 	public Sol_info duplicate() {
 		Sol_info sol = new Sol_info(type,xl,yl,zl,denom,root,root2,root3);
-		sol.dx = dx;
-		sol.dy = dy;
-		sol.dz = dz;
+		sol.dx = getDx();
+		sol.dy = getDy();
+		sol.dz = getDz();
 		sol.conv_failed = conv_failed;
 		sol.hasVal = hasVal;
 		sol.hasPos = hasPos;
@@ -419,6 +421,49 @@ public final class Sol_info {
 		double denom = lamsq * lamsq;
 		double K = numer / denom;
 		return K;
+	}
+
+	public int getDx() {
+		return dx;
+	}
+
+	public int getDy() {
+		return dy;
+	}
+
+	public int getDz() {
+		return dz;
+	}
+
+	public void setDerivs(int f1, int f2, int f3) {
+		dx = f1; dy=f2; dz=f3;
+		
+	}
+
+	public void setDerivs(Solve3DresultWithSig conv_res) {
+		dx = conv_res.sig_x;
+		dy = conv_res.sig_y;
+		dz = conv_res.sig_z;
+		
+	}
+
+	public void setDerivs(Sol_info sol) {
+		dx = sol.dx;
+		dy = sol.dy;
+		dz = sol.dz;
+		
+	}
+
+	public void setDx(int dx) {
+		this.dx = dx;
+	}
+
+	public void setDy(int dy) {
+		this.dy = dy;
+	}
+
+	public void setDz(int dz) {
+		this.dz = dz;
 	}
 
 

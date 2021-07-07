@@ -29,7 +29,7 @@ import jv.viewer.PvViewer;
  *          0.2.1 23 Jan 2001 : added definitions of default object
  *          (PjAcurveClient_IP) : added a status bar when running as an
  *          application : cleaned up debug messages to write to JavaView
- *          console. 0.2 15 Jan 2001 
+ *          console. 0.2 15 Jan 2001
  */
 
 abstract public class PaSingSurf extends JPanel {

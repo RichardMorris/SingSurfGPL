@@ -37,6 +37,12 @@ class BoxGenerator implements Runnable {
 			this.bigbox = box;
 		}
 
+	public void PrintResults() {
+		boxsolver.printResults();
+		facesolver.printResults();
+		converger.printResults();
+	}
+	
 	public void run() {
 		try {
 			System.out.println("Starting GenBox");
@@ -360,9 +366,7 @@ class BoxGenerator implements Runnable {
 
 			if (aa.r.coeff[0] == 0.0) {
 				edge.sol = new Sol_info(edge.type, edge.xl, edge.yl, edge.zl, edge.denom, 0.5);
-				edge.sol.dx = f1;
-				edge.sol.dy = f2;
-				edge.sol.dz = f3;
+				edge.sol.setDerivs(f1,f2,f3);
 			}
 			edge.status = BoxClevA.FOUND_EVERYTHING;
 			return;
@@ -393,9 +397,7 @@ class BoxGenerator implements Runnable {
 		rootm = 0.5;
 		
 		edge.sol = new Sol_info(edge.type, edge.xl, edge.yl, edge.zl, edge.denom, rootm);
-		edge.sol.dx = f1;
-		edge.sol.dy = f2;
-		edge.sol.dz = f3;
+		edge.sol.setDerivs(f1, f2, f3);
 		edge.sol.setValue(solveres.val);
 		if (f1 == 0 || f2 == 0 || f3 == 0) {
 			/*** Can't work out derivatives easily ***/
@@ -405,23 +407,23 @@ class BoxGenerator implements Runnable {
 			if (f1 == 0) {
 				res = ctx.evalbern3D(ctx.Dx, vec[0], vec[1], vec[2]);
 				if (res < 0)
-					edge.sol.dx = -1;
+					edge.sol.setDx(-1);
 				if (res > 0)
-					edge.sol.dx = 1;
+					edge.sol.setDx(1);
 			}
 			if (f2 == 0) {
 				res = ctx.evalbern3D(ctx.Dy, vec[0], vec[1], vec[2]);
 				if (res < 0)
-					edge.sol.dy = -1;
+					edge.sol.setDy(-1);
 				if (res > 0)
-					edge.sol.dy = 1;
+					edge.sol.setDy(1);
 			}
 			if (f3 == 0) {
 				res = ctx.evalbern3D(ctx.Dz, vec[0], vec[1], vec[2]);
 				if (res < 0)
-					edge.sol.dz = -1;
+					edge.sol.setDz(-1);
 				if (res > 0)
-					edge.sol.dz = 1;
+					edge.sol.setDz(1);
 			}
 
 			if (Boxclev.PRINT_FIND_EDGE_SOL) {

@@ -280,9 +280,9 @@ public abstract class PlotAbstract implements Plotter {
 	}
 
 	Color calcSkelColour(Sol_info sol) {
-        int r = (sol.dx == 0  ? 255 : 0);
-        int g = (sol.dy == 0  ? 255 : 0);
-        int b = (sol.dz == 0  ? 255 : 0);
+        int r = (sol.getDx() == 0  ? 255 : 0);
+        int g = (sol.getDy() == 0  ? 255 : 0);
+        int b = (sol.getDz() == 0  ? 255 : 0);
         return new Color(r,g,b);
 	}
 		
@@ -362,7 +362,7 @@ public abstract class PlotAbstract implements Plotter {
 				worseValue = Math.abs(value);
 			}
 
-    		if(sol.dx == 0 && sol.dy ==0 && sol.dz ==0) {
+    		if(sol.getDx() == 0 && sol.getDy() ==0 && sol.getDz() ==0) {
     			++sing_count;
     			if(blowup_singularities) {
         			sol.plotindex = BLOW_UP;
@@ -389,12 +389,12 @@ public abstract class PlotAbstract implements Plotter {
             	badIndicies.put(sol.plotindex,sol);
             }
 //            if(boxclev.tagSing>0) {
-        	if(sol.dx == 0 && sol.dy ==0 && sol.dz ==0) {
+        	if(sol.getDx() == 0 && sol.getDy() ==0 && sol.getDz() ==0) {
         			singIndicies.put(sol.plotindex,sol);
 //        		}
             }
         }
-        if(sol.dx==0&&sol.dy==0&&sol.dz==0)
+        if(sol.getDx()==0&&sol.getDy()==0&&sol.getDz()==0)
             problem=true;
         if(PRINT_FACET) {
             System.out.printf("No %d ",sol.plotindex);
@@ -520,7 +520,7 @@ public abstract class PlotAbstract implements Plotter {
 			case JustSurface:
 				break;
 			case Skeleton:
-				if(sol.dx == 0 && sol.dy == 0 && sol.dz == 0)
+				if(sol.getDx() == 0 && sol.getDy() == 0 && sol.getDz() == 0)
 	                plot_point(sing.sing);
 				break;
 			default:
@@ -548,12 +548,12 @@ public abstract class PlotAbstract implements Plotter {
         {
                if(mode == PlotMode.Skeleton 
             	|| (mode == PlotMode.Degenerate
-                      && node_link.A.sol.dx == 0
-                      && node_link.A.sol.dy == 0
-                      && node_link.A.sol.dz == 0
-                      && node_link.B.sol.dx == 0
-                      && node_link.B.sol.dy == 0
-                      && node_link.B.sol.dz == 0 ) )
+                      && node_link.A.sol.getDx() == 0
+                      && node_link.A.sol.getDy() == 0
+                      && node_link.A.sol.getDz() == 0
+                      && node_link.B.sol.getDx() == 0
+                      && node_link.B.sol.getDy() == 0
+                      && node_link.B.sol.getDz() == 0 ) )
                 plot_line(node_link.A.sol,node_link.B.sol);
 
         }

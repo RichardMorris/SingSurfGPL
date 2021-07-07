@@ -108,7 +108,6 @@ public class ProjectFactory {
 			return null;
 		}
 	}
-
 	
 	/**
 	 * Builder for default def
@@ -132,9 +131,8 @@ public class ProjectFactory {
 		Constructor<?> cons;
 		AbstractClient newsurf = null;
 		try {
-				cons = type.clientClass.getConstructor(new Class[] { GeomStore.class, String.class });
-				newsurf = (AbstractClient) cons.newInstance(new Object[] { store, projName });
-			
+			cons = type.clientClass.getConstructor(new Class[] { GeomStore.class, String.class });
+			newsurf = (AbstractClient) cons.newInstance(new Object[] { store, projName });
 			return newsurf;
 		} catch (Exception e) {
 			Throwable cause = e.getCause();

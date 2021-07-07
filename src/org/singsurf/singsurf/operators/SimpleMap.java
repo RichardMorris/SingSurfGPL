@@ -17,9 +17,9 @@ public abstract class SimpleMap extends AbstractModifier {
 	@Override
 	public PgElementSet operateSurface(PgElementSet geom) throws EvaluationException {
 	    if(doNormals() && geom.hasVertexNormals() && !paramsFromTexture) {
-		return operatePointsAndNormals(geom);
+	    	return operatePointsAndNormals(geom);
 	    } else {
-		return (PgElementSet) operatePoints(geom);
+	    	return (PgElementSet) operatePoints(geom);
 	    }
 	}
 

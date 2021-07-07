@@ -39,11 +39,11 @@ public class PlotVrml extends PlotAbstract {
 			file_v = File.createTempFile("asurf", ".verts");
 			file_n = File.createTempFile("asurf", ".norms");
 			file_f = File.createTempFile("asurf", ".faces");
+			file_c = File.createTempFile("asurf", ".cols");
 			pw_v = new PrintWriter(file_v);
 			pw_n = new PrintWriter(file_n);
 			pw_f = new PrintWriter(file_f);
-				file_c = File.createTempFile("asurf", ".cols");
-				pw_c = new PrintWriter(file_c);
+			pw_c = new PrintWriter(file_c);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -204,6 +204,8 @@ public class PlotVrml extends PlotAbstract {
 				in_v.lines()
 				.map(line -> line + ( in_v.getLineNumber() < vert_count ? "," : "") )
 				.forEach(line -> output.println(line));
+			} catch(Exception e) {
+				System.err.println(e.toString());
 			}
 
 			output.println();
@@ -218,6 +220,8 @@ public class PlotVrml extends PlotAbstract {
 				in_n.lines().map(
 						line -> line + ( in_n.getLineNumber() < norm_count ? "," : "") )
 				.forEach(line -> output.println(line));
+			} catch(Exception e) {
+				System.err.println(e.toString());
 			}			
 			output.println("]");
 			output.println("}");
@@ -232,6 +236,8 @@ public class PlotVrml extends PlotAbstract {
 					in_c.lines().map(
 							line -> line + ( in_c.getLineNumber() < col_count ? "," : "") )
 					.forEach(line -> output.println(line));
+				} catch(Exception e) {
+					System.err.println(e.toString());
 				}
 				output.println("]");
 				output.println("}");
@@ -244,6 +250,8 @@ public class PlotVrml extends PlotAbstract {
 				in_f.lines().map(
 						line -> line + ( in_f.getLineNumber() < face_count ? "," : "") )
 				.forEach(line -> output.println(line));
+			} catch(Exception e) {
+				System.err.println(e.toString());
 			}
 			output.println("]");
 			output.println("}");
@@ -255,9 +263,6 @@ public class PlotVrml extends PlotAbstract {
 			output.println("}");
 			output.println("]");
 			output.println("}");
-		}
-		catch (IOException e) {
-			e.printStackTrace();
 		} finally {
 			out.close();
 		}
