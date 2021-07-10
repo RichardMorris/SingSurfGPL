@@ -12,9 +12,12 @@ import java.awt.event.ItemEvent;
 import java.util.Collections;
 import java.util.List;
 
+import jv.geom.PgPolygonSet;
+import jv.object.PsDebug;
+import jv.project.PgGeometryIf;
+
 import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.LParamList;
-import org.singsurf.singsurf.LmsPolygonSetMaterial;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.PuVariable;
@@ -26,11 +29,10 @@ import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.geometries.PolygonSetMaterial;
 import org.singsurf.singsurf.jep.EquationPolynomialConverter;
 
-import jv.geom.PgPolygonSet;
-import jv.object.PsDebug;
-import jv.project.PgGeometryIf;
+
 
 /**
  * @author Rich Morris Created on 30-Mar-2005
@@ -187,7 +189,7 @@ public class ACurve extends AbstractClient {
 
 	rebuildResultArray();
 	if (outCurve != null)
-	    line_mat = new LmsPolygonSetMaterial(outCurve);
+	    line_mat = new PolygonSetMaterial(outCurve);
 
 	PgGeometryIf resultGeom = null;
 

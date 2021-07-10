@@ -27,9 +27,6 @@ import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.Fractometer;
 import org.singsurf.singsurf.LParamList;
-import org.singsurf.singsurf.LmsElementSetMaterial;
-import org.singsurf.singsurf.LmsPointSetMaterial;
-import org.singsurf.singsurf.LmsPolygonSetMaterial;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.PuIntChoice;
 import org.singsurf.singsurf.PuParameter;
@@ -45,6 +42,9 @@ import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.geometries.ElementSetMaterial;
+import org.singsurf.singsurf.geometries.PointSetMaterial;
+import org.singsurf.singsurf.geometries.PolygonSetMaterial;
 import org.singsurf.singsurf.jep.EquationPolynomialConverter;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.SimpleClip;
@@ -356,11 +356,11 @@ public class ASurf extends AbstractClient {
 			return;
 		}
 		if (outSurf != null)
-			face_mat = new LmsElementSetMaterial(outSurf);
+			face_mat = new ElementSetMaterial(outSurf);
 		if (outCurve != null)
-			line_mat = new LmsPolygonSetMaterial(outCurve);
+			line_mat = new PolygonSetMaterial(outCurve);
 		if (outPoints != null)
-			point_mat = new LmsPointSetMaterial(outPoints);
+			point_mat = new PointSetMaterial(outPoints);
 
 		Thread t = new Thread(new CalcGeomRunnable(),"ASurf");
 		t.start();

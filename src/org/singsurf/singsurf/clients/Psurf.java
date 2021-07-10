@@ -15,7 +15,6 @@ import java.util.List;
 
 import org.singsurf.singsurf.Fractometer;
 import org.singsurf.singsurf.LParamList;
-import org.singsurf.singsurf.LmsElementSetMaterial;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.PuVariable;
@@ -27,6 +26,7 @@ import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
+import org.singsurf.singsurf.geometries.ElementSetMaterial;
 import org.singsurf.singsurf.operators.SphereClip;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
 
@@ -226,7 +226,7 @@ public class Psurf extends AbstractClient {
 		// if(m_geom.getNumVertices()!= (localX.getSteps()+1)*(localY.getSteps()+1))
 		rebuildResultArray();
 		if (outSurf != null)
-			face_mat = new LmsElementSetMaterial(outSurf);
+			face_mat = new ElementSetMaterial(outSurf);
 
 		try {
 			// System.out.println("Num vertices: "+m_geom.getNumVertices());

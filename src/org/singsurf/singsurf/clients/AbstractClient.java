@@ -31,9 +31,6 @@ import org.nfunk.jep.ASTVarNode;
 import org.nfunk.jep.Node;
 import org.singsurf.singsurf.Fractometer;
 import org.singsurf.singsurf.LParamList;
-import org.singsurf.singsurf.LmsElementSetMaterial;
-import org.singsurf.singsurf.LmsPointSetMaterial;
-import org.singsurf.singsurf.LmsPolygonSetMaterial;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.PuIntChoice;
 import org.singsurf.singsurf.PuParameter;
@@ -46,6 +43,9 @@ import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.Parameter;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.geometries.ElementSetMaterial;
+import org.singsurf.singsurf.geometries.PointSetMaterial;
+import org.singsurf.singsurf.geometries.PolygonSetMaterial;
 
 import jv.geom.PgElementSet;
 import jv.geom.PgPointSet;
@@ -76,11 +76,11 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 	Frame m_frame;
 
 	/** Material properties for faces. */
-	LmsElementSetMaterial face_mat = null;
+	ElementSetMaterial face_mat = null;
 	/** Material properties for lines. */
-	LmsPolygonSetMaterial line_mat = null;
+	PolygonSetMaterial line_mat = null;
 	/** Material properties for points. */
-	LmsPointSetMaterial point_mat = null;
+	PointSetMaterial point_mat = null;
 
 	/**
 	 * The name of the base geometry. For project where the full geometry consists

@@ -25,11 +25,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.SwingUtilities;
 
-import org.singsurf.singsurf.LmsPointSetMaterial;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.geometries.PointSetMaterial;
 import org.singsurf.singsurf.geometries.SSGeomListener;
 
 import jv.geom.PgElementSet;
@@ -49,7 +49,7 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 	/** A list of activeInputs **/
 	protected java.awt.List activeInputNames = new java.awt.List(10, false);
 
-	protected Map<String, LmsPointSetMaterial> materials = new HashMap<String, LmsPointSetMaterial>();
+	protected Map<String, PointSetMaterial> materials = new HashMap<String, PointSetMaterial>();
 
 	protected Button removeInputButton = new Button("Detach");
 	protected Button removeInputGeomButton = new Button("Remove input and geom");
@@ -155,6 +155,7 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 	}
 
 	public void calcGeom(GeomPair p) {
+		System.out.println("calcGeom: "+p.getInput().getName() +" -> " + p.getOutput().getName());
 
 		if (!calc.isGood()) {
 			showStatus(calc.getMsg());
@@ -379,6 +380,7 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 			cbShowVert.setEnabled(true);
 			cbShowCurves.setEnabled(false);
 			cbShowPoints.setEnabled(false);
+			cbShowBoundary.setEnabled(true);
 			
 			if(surf.hasElementColors()) {
 				chSurfColours.select("Unchanged");								
@@ -413,11 +415,12 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 			PgPolygonSet surf = (PgPolygonSet) geom;
 			cbShowCurves.setState(surf.isShowingPolygons());
 			cbShowVert.setState(surf.isShowingVertices());
-			this.cbShowFace.setEnabled(false);
-			this.cbShowEdge.setEnabled(false);
-			this.cbShowVert.setEnabled(true);
-			this.cbShowPoints.setEnabled(false);
-			this.cbShowCurves.setEnabled(true);
+			cbShowFace.setEnabled(false);
+			cbShowEdge.setEnabled(false);
+			cbShowVert.setEnabled(true);
+			cbShowPoints.setEnabled(false);
+			cbShowCurves.setEnabled(true);
+			cbShowBoundary.setEnabled(false);
 			
 			if(surf.hasPolygonColors()) {
 				chCurveColours.select("Unchanged");								
@@ -451,17 +454,19 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 		} else if(geom instanceof PgPointSet) {
 			PgPointSet surf = (PgPointSet) geom;
 			cbShowPoints.setState(surf.isShowingVertices());
-			this.cbShowFace.setEnabled(false);
-			this.cbShowEdge.setEnabled(false);
-			this.cbShowVert.setEnabled(false);
-			this.cbShowCurves.setEnabled(false);
-			this.cbShowPoints.setEnabled(true);
+			cbShowFace.setEnabled(false);
+			cbShowEdge.setEnabled(false);
+			cbShowVert.setEnabled(false);
+			cbShowCurves.setEnabled(false);
+			cbShowPoints.setEnabled(true);
+			cbShowBoundary.setEnabled(false);
 		} else {
-			this.cbShowFace.setEnabled(false);
-			this.cbShowEdge.setEnabled(false);
-			this.cbShowVert.setEnabled(false);
-			this.cbShowCurves.setEnabled(false);
-			this.cbShowPoints.setEnabled(false);			
+			cbShowFace.setEnabled(false);
+			cbShowEdge.setEnabled(false);
+			cbShowVert.setEnabled(false);
+			cbShowCurves.setEnabled(false);
+			cbShowPoints.setEnabled(false);			
+			cbShowBoundary.setEnabled(false);
 		}
 	}
 	

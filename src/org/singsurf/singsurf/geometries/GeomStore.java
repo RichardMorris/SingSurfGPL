@@ -18,9 +18,6 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.singsurf.singsurf.LmsElementSetMaterial;
-import org.singsurf.singsurf.LmsPointSetMaterial;
-import org.singsurf.singsurf.LmsPolygonSetMaterial;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.clients.AbstractClient;
@@ -265,15 +262,15 @@ public class GeomStore implements PvGeometryListenerIf {
     public static void copySrcTgt(PgGeometryIf src, PgGeometryIf tgt) {
     	try {
     		if (tgt instanceof PgElementSet) {
-    			LmsElementSetMaterial mat = new LmsElementSetMaterial((PgElementSet) tgt);
+    			ElementSetMaterial mat = new ElementSetMaterial((PgElementSet) tgt);
     			((PgElementSet) tgt).copy((PgElementSet) src);
     			mat.apply((PgElementSet) tgt);
     		} else if (tgt instanceof PgPolygonSet) {
-    			LmsPolygonSetMaterial mat = new LmsPolygonSetMaterial((PgPolygonSet) tgt);
+    			PolygonSetMaterial mat = new PolygonSetMaterial((PgPolygonSet) tgt);
     			((PgPolygonSet) tgt).copy((PgPolygonSet) src);
     			mat.apply((PgPolygonSet) tgt);
     		} else if (tgt instanceof PgPointSet) {
-    			LmsPointSetMaterial mat = new LmsPointSetMaterial((PgPointSet) tgt);
+    			PointSetMaterial mat = new PointSetMaterial((PgPointSet) tgt);
     			((PgPointSet) tgt).copy((PgPointSet) src);
     			mat.apply((PgPointSet) tgt);
     		} 

@@ -163,6 +163,9 @@ public class ProjectChooserController {
 				}
 
 			}
+			
+			//TODO repeat loading of project components to correct for not getting the order right
+			//TODO replace with a better method
 			for (ProjectComponents pc : ldr.getProjComp()) {
 				if (!pc.isEmpty()) {
 					AbstractClient client = model.getProject(pc.getName());

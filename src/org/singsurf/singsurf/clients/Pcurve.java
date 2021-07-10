@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.singsurf.singsurf.LParamList;
-import org.singsurf.singsurf.LmsPolygonSetMaterial;
 import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.PuVariable;
@@ -22,6 +21,7 @@ import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.geometries.PolygonSetMaterial;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.SphereClip;
 
@@ -144,7 +144,7 @@ public class Pcurve extends AbstractClient {
 		// if(outCurve.getNumVertices()!= (localX.getSteps()+1))
 		rebuildResultArray();
 		if (outCurve != null)
-			line_mat = new LmsPolygonSetMaterial(outCurve);
+			line_mat = new PolygonSetMaterial(outCurve);
 
 		// System.out.println("Num vertices: "+m_geom.getNumVertices());
 		// System.out.println("x steps "+psVars[0].steps);

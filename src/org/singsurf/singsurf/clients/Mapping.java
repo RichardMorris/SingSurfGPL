@@ -14,15 +14,15 @@ import java.util.List;
 
 import org.singsurf.singsurf.Fractometer;
 import org.singsurf.singsurf.LParamList;
-import org.singsurf.singsurf.LmsElementSetMaterial;
-import org.singsurf.singsurf.LmsPointSetMaterial;
-import org.singsurf.singsurf.LmsPolygonSetMaterial;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.geometries.ElementSetMaterial;
+import org.singsurf.singsurf.geometries.PointSetMaterial;
+import org.singsurf.singsurf.geometries.PolygonSetMaterial;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.ContinuityClip;
 import org.singsurf.singsurf.operators.SimpleCalcMap;
@@ -225,8 +225,9 @@ public class Mapping extends AbstractOperatorClient {
 		PgGeometryIf input = p.getInput();
 
 		// debugCols((PgElementSet) out);
-
+		PointSetMaterial mat = PointSetMaterial.getMaterial(out);
 		GeomStore.copySrcTgt(mappedGeom, out);
+		mat.apply(out);
 
 		System.out.println("out " + ((PgPointSet) out).getNumVertices());
 		// debugCols((PgElementSet) out);
@@ -275,7 +276,7 @@ public class Mapping extends AbstractOperatorClient {
 		}
 		
 		*/
-		setDisplayProperties(input.getName(),out);
+//		setDisplayProperties(input.getName(),out);
 		setGeometryInfo(out,input);
 		store.geomChanged(out);
 	}
@@ -289,7 +290,7 @@ public class Mapping extends AbstractOperatorClient {
 		PgGeometryIf input = store.getGeom(name);
 		PgGeometryIf output = store.aquireGeometry(getPreferredOutputName(name), input, this);
 		GeomPair p = new GeomPair(input, output);
-		LmsPointSetMaterial mat = LmsPointSetMaterial.getMaterial(input);
+		PointSetMaterial mat = PointSetMaterial.getMaterial(input);
 		mat.apply(output);
 		activePairs.put(name, p);
 		activeInputNames.add(name);
@@ -339,14 +340,14 @@ public class Mapping extends AbstractOperatorClient {
 
 	private void setActiveMaterialsFromCheckboxes() {
 		for (String inputName : activeInputNames.getSelectedItems()) {
-			LmsPointSetMaterial mat = this.materials.get(inputName);
+			PointSetMaterial mat = this.materials.get(inputName);
 			setMaterialFromCheckboxes(mat);
 		}
 	}
 
-	private void setMaterialFromCheckboxes(LmsPointSetMaterial mat) {
-		if(mat instanceof LmsElementSetMaterial) {
-			LmsElementSetMaterial emat = (LmsElementSetMaterial) mat;
+	private void setMaterialFromCheckboxes(PointSetMaterial mat) {
+		if(mat instanceof ElementSetMaterial) {
+			ElementSetMaterial emat = (ElementSetMaterial) mat;
 			emat.showEles = cbShowFace.getState();
 			emat.showEdge = cbShowEdge.getState();
 			emat.showVerts = cbShowVert.getState();
@@ -384,8 +385,8 @@ public class Mapping extends AbstractOperatorClient {
 				emat.gEleCol = Color.gray;
 				break;
 			}
-		} else if(mat instanceof LmsPolygonSetMaterial) {
-			LmsPolygonSetMaterial pmat = (LmsPolygonSetMaterial) mat;
+		} else if(mat instanceof PolygonSetMaterial) {
+			PolygonSetMaterial pmat = (PolygonSetMaterial) mat;
 			pmat.showPolys = cbShowCurves.getState();
 			pmat.showVerts = cbShowVert.getState();
 			
@@ -438,7 +439,7 @@ public class Mapping extends AbstractOperatorClient {
 	}
 
 	private void setDisplayProperties(String inputName, PgGeometryIf output) {
-		LmsPointSetMaterial mat = this.materials.get(inputName);
+		PointSetMaterial mat = this.materials.get(inputName);
 		mat.apply(output);
 		store.geomApperenceChanged(output);
 	}

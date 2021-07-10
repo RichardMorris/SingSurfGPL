@@ -20,6 +20,7 @@ import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
+import org.singsurf.singsurf.geometries.PointSetMaterial;
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.SimpleCalcIntersection;
 import org.singsurf.singsurf.operators.UnSuportedGeometryException;
@@ -161,6 +162,7 @@ public class Intersection extends AbstractOperatorClient {
 			showStatus(calc.getMsg());
 			return null;
 		}
+//		System.out.println("calcGeomThread: "+p.getInput().getName() +" -> " + p.getOutput().getName());
 		PgGeometryIf input = p.getInput();
 
 		if (input == null) {
@@ -189,14 +191,15 @@ public class Intersection extends AbstractOperatorClient {
 	}
 	
 	public void displayGeom(GeomPair p, PgGeometryIf resultGeom) {
+		System.out.println("displayGeom: "+p.getInput().getName() +" -> " + p.getOutput().getName()+" res "+resultGeom.getName());
 	
-		System.out.println("mapped outer");
 		// debugCols((PgElementSet) mappedGeom);
 		PgGeometryIf out = p.getOutput();
 //		PgGeometryIf input = p.getInput();
-
+		PointSetMaterial mat = PointSetMaterial.getMaterial(out);
 		GeomStore.copySrcTgt(resultGeom, out);
-		setDisplayProperties(out);
+		mat.apply(out);
+		//setDisplayProperties(out);
 		setGeometryInfo(out,p.getInput());
 		store.geomChanged(out);
 	}
@@ -211,6 +214,7 @@ public class Intersection extends AbstractOperatorClient {
 
 	@Override
 	public void newActiveInput(String name) {
+		System.out.println("newActiveInput "+name);
 		if (activePairs.containsKey(name)) {
 			showStatus(name + " is already active");
 			return;
@@ -226,6 +230,8 @@ public class Intersection extends AbstractOperatorClient {
 		GeomPair p = new GeomPair(input, output);
 //		this.setCheckboxesFromGeomety(p.getOutput());
 		setDisplayProperties(p.getOutput());
+		PointSetMaterial mat = PointSetMaterial.getMaterial(input);
+		materials.put(name,mat);
 		activePairs.put(name, p);
 		activeInputNames.add(name);
 		calcGeom(p);
