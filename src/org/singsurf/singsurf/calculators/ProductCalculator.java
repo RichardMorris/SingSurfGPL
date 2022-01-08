@@ -8,6 +8,7 @@ import org.lsmp.djep.djep.DSymbolTable;
 import org.lsmp.djep.djep.PartialDerivative;
 import org.lsmp.djep.matrixJep.MatrixJep;
 import org.lsmp.djep.matrixJep.MatrixVariableI;
+import org.lsmp.djep.mrpe.MRpEval;
 import org.lsmp.djep.vectorJep.Dimensions;
 import org.lsmp.djep.xjep.XVariable;
 import org.nfunk.jep.ParseException;
@@ -33,6 +34,14 @@ public class ProductCalculator extends Calculator {
 		super(def, nderiv);
 		varFac = new SpecialVariableFactory();
 		mj = (MatrixJep) mj.newInstance(new DSymbolTable(varFac));
+		mj.setAllowAssignment(true);
+		mj.setAllowUndeclared(true);
+		mj.setImplicitMul(true);
+		mj.addComplex();
+		mj.addStandardConstants();
+		mj.addStandardFunctions();
+		mj.addStandardDiffRules();
+		mrpe = new MRpEval(mj);
 	}
 
 	@Override
