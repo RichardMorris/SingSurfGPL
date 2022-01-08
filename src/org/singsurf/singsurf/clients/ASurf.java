@@ -143,8 +143,8 @@ public class ASurf extends AbstractClient {
 		
 //		this.cbColour.setLabel("Colour by position");
 
-		colourMin = new Fractometer(-1.0);
-		colourMax = new Fractometer(1.0);
+		colourMin = new Fractometer(-5.0);
+		colourMax = new Fractometer(5.0);
 		this.chSurfColours.select("Colours from XYZ"); 
 		
 		this.cbShowFace.setState(true);

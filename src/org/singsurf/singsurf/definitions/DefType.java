@@ -75,7 +75,7 @@ public class DefType
 	public static final DefType genColour = new DefType("genColour",3,3);
 	public static final DefType genColourImp = new DefType("genColourImplicit",3,3);
 
-	public static final DefType extrude = new DefType("extrude",2,3);
+	public static final DefType extrude = new DefType("extrude",4,3);
 	public static final DefType genExtrude = new DefType("genExtrude",2,3);
 	public static final DefType p3 = new DefType("p3",2,3);
 	public static final DefType globals = new DefType("globals");

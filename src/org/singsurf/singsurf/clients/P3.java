@@ -97,7 +97,7 @@ public class P3 extends AbstractClient {
 	private double x0;
 	private double y0;
 	private double z0;
-	private double w0;
+	private double w0 = 1.0;
 
 	Split4D splitter = new Split4D();
 	
