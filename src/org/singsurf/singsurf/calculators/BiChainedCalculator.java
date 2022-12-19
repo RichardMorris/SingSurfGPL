@@ -124,11 +124,11 @@ public class BiChainedCalculator extends Calculator {
     // private Calculator getIngredient() { throw new RuntimeException("Fail");
     // }
 
-    public Calculator getIngredient1() {
+    public Calculator getFirstIngredient() {
         return ingredient1;
     }
 
-    public Calculator getIngredient2() {
+    public Calculator getSecondIngredient() {
         return ingredient2;
     }
 
@@ -189,12 +189,12 @@ public class BiChainedCalculator extends Calculator {
         }
     }
 
-    public void setIngredient1(Calculator ingredient) {
+    public void setFirstIngredient(Calculator ingredient) {
         this.ingredient1 = ingredient;
         build();
     }
 
-    public void setIngredient2(Calculator ingredient) {
+    public void setSecondIngredient(Calculator ingredient) {
         this.ingredient2 = ingredient;
         build();
     }

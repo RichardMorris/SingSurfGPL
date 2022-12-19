@@ -21,7 +21,6 @@ public class GeomPair {
 	 * @param output
 	 */
 	public GeomPair(PgGeometryIf input, PgGeometryIf output) {
-		// TODO Auto-generated constructor stub
 		this.input = input;
 		this.output = output;
 	}

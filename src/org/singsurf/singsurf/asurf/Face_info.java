@@ -15,16 +15,20 @@ import org.junit.Test;
 public class Face_info {
 	/*** Some definitions to assist in making edges on faces ***/
 
+	public enum Type { X_LOW, X_HIGH, Y_LOW, Y_HIGH, MID_FACE  }
+	
+	/*
 	public static final int X_LOW =1;
 	public static final int  X_HIGH=2;
 	public static final int  Y_LOW=3;
 	public static final int  Y_HIGH=4;
 	public static final int  MID_FACE=5;
+
 	public static final int  X_LOW_Y_LOW=6;
 	public static final int  X_LOW_Y_HIGH=7;
-	public static final int  X_HIGH_Y_LOW=8;
-	
+	public static final int  X_HIGH_Y_LOW=8;	
 	public static final int  X_HIGH_Y_HIGH=9;
+*/
 	private static final boolean PRINT_INCLUDE_LINK = false;
 	private static final boolean PRINT_INCLUDE_NODE_LINK = false;
     private static final boolean RAW_LINKS = true;
@@ -62,6 +66,10 @@ public class Face_info {
 	 * Function:	make_sub_faces
 	 * action:	creates the four sub faces of a face
 	 */
+
+	public Face_info(Face_info face) {
+		this(face.type,face.xl,face.yl,face.zl,face.denom);
+	}
 
 	public Face_info[] make_sub_faces()
 	{
@@ -111,7 +119,7 @@ public class Face_info {
      *		about the edge on the face refered to by code.
      */
 
-    Edge_info make_face_edge(int code)
+    public Edge_info make_face_edge(Type code)
     {
     	switch(type)
     	{

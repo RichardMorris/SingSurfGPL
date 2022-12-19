@@ -50,7 +50,7 @@ public class Box_info {
      * 'type' of 'box'.
      */
 
-    Face_info make_box_face(Key3D type1) {
+    public Face_info make_box_face(Key3D type1) {
 	switch (type1) {
 	case FACE_LL:
 	    return new Face_info(Key3D.FACE_LL, this.xl, this.yl, this.zl, this.denom);
@@ -894,6 +894,58 @@ public class Box_info {
 
 	public Face_info[] facesAsArray() {
 		return new Face_info[] { ll, rr, ff, bb, dd, uu };
+	}
+
+	public Edge_info make_box_edge(Key3D key) {
+
+//	    return new Face_info(Key3D.FACE_DD, this.xl, this.yl, this.zl, this.denom);
+
+		switch(key) {
+		case EDGE_LD: {
+			return new Edge_info(Key3D.Y_AXIS,  this.xl, this.yl, this.zl, this.denom);
+		}
+		case EDGE_LU: {
+			return new Edge_info(Key3D.Y_AXIS,  this.xl, this.yl, this.zl+1, this.denom);
+		}
+		case EDGE_RD: {
+			return new Edge_info(Key3D.Y_AXIS,  this.xl+1, this.yl, this.zl, this.denom);
+		}
+		case EDGE_RU: {
+			return new Edge_info(Key3D.Y_AXIS,  this.xl+1, this.yl, this.zl+1, this.denom);
+		}
+		
+		
+		
+		case EDGE_FD: {
+			return new Edge_info(Key3D.X_AXIS,  this.xl, this.yl, this.zl, this.denom);
+		}
+		case EDGE_FU: {
+			return new Edge_info(Key3D.X_AXIS,  this.xl, this.yl, this.zl+1, this.denom);
+		}
+		case EDGE_BD: {
+			return new Edge_info(Key3D.X_AXIS,  this.xl, this.yl+1, this.zl, this.denom);
+		}
+		case EDGE_BU: {
+			return new Edge_info(Key3D.X_AXIS,  this.xl, this.yl+1, this.zl+1, this.denom);
+		}
+
+		case EDGE_LF: {
+			return new Edge_info(Key3D.Z_AXIS,  this.xl, this.yl, this.zl, this.denom);
+		}
+		case EDGE_LB: {
+			return new Edge_info(Key3D.Z_AXIS,  this.xl, this.yl+1, this.zl, this.denom);
+		}
+		case EDGE_RF: {
+			return new Edge_info(Key3D.Z_AXIS,  this.xl+1, this.yl, this.zl, this.denom);
+		}
+		case EDGE_RB: {
+			return new Edge_info(Key3D.Z_AXIS,  this.xl+1, this.yl+1, this.zl, this.denom);
+		}
+		
+		default:
+		    BoxClevA.log.printf("bad type %d in make_bern1d_of_box\n", key);
+		    throw new IllegalArgumentException("Make_bern2D_of_box" +key.toString());
+		}
 	}
 
 

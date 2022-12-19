@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import org.singsurf.singsurf.clients.AbstractClient;
+import org.singsurf.singsurf.clients.AbstractProject;
 import org.singsurf.singsurf.geometries.GeomStore;
 
 import jv.object.PsConfig;
@@ -111,7 +111,7 @@ abstract public class PaSingSurf extends JPanel {
 		disp.setSize(325, 550);
 
 		m_viewer.getDisplay().setEnabled3DLook(true);
-		store = new GeomStore(m_viewer);
+		store = new GeomStore(m_viewer,this);
 		m_viewer.getDisplay().showFrame(true);
 		disp.validate();
 		if (PRINT_DEBUG)
@@ -159,12 +159,12 @@ abstract public class PaSingSurf extends JPanel {
 
 	public void loadDefinitionByName(String name) {
 		System.out.println("loadModel " + name);
-		AbstractClient myProj = (AbstractClient) m_viewer.getCurrentProject();
+		AbstractProject myProj = (AbstractProject) m_viewer.getCurrentProject();
 		myProj.loadDefByName(name);
 	}
 
-	public AbstractClient getProject(String name) {
-		return (AbstractClient) m_viewer.getProject(name);
+	public AbstractProject getProject(String name) {
+		return (AbstractProject) m_viewer.getProject(name);
 	}
 
 	/**

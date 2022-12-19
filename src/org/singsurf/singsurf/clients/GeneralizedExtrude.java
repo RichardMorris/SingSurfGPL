@@ -53,15 +53,15 @@ public class GeneralizedExtrude extends Extrude implements GeneralisedOperator {
 	}
 
 
-	AbstractClient ingredient;
+	AbstractProject ingredient;
 
 	@Override
-	public AbstractClient getIngredient() {
+	public AbstractProject getIngredient() {
 		return ingredient;
 	}
 
 	@Override
-	public void setIngredient(AbstractClient ingr) {
+	public void setIngredient(AbstractProject ingr) {
 		ingredient = ingr;
 
 		((ProductCalculator) calc).setIngredient(ingr.getCalculator());
@@ -85,13 +85,13 @@ public class GeneralizedExtrude extends Extrude implements GeneralisedOperator {
 		super.geometryHasChanged(geomName);
 		if (!calc.isGood())
 			return;
-		if (goodIngredient() && getIngridientName().equals(geomName)) {
+		if (goodIngredient() && getIngredientName().equals(geomName)) {
 			this.calcGeoms();
 		}
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 		if (goodIngredient() && ((ProductCalculator) calc).getIngredient() == inCalc)
 			this.setIngredient(client);
 	}
@@ -115,11 +115,11 @@ public class GeneralizedExtrude extends Extrude implements GeneralisedOperator {
 	@Override
 	public String getPreferredOutputName(String name) {
 
-		return getName() + "(" + getIngridientName() + "," + name + ")";
+		return getName() + "(" + getIngredientName() + "," + name + ")";
 	}
 
 	@Override
-	public String getIngridientName() {
+	public String getIngredientName() {
 		if (calc != null) {
 			ProductCalculator cc = (ProductCalculator) calc;
 			if (cc != null) {
@@ -144,13 +144,13 @@ public class GeneralizedExtrude extends Extrude implements GeneralisedOperator {
 	}
 
 	@Override
-	public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+	public void loadProjectComponents(ProjectComponents comp) {
 		if (comp.getIngredients().size() >= 1) {
 			String name = comp.getIngredients().get(0);
-			this.setIngredient(ss.getProject(name));
+			this.setIngredient(store.getProject(name));
 			this.ch_ingredient.select(name);
 		}
-		super.loadProjectComponents(comp, ss);
+		super.loadProjectComponents(comp);
 	}
 
 }

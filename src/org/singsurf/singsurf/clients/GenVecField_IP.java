@@ -65,7 +65,7 @@ public class GenVecField_IP extends SingSurf_IP {
 	
 	protected PsPanel getInputsPanel() {
 		PsPanel p1 = new PsPanel();
-		Component comp = ((AbstractOperatorClient) project).activeInputNames;
+		Component comp = ((AbstractOperatorProject) project).activeInputNames;
 		p1.add(comp);
 		p1.add(new Label("With selected:"));
 //		p1.add(project.cbShowFace);
@@ -79,9 +79,9 @@ public class GenVecField_IP extends SingSurf_IP {
 		p1.addLabelComponent("Show vectors",vfparent.cbShowVect);
 
 		
-		p1.add(((AbstractOperatorClient) project).removeInputButton);
-		p1.add(((AbstractOperatorClient) project).removeInputGeomButton);
-		p1.add(((AbstractOperatorClient) project).removeInputDepButton);
+		p1.add(((AbstractOperatorProject) project).removeInputButton);
+		p1.add(((AbstractOperatorProject) project).removeInputGeomButton);
+		p1.add(((AbstractOperatorProject) project).removeInputDepButton);
 		
 		return p1;
 	}

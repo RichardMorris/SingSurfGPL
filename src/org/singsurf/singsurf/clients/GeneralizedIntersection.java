@@ -116,17 +116,17 @@ public class GeneralizedIntersection extends Intersection implements Generalised
 
     }
 
-    AbstractClient ingredient;
+    AbstractProject ingredient;
 
 	private Calculator inCalc;
 
     @Override
-    public AbstractClient getIngredient() {
+    public AbstractProject getIngredient() {
 	return ingredient;
     }
 
     @Override
-    public void setIngredient(AbstractClient ingr) {
+    public void setIngredient(AbstractProject ingr) {
 	ingredient = ingr;
 
 	inCalc = ingr.getCalculator();
@@ -179,7 +179,7 @@ public class GeneralizedIntersection extends Intersection implements Generalised
     }
 
     @Override
-    public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+    public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 	if (goodIngredient() && ((ChainedCalculator) calc).getIngredient() == inCalc)
 	    this.setIngredient(client);
     }
@@ -197,8 +197,7 @@ public class GeneralizedIntersection extends Intersection implements Generalised
 
     @Override
     public String getPreferredOutputName(String name) {
-	return getName() + "(" + this.getIngridientName() + "," + name
-		+ ")";
+	return getName() + "(" + this.getIngredientName() + "," + name + ")";
     }
 
     @Override
@@ -214,17 +213,18 @@ public class GeneralizedIntersection extends Intersection implements Generalised
     }
 
     @Override
-    public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+    public void loadProjectComponents(ProjectComponents comp) {
 	if (comp.getIngredients().size() >= 1) {
 	    String name = comp.getIngredients().get(0);
-	    this.setIngredient(ss.getProject(name));
+	    this.setIngredient(store.getProject(name));
+
 	    this.ch_ingredient.select(name);
 	}
-	super.loadProjectComponents(comp, ss);
+	super.loadProjectComponents(comp);
     }
 
     @Override
-    public String getIngridientName() {
+    public String getIngredientName() {
 	if(calc!=null) {
 	    ChainedCalculator cc = (ChainedCalculator) calc;
 	    if(cc!=null) { 

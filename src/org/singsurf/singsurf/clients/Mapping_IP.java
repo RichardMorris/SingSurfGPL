@@ -39,7 +39,7 @@ public class Mapping_IP extends SingSurf_IP {
 	protected PsPanel getSouthPanel() {
 		PsPanel south = super.getSouthPanel();
 		south.addSubTitle("New Input Geometry");
-		south.add(((AbstractOperatorClient) project).ch_inputSurf);
+		south.add(((AbstractOperatorProject) project).ch_inputSurf);
 		return south;
 	}
 

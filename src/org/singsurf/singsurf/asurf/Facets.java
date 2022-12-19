@@ -1141,10 +1141,10 @@ public class Facets {
 					for(Facet_info f2:res)
 						li.add(f2);
 					fhnAgain=true;
-					break;
+				} else {
+					cleanFacets.add(f1);
+					li.remove();
 				}
-				cleanFacets.add(f1);
-				li.remove();
 			} /* end loop through facets */
 		}
 		return cleanFacets;
@@ -1207,7 +1207,6 @@ public class Facets {
 	}
 
 	/**
-	 * @param flag
 	 * @param f1
 	 * @return
 	 */
@@ -2431,18 +2430,15 @@ public class Facets {
 		make_chains(box);
 
 		if(box.chains!=null ) {
-		ListIterator<Chain_info> li=box.chains.listIterator();
-		while(li.hasNext())
-		{
-			Chain_info chain1 = li.next();
-			if(!chain1.has_coherent_signs()) {
-				if(failCountO++==0) {
-					BoxClevA.log.println("Chain with sign conflict");
-					BoxClevA.log.println(chain1);
+			for(Chain_info chain1 :box.chains )
+			{
+				if(!chain1.has_coherent_signs()) {
+					if(failCountO++==0) {
+						BoxClevA.log.println("Chain with sign conflict");
+						BoxClevA.log.println(chain1);
+					}
 				}
-			}
-			
-		}		
+			}		
 		}
 		if(PRINT_DRAW_BOX){
 			BoxClevA.log.printf("\nmake_facets_leaf: box (%d,%d,%d)/%d\n",

@@ -3,34 +3,34 @@
 */
 package org.singsurf.singsurf;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.SortedSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.singsurf.singsurf.calculators.Calculator;
-import org.singsurf.singsurf.clients.AbstractClient;
+import org.singsurf.singsurf.clients.AbstractProject;
+import org.singsurf.singsurf.geometries.GeomListener;
 import org.singsurf.singsurf.geometries.GeomStore;
-import org.singsurf.singsurf.geometries.SSGeomListener;
 
 import jv.project.PgGeometryIf;
 import jv.viewer.PvViewer;
 
-public class ProjectChooserModel  implements SSGeomListener {
-    List<AbstractClient> projects = new ArrayList<AbstractClient>();
-    List<ListItem> items = new ArrayList<ListItem>();
+public class ProjectChooserModel  implements GeomListener {
+    List<AbstractProject> projects = new CopyOnWriteArrayList<AbstractProject>();
+    List<ListItem> items = new CopyOnWriteArrayList<ListItem>();
 
     ProjectChooserView view;
 	PvViewer m_viewer;
 
     
     class ListItem {
-    	AbstractClient project;
+    	AbstractProject project;
     	PgGeometryIf geom;
-		public ListItem(AbstractClient project, PgGeometryIf geom) {
+		public ListItem(AbstractProject project, PgGeometryIf geom) {
 			super();
 			this.project = project;
 			this.geom = geom;
@@ -55,7 +55,7 @@ public class ProjectChooserModel  implements SSGeomListener {
     public void rebuild() {
 //    	System.out.println("Model.rebuild ");
     	items.clear();
-    	for(AbstractClient project:projects) {
+    	for(AbstractProject project:projects) {
     		if(project==null)
     			continue;
 //        	System.out.println("Project "+project.getName());
@@ -71,21 +71,21 @@ public class ProjectChooserModel  implements SSGeomListener {
     		view.rebuild();
     }
 
-    public void addProject(AbstractClient project) {
+    public void addProject(AbstractProject project) {
         projects.add(project);
         rebuild();
     }
 
-    public void removeProject(AbstractClient project) {
+    public void removeProject(AbstractProject project) {
         projects.remove(project);
         rebuild();
     }
     
-    public AbstractClient getProject(int i) {
+    public AbstractProject getProject(int i) {
         return projects.get(i);
     }
 
-    public List<AbstractClient> getProjects() {
+    public List<AbstractProject> getProjects() {
         return projects;
     }
  
@@ -110,11 +110,11 @@ public class ProjectChooserModel  implements SSGeomListener {
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 	} 
 	
 	boolean containsProjectName(String name) {
-		for(AbstractClient proj : projects) {
+		for(AbstractProject proj : projects) {
 			if(proj!=null && proj.getName().equals(name))
 				return true;
 		}
@@ -155,8 +155,8 @@ public class ProjectChooserModel  implements SSGeomListener {
 		return getCloneName(shortName);
 	}
 
-	public AbstractClient getProject(String name) {
-		for(AbstractClient ele:projects) {
+	public AbstractProject getProject(String name) {
+		for(AbstractProject ele:projects) {
 			if(ele.getName().equals(name))
 				return ele;
 		}

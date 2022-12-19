@@ -35,7 +35,7 @@ import jv.project.PgGeometryIf;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class Clip extends AbstractOperatorClient {
+public class Clip extends AbstractOperatorProject {
 	private static final long serialVersionUID = 1L;
 
 	/** The name for the program */
@@ -221,12 +221,7 @@ public class Clip extends AbstractOperatorClient {
 		}
 		PgGeometryIf input = store.getGeom(name);
 		PgGeometryIf output = null;
-		if (input instanceof PgElementSet)
-			output = store.aquireSurface(getPreferredOutputName(name), this);
-		else if (input instanceof PgPolygonSet)
-			output = store.aquireCurve(getPreferredOutputName(name), this);
-		else if (input instanceof PgPointSet)
-			output = store.aquirePoints(getPreferredOutputName(name), this);
+		output = store.acquireGeometry(getPreferredOutputName(name), input, this);
 		GeomPair p = new GeomPair(input, output);
 		this.setCheckboxesFromGeomety(p.getOutput());
 		setDisplayProperties(p.getOutput());
@@ -266,7 +261,7 @@ public class Clip extends AbstractOperatorClient {
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 		// TODO
 	}
 

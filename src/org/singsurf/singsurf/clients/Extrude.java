@@ -37,7 +37,7 @@ import jv.project.PgGeometryIf;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class Extrude extends AbstractOperatorClient {
+public class Extrude extends AbstractOperatorProject {
 	/** 
 	 * 
 	 */
@@ -265,19 +265,18 @@ public class Extrude extends AbstractOperatorClient {
 		PgGeometryIf output = null;
 		if(this.cbAsLineBundle.getState()) {
 		if (input instanceof PgElementSet)
-			output = store.aquireSurface(getPreferredOutputName(name), this);
+			output = store.acquireSurface(getPreferredOutputName(name), this);
 		else if (input instanceof PgPolygonSet)
-			output = store.aquireCurve(getPreferredOutputName(name), this);
+			output = store.acquireCurve(getPreferredOutputName(name), this);
 		else if (input instanceof PgPointSet)
-			output = store.aquireCurve(getPreferredOutputName(name), this);
+			output = store.acquireCurve(getPreferredOutputName(name), this);
 		} else {
 			if (input instanceof PgElementSet)
-				output = store.aquireSurface(getPreferredOutputName(name), this);
+				output = store.acquireSurface(getPreferredOutputName(name), this);
 			else if (input instanceof PgPolygonSet)
-				output = store.aquireSurface(getPreferredOutputName(name), this);
+				output = store.acquireSurface(getPreferredOutputName(name), this);
 			else if (input instanceof PgPointSet)
-				output = store.aquireCurve(getPreferredOutputName(name), this);
-			
+				output = store.acquireCurve(getPreferredOutputName(name), this);			
 		}
 		GeomPair p = new GeomPair(input, output);
 		this.setCheckboxesFromGeomety(p.getOutput());
@@ -329,7 +328,7 @@ public class Extrude extends AbstractOperatorClient {
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 	}
 
 	@Override

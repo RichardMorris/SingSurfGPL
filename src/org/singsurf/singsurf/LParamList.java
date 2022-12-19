@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.singsurf.singsurf.clients.AbstractClient;
+import org.singsurf.singsurf.clients.AbstractProject;
 import org.singsurf.singsurf.definitions.Parameter;
 
 import jv.object.PsPanel;
@@ -47,7 +47,7 @@ public class LParamList extends PsPanel implements ItemListener {
 	private static final long serialVersionUID = 1L;
 
 	private boolean changed;
-	AbstractClient parentClient;
+	AbstractProject parentClient;
 	List<PuParameter> v = new ArrayList<PuParameter>();
 	ScrollPane pane = new ScrollPane(ScrollPane.SCROLLBARS_AS_NEEDED);
 	PsPanel inner = new PsPanel();
@@ -56,7 +56,7 @@ public class LParamList extends PsPanel implements ItemListener {
 
 	private Label dpLbl;
 	
-	public LParamList(AbstractClient parent) {
+	public LParamList(AbstractProject parent) {
 //		System.out.println("LParamList "+parent.getName()+" changed"+changed);
 		this.parentClient = parent;
 		this.setFont(parent.basicFont);
@@ -122,14 +122,6 @@ public class LParamList extends PsPanel implements ItemListener {
 		changed = true;
 		return r;
 	}
-
-//	public PuParameter addParameter(Parameter p, double val) {
-//		PuParameter q = addParameter(p);
-//		if (q == null)
-//			return null;
-//		q.setVal(val);
-//		return q;
-//	}
 
 	public void reset() {
 		for (PuParameter p : v) {
@@ -197,6 +189,10 @@ public class LParamList extends PsPanel implements ItemListener {
 			}
 			parentClient.setDP(dp);
 		}
+	}
+
+	public void remove(PuParameter key) {
+		v.remove(key);
 	}
 
 }

@@ -14,16 +14,16 @@ public interface ClientFactory {
      * @param name Name of client
      * @param def definition of surface
      * @param store GeomStore object
-     * @return a new AbstractClient instance
+     * @return a new AbstractProject instance
      */
-    public AbstractClient newInstance(String name,Definition def,GeomStore store);
+    public AbstractProject newInstance(String name,Definition def,GeomStore store);
     
     /**
      * Create a new instance with no predefined def
      * @param name Name of client
      * @param defs list of definitions
      * @param store GeomStore object
-     * @return  a new AbstractClient instance
+     * @return  a new AbstractProject instance
      */
-    public AbstractClient newInstance(String name,List<Definition> defs,GeomStore store);
+    public AbstractProject newInstance(String name,List<Definition> defs,GeomStore store);
 }

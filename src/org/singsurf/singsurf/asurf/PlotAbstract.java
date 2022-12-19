@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class PlotAbstract implements Plotter {
@@ -144,30 +143,6 @@ public abstract class PlotAbstract implements Plotter {
             plot_facet(f1,box);
         }
     }
-
-	@SuppressWarnings("unused")
-	private int[] countSolType(Set<Sol_info> allSols) {
-        int res[] = new int[12];
-        for(Sol_info s:allSols) {
-            switch(s.type) {
-            case X_AXIS: ++res[0]; break;
-            case Y_AXIS: ++res[1]; break; 
-            case Z_AXIS: ++res[2]; break;
-            case FACE_BB: ++res[3]; break;
-            case FACE_DD: ++res[4]; break;
-            case FACE_FF: ++res[5]; break;
-            case FACE_LL: ++res[6]; break;
-            case FACE_RR: ++res[7]; break;
-            case FACE_UU: ++res[8]; break;
-            case BOX: ++res[9]; break;
-            case VERTEX: ++res[10]; break;
-            case NONE: ++res[11]; break;
-            }
-        }
-        return res;
-    }
-
-    
 
 	private void plot_facet(Facet_info f1, Box_info box) {
         Facet_sol s1;
@@ -579,7 +554,8 @@ public abstract class PlotAbstract implements Plotter {
         System.out.print(sol);
     }
 
-    void plot_point(Sol_info sol)
+    @Override
+	public void plot_point(Sol_info sol)
     {
 
         if(sol == null)
@@ -616,7 +592,8 @@ public abstract class PlotAbstract implements Plotter {
         return indexA;
     }
 
-	void plot_line(Sol_info sol1,Sol_info sol2)
+	@Override
+	public void plot_line(Sol_info sol1,Sol_info sol2)
     {
         if(PRINT_FACET) {
             System.out.printf("line: \n");

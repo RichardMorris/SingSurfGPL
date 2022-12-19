@@ -587,19 +587,19 @@ public class Topology {
 	{
 		if( face.x_low == null )
 		{
-			face.x_low = face.make_face_edge(Face_info.X_LOW);
+			face.x_low = face.make_face_edge(Face_info.Type.X_LOW);
 		}
 		if( face.x_high == null )
 		{
-			face.x_high = face.make_face_edge(Face_info.X_HIGH);
+			face.x_high = face.make_face_edge(Face_info.Type.X_HIGH);
 		}
 		if( face.y_low == null )
 		{
-			face.y_low = face.make_face_edge(Face_info.Y_LOW);
+			face.y_low = face.make_face_edge(Face_info.Type.Y_LOW);
 		}
 		if( face.y_high == null )
 		{
-			face.y_high = face.make_face_edge(Face_info.Y_HIGH);
+			face.y_high = face.make_face_edge(Face_info.Type.Y_HIGH);
 		}
 	}
 
@@ -645,16 +645,16 @@ public class Topology {
 		/*** Now create the internal edges ***/
 
 		face1.x_high = face2.x_low = 
-			 face1.make_face_edge(Face_info.X_HIGH);
+			 face1.make_face_edge(Face_info.Type.X_HIGH);
 
 		face3.x_high = face4.x_low = 
-			 face3.make_face_edge(Face_info.X_HIGH);
+			 face3.make_face_edge(Face_info.Type.X_HIGH);
 
 		face1.y_high = face3.y_low = 
-			 face1.make_face_edge(Face_info.Y_HIGH);
+			 face1.make_face_edge(Face_info.Type.Y_HIGH);
 
 		face2.y_high = face4.y_low = 
-			 face2.make_face_edge(Face_info.Y_HIGH);
+			 face2.make_face_edge(Face_info.Type.Y_HIGH);
 	}
 
 	/**

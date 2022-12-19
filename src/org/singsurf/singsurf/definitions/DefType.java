@@ -78,7 +78,9 @@ public class DefType
 	public static final DefType extrude = new DefType("extrude",4,3);
 	public static final DefType genExtrude = new DefType("genExtrude",2,3);
 	public static final DefType p3 = new DefType("p3",2,3);
-	public static final DefType globals = new DefType("globals");
+	//public static final DefType dual = new DefType("dual");
+	
+	public static final DefType globals = new DefType("globals",0,0);
 
 	public static final DefType volcalc = new DefType("volcalc",3,3);
 

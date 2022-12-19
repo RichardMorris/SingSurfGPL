@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class DefinitionReader {
 			br = new BufferedReader(new InputStreamReader(in));
 		} else {
 			FileInputStream f = new FileInputStream(filename);
-			br = new BufferedReader(new InputStreamReader(f,Charset.forName("UTF-8")));
+			br = new BufferedReader(new InputStreamReader(f, StandardCharsets.UTF_8));
 		}
 	}
 
@@ -53,9 +53,9 @@ public class DefinitionReader {
 	}
 
 	public static Definition findDefByName(Definition[] defs, String name) {
-		for (int i = 0; i < defs.length; ++i)
-			if (defs[i].getName().equals(name))
-				return defs[i];
+		for (Definition def : defs)
+			if (def.getName().equals(name))
+				return def;
 		return null;
 	}
 
@@ -69,6 +69,7 @@ public class DefinitionReader {
 	List<ProjectComponents> projComp = new ArrayList<>();
 	ProjectComponents curProjComp;
 	private TreeNode root;
+	VisibleGeometries visGeom=null;
 	
 	public static class TreeNode {
 		private List<TreeNode> children = new ArrayList<>();
@@ -99,12 +100,15 @@ public class DefinitionReader {
 		return projComp;
 	}
 
+	enum ReadStates { BASE, DEF, PROJCOMP, INPUT, VISGEOM, DISP };
+
 	public void read() {
+		
 		root = new TreeNode(null,"All");
 		TreeNode current=getRoot();
 		String line;
-		StringBuffer buf = null;
-		int state = 0;
+		StringBuilder buf = null;
+		ReadStates state = ReadStates.BASE;
 		String lname = null;
 		String ltype = null;
 		String lopType = null;
@@ -114,48 +118,54 @@ public class DefinitionReader {
 		curProjComp = null;
 		projComp.clear();
 		String inputName = "";
+		String displayName = "";
+		int lineNo = 0;
 		try {
 			while ((line = br.readLine()) != null) {
 				String trim = line.trim();
+				++lineNo;
 				try {
 					switch (state) {
-					case 0: /* not in a definition */
+					case BASE: /* not in a definition */
 						if (trim.startsWith("<definition ")) {
 							lname = getAttribute(trim, "name");
 							ltype = getAttribute(trim, "type");
 							lopType = getAttribute(trim, "opType");
-							buf = new StringBuffer();
+							buf = new StringBuilder();
 							vars = new ArrayList<DefVariable>();
 							params = new ArrayList<Parameter>();
 							opts = new ArrayList<Option>();
-							state = 1;
+							state = ReadStates.DEF;
 						} else if (trim.startsWith("<projectComponents")) {
 							lname = getAttribute(trim, "name");
 							curProjComp = new ProjectComponents(lname);
-							state = 2;
+							state = ReadStates.PROJCOMP;
+						} else if (trim.startsWith("<visibleGeometries")) {
+							visGeom = new VisibleGeometries();
+							state = ReadStates.VISGEOM;
 						} else if (trim.startsWith("<group")) {
 							lname = getAttribute(trim, "name");
 							TreeNode node = new TreeNode(current,lname);
 							current.getChildren().add(node);
 							current = node;
-							state = 0;
 						} else if (trim.startsWith("</group")) {
 							current = current.parent;
-							state = 0;
 						} else if (trim.startsWith("<definitions>")) {
 						} else if (trim.startsWith("</definitions>")) {
 						} else if (trim.startsWith("<dependancies>")) {
 						} else if (trim.startsWith("</dependancies>")) {
+						} else if (trim.startsWith("<dependencies>")) {
+						} else if (trim.startsWith("</dependencies>")) {
 						} else if (trim.startsWith("<")) {
-							PsDebug.error("LsmpDefs.readDef bad tag '" + trim + "'");
+							PsDebug.error("LsmpDefs.readDef bad tag '" + trim + "' line no: " + lineNo);
 						}
 						break;
-					case 1: /* Inside a definition */
+					case DEF: /* Inside a definition */
 						if ("</definition>".equals(trim)) {
 							Definition def = new Definition(lname, ltype, buf.toString(), lopType, vars, params, opts);
 							defs.add(def);
 							current.defs.add(def);
-							state = 0;
+							state = ReadStates.BASE;
 						} else if (trim.startsWith("<variable")) {
 							vars.add(DefVariable.parseTag(trim));
 						} else if (trim.startsWith("<parameter")) {
@@ -163,15 +173,15 @@ public class DefinitionReader {
 						} else if (trim.startsWith("<option")) {
 							opts.add(new Option(trim));
 						} else if (trim.startsWith("<")) {
-							PsDebug.error("LsmpDefs.readDef bad tag '" + trim + "'");
+							PsDebug.error("LsmpDefs.readDef bad tag '" + trim + "' line: " + lineNo);
 						} else // not a tag must be normal line
-							buf.append(line + "\n");
+							buf.append(line).append("\n");
 						break;
-					case 2:
+					case PROJCOMP:
 						if (trim.startsWith("</projectComponents>")) {
 							projComp.add(curProjComp);
 							curProjComp = null;
-							state = 0;
+							state = ReadStates.BASE;
 						} else if (trim.startsWith("<input")) {
 							inputName = getAttribute(trim, "name");
 							curProjComp.addInput(inputName);
@@ -179,7 +189,7 @@ public class DefinitionReader {
 							if(trim.endsWith("/>")) {
 								
 							} else if(trim.endsWith(">")) {
-								state = 3;
+								state = ReadStates.INPUT;
 							} else {
 								System.out.println("Bad input tag " + trim);
 							}
@@ -188,9 +198,9 @@ public class DefinitionReader {
 							curProjComp.addIngredient(ingrName);
 						}
 						break;
-					case 3:
+					case INPUT:
 						if (trim.startsWith("</input>")) {
-							state = 2;
+							state = ReadStates.PROJCOMP;
 						} else if (trim.startsWith("<inputOpt")) {
 							String optName = getAttribute(trim, "name");
 							String optValue = getAttribute(trim, "value");
@@ -198,10 +208,42 @@ public class DefinitionReader {
 						}
 						
 						break;
+						
+						
+					case VISGEOM:
+						if (trim.startsWith("</visibleGeometries>")) {
+							state = ReadStates.BASE;
+						} else if (trim.startsWith("<display")) {
+							displayName = getAttribute(trim, "name");
+							visGeom.addDisplay(displayName);
+							
+							if(trim.endsWith("/>")) {
+								
+							} else if(trim.endsWith(">")) {
+								state = ReadStates.DISP;
+							} else {
+								System.out.println("Bad input tag " + trim);
+							}
+						}
+						break;
+
+					case DISP:
+						if (trim.startsWith("</display>")) {
+							state = ReadStates.VISGEOM;
+						} else if (trim.startsWith("<visgeom")) {
+							final String optName = getAttribute(trim, "name");
+							final String optValue = getAttribute(trim, "visible");
+							final boolean bool = Boolean.parseBoolean(optValue);
+							visGeom.addGeom(displayName, optName, bool);
+						}
+						
+						break;
+						
+
 					}
 				} catch (ParseException e) {
 					PsDebug.error("LsmpDefs.readDef line '" + trim + "' " + e.getMessage());
-					state = 0;
+					state = ReadStates.BASE;
 				}
 			}
 		} catch (IOException e) {
@@ -240,6 +282,10 @@ public class DefinitionReader {
 
 	public TreeNode getRoot() {
 		return root;
+	}
+
+	public VisibleGeometries getVisGeom() {
+		return visGeom;
 	}
 
 } // end if class

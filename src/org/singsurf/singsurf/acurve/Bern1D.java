@@ -149,8 +149,7 @@ public class Bern1D {
 
 		   for(level=1;level<=xord;level++)
 		      for(col=level;col<= 2*xord -level;col+=2)
-		            pyramid[col] = 0.5 * ( pyramid[col-1] +
-		                pyramid[col+1] );
+		            pyramid[col] = 0.5 * ( pyramid[col-1] +  pyramid[col+1] );
 
 		   for(col=0;col<=xord;col++)
 		      {
@@ -174,8 +173,8 @@ public class Bern1D {
 
 	/**************************************************************/
 	/*                                                            */
-	/*     input 'aa'   an array such that aa(i,j,k) is coeff of  */
-	/*                  x^i y^j z^k                               */
+	/*     input 'aa'   an array such that aa(i) is coeff of      */
+	/*                  x^i                                       */
 	/*                                                            */
 	/**************************************************************/
 
@@ -325,4 +324,48 @@ public class Bern1D {
 	public static final PosBern1D posBern1D = new PosBern1D();
 	public static final NegBern1D negBern1D = new NegBern1D();
 	public static final ZeroBern1D zeroBern1D = new ZeroBern1D();
+	
+	/**
+	 * Elevate the polynomial to an equivalent one one degree higher.
+	 * If our polynomial is 
+	 * {@code b0 (1-x)^n + b1 (1-x)^(n-1) x + ... bn x^n}
+	 * then the polynomial 
+	 * {@code b0 (1-x)^(n+1) + (b0+b1) (1-x)^n x + ... bn x^n}
+	 * evaluates to the same value.
+	 * The class represent polynomials of the form 
+	 * {@code b0 (1-x)^n + nC1 (1-x)^(n-1) x + ...}
+	 * So we need suitable re-scaling of coefficients.
+	 * @see org.singsurf.singsurf.test.RaiseBernTest
+	 * 
+	 * @return a Bernstein polynomial which will evaluate to the same values
+	 */
+	public Bern1D elevate() {
+		double co[] = new double[xord+1];
+		for(int i=0;i<=xord;++i) {
+			co[i] = this.coeff[i] * Binomial.binom(xord,i);
+		}
+		Bern1D res = new Bern1D(this.xord+1);
+		res.coeff[0] = this.coeff[0];
+		res.coeff[xord+1] = this.coeff[xord];
+		for(int i=1;i<=this.xord;++i)
+			res.coeff[i]= (co[i]+co[i-1])/Binomial.binom(xord+1, i);
+		return res;
+	}
+	
+	/**
+	 * Elevate a polynomial to an equivalent specified degree
+	 * @param deg degree of result
+	 * @return polynomial of degree deg, 
+	 * @throws AsurfException if the requested degree is lower than this one
+	 */
+	public Bern1D elevateTo(int deg) throws AsurfException {
+		if(deg < xord) throw new AsurfException("raiseTo deg "+deg+" < xord "+xord);
+		if(this.xord == deg) return this;
+		Bern1D raised = this;
+		do {
+			raised = raised.elevate();
+		} while(raised.xord < deg);
+		return raised;
+	}
+	
 }

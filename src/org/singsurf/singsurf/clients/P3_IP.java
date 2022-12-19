@@ -8,16 +8,39 @@ import java.awt.Panel;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JTextField;
 
 import org.singsurf.singsurf.WrapLayout;
 
 import jv.object.PsPanel;
 import jv.object.PsUpdateIf;
+import jv.vecmath.PdMatrix;
 
 public class P3_IP extends SingSurf_IP {
 	private static final long serialVersionUID = 1L;
 
 	private P3 p3;
+
+	private JTextField rxx = new JTextField();
+	private JTextField rxy = new JTextField();
+	private JTextField rxz = new JTextField();
+	private JTextField rxw = new JTextField();
+
+	private JTextField ryx = new JTextField();
+	private JTextField ryy = new JTextField();
+	private JTextField ryz = new JTextField();
+	private JTextField ryw = new JTextField();
+
+	private JTextField rzx = new JTextField();
+	private JTextField rzy = new JTextField();
+	private JTextField rzz = new JTextField();
+	private JTextField rzw = new JTextField();
+
+	private JTextField rwx = new JTextField();
+	private JTextField rwy = new JTextField();
+	private JTextField rwz = new JTextField();
+	private JTextField rww = new JTextField();
+
 	public P3_IP() {
 		super(false);
 		if (getClass() == P3_IP.class)
@@ -130,7 +153,60 @@ public class P3_IP extends SingSurf_IP {
 
 	@Override
 	protected PsPanel getDomainPanel() {
-		return null;
+		
+		PsPanel p4 = new PsPanel();
+		p4.setLayout(new BoxLayout(p4,BoxLayout.Y_AXIS));
+
+		p4.add(new Label("Rotation Matrix:"));
+
+		PsPanel p4b = new PsPanel(new GridLayout(4, 4));
+		p4b.add(rxx);
+		p4b.add(rxy);
+		p4b.add(rxz);
+		p4b.add(rxw);
+
+		p4b.add(ryx);
+		p4b.add(ryy);
+		p4b.add(ryz);
+		p4b.add(ryw);
+
+		p4b.add(rzx);
+		p4b.add(rzy);
+		p4b.add(rzz);
+		p4b.add(rzw);
+
+		p4b.add(rwx);
+		p4b.add(rwy);
+		p4b.add(rwz);
+		p4b.add(rww);
+
+		p4.add(p4b);
+		p4.add(p3.BloadMatrix);
+		p4.add(p3.BsaveMatrix);
+		return p4;
+	}
+
+	public void updateRotMatDisp(PdMatrix mat) {
+		rxx.setText(String.format("%6.3f",mat.getEntry(0, 0)));
+		rxy.setText(String.format("%6.3f",mat.getEntry(0, 1)));
+		rxz.setText(String.format("%6.3f",mat.getEntry(0, 2)));
+		rxw.setText(String.format("%6.3f",mat.getEntry(0, 3)));
+		
+		ryx.setText(String.format("%6.3f",mat.getEntry(1, 0)));
+		ryy.setText(String.format("%6.3f",mat.getEntry(1, 1)));
+		ryz.setText(String.format("%6.3f",mat.getEntry(1, 2)));
+		ryw.setText(String.format("%6.3f",mat.getEntry(1, 3)));
+		
+		rzx.setText(String.format("%6.3f",mat.getEntry(2, 0)));
+		rzy.setText(String.format("%6.3f",mat.getEntry(2, 1)));
+		rzz.setText(String.format("%6.3f",mat.getEntry(2, 2)));
+		rzw.setText(String.format("%6.3f",mat.getEntry(2, 3)));
+		
+		rwx.setText(String.format("%6.3f",mat.getEntry(3, 0)));
+		rwy.setText(String.format("%6.3f",mat.getEntry(3, 1)));
+		rwz.setText(String.format("%6.3f",mat.getEntry(3, 2)));
+		rww.setText(String.format("%6.3f",mat.getEntry(3, 3)));
+		
 	}
 
 

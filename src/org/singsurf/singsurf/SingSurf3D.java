@@ -55,7 +55,7 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 	Choice appletNewProj = new Choice();
 	Choice appletSelProj = new Choice();
 
-	private ProjectChooserModel model;
+	//private ProjectChooserModel model;
 
 	private ProjectChooserController controller;
 
@@ -94,7 +94,7 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 	}
 
 	private void setUpMVC() {
-		model = new ProjectChooserModel(store, this.m_viewer);
+		ProjectChooserModel model = new ProjectChooserModel(store, this.m_viewer);
 		controller = new ProjectChooserController(this, this.m_viewer, model);
 		ProjectChooserView view = new ProjectChooserView(controller, model);
 		view.setMinimumSize(new Dimension(100,800));
@@ -165,6 +165,40 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 			}
 		});
 		fileMenu.add(sv);
+
+		MenuItem cl = new MenuItem("Clone Project");
+		cl.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				cloneProject();
+			}
+		});
+		fileMenu.add(cl);
+/*
+	} else if(command.equals("DelKeep")) {
+		controller.deleteProj(item,false,false);
+	} else if(command.equals("DelRm")) {
+		controller.deleteProj(item,true,false);
+	} else if(command.equals("DelRmDeps")) {
+		controller.deleteProj(item,true,true);
+*/
+		MenuItem dp = new MenuItem("Delete Project");
+		dp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller.delProjecty(controller.currentProject,false,false);
+			}
+		});
+		fileMenu.add(dp);
+
+		MenuItem dp2 = new MenuItem("Delete Project+Geom");
+		dp2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				controller.delProjecty(controller.currentProject,true,false);
+			}
+		});
+		fileMenu.add(dp2);
 
 		MenuItem del = new MenuItem("Delete all");
 		del.addActionListener(new ActionListener() {
@@ -336,7 +370,7 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 			controller.loadModel(fd.getDirectory(),fd.getFile());
 			return;
 		}
-		controller.loadProjectFromFile(imagefilename);
+		controller.loadScene(imagefilename);
 	}
 
 	void saveScene() {
@@ -348,6 +382,10 @@ public class SingSurf3D extends PaSingSurf implements ActionListener {
 		}
 		String filename = fd.getDirectory() + fd.getFile();
 		controller.saveScene(filename);
+	}
+
+	void cloneProject() {
+		controller.cloneProject();
 	}
 
 	void saveProject() {

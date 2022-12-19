@@ -22,7 +22,7 @@ import jv.project.PjProject_IP;
 public abstract class SingSurf_IP extends PjProject_IP {
 	private static final long serialVersionUID = 1L;
 	/** Reference to main PjPsurfJepNew class */
-	AbstractClient project;
+	AbstractProject project;
 	boolean has_steps;
 	private PsPanel northPanel;
 
@@ -33,7 +33,7 @@ public abstract class SingSurf_IP extends PjProject_IP {
 
 	public void superSetParent(PsUpdateIf par) {
 		super.setParent(par);
-		project = (AbstractClient) par;
+		project = (AbstractProject) par;
 		project.m_IP = this;
 		setFont(project.basicFont);
 		getTitle().setFont(project.basicFont.deriveFont(Font.BOLD));
@@ -44,7 +44,7 @@ public abstract class SingSurf_IP extends PjProject_IP {
 	public void setParent(PsUpdateIf par) {
 		// System.out.println("IP setParent");
 		super.setParent(par);
-		project = (AbstractClient) par;
+		project = (AbstractProject) par;
 		project.m_IP = this;
 		setFont(project.basicFont);
 		getTitle().setFont(project.basicFont.deriveFont(Font.BOLD));
@@ -71,7 +71,7 @@ public abstract class SingSurf_IP extends PjProject_IP {
 			p3.setFont(project.basicFont);
 			tabPanel.addPanel("Parameters", p3);
 		}
-		if( project instanceof AbstractOperatorClient) {
+		if( project instanceof AbstractOperatorProject) {
 			final PsPanel ip = getInputsPanel();
 			ip.setFont(project.basicFont);
 			tabPanel.addPanel("Inputs", ip);
@@ -205,7 +205,7 @@ public abstract class SingSurf_IP extends PjProject_IP {
 	
 	protected PsPanel getInputsPanel() {
 		PsPanel p1 = new PsPanel();
-		Component comp = ((AbstractOperatorClient) project).activeInputNames;
+		Component comp = ((AbstractOperatorProject) project).activeInputNames;
 		p1.add(comp);
 		p1.add(new Label("With selected:"));
 		p1.add(project.cbShowFace);
@@ -219,9 +219,9 @@ public abstract class SingSurf_IP extends PjProject_IP {
 		p1.addLabelComponent("curves colours: ",project.chCurveColours);
 
 		
-		p1.add(((AbstractOperatorClient) project).removeInputButton);
-		p1.add(((AbstractOperatorClient) project).removeInputGeomButton);
-		p1.add(((AbstractOperatorClient) project).removeInputDepButton);
+		p1.add(((AbstractOperatorProject) project).removeInputButton);
+		p1.add(((AbstractOperatorProject) project).removeInputGeomButton);
+		p1.add(((AbstractOperatorProject) project).removeInputDepButton);
 		
 		return p1;
 	}

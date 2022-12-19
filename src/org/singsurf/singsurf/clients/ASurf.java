@@ -21,6 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.SwingUtilities;
 
+import org.lsmp.djep.djep.DJep;
 import org.lsmp.djep.xjep.PrintVisitor;
 import org.nfunk.jep.ASTVarNode;
 import org.nfunk.jep.Node;
@@ -32,17 +33,20 @@ import org.singsurf.singsurf.PuIntChoice;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.PuVariable;
 import org.singsurf.singsurf.acurve.AsurfException;
+import org.singsurf.singsurf.acurve.Bern1D;
 import org.singsurf.singsurf.asurf.BoxClevA;
 import org.singsurf.singsurf.asurf.BoxClevJavaView;
+import org.singsurf.singsurf.asurf.Converger;
 import org.singsurf.singsurf.asurf.PlotAbstract.PlotMode;
 import org.singsurf.singsurf.asurf.Region_info;
+import org.singsurf.singsurf.asurf.Sol_info;
 import org.singsurf.singsurf.calculators.PolynomialCalculator;
 import org.singsurf.singsurf.definitions.DefVariable;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.ProjectComponents;
-import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.geometries.ElementSetMaterial;
+import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.geometries.PointSetMaterial;
 import org.singsurf.singsurf.geometries.PolygonSetMaterial;
 import org.singsurf.singsurf.jep.EquationPolynomialConverter;
@@ -59,7 +63,7 @@ import jv.vecmath.PdVector;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class ASurf extends AbstractClient {
+public class ASurf extends AbstractProject {
 	private static final long serialVersionUID = 1L;
 
 	Definition def;
@@ -92,6 +96,7 @@ public class ASurf extends AbstractClient {
 	
 	public ASurf(GeomStore store, Definition def) {
 		super(store, def.getName());
+		System.out.println("ASurf: "+def.getName()+" thread: "+ Thread.currentThread().toString());
 		if (getClass() == ASurf.class) {
 			init(def);
 		}
@@ -152,7 +157,7 @@ public class ASurf extends AbstractClient {
 		this.cbShowCurves.setState(false);
 		this.cbShowVert.setState(false);
 		this.cbShowPoints.setState(false);
-		this.cbShowBoundary.setState(true);
+		this.cbShowBoundary.setState(false);
 
 		cbg_coarse = new CheckboxGroup();
 		cb_c_4 = new Checkbox("4", cbg_coarse, false);
@@ -286,7 +291,7 @@ public class ASurf extends AbstractClient {
 		this.m_name = newdef.getName();
 		store.showStatus("Loaded " + m_name);
 		this.getInfoPanel().repaint();
-		outSurf = store.aquireSurface(newdef.getName(), this);
+		//outSurf = store.acquireSurface(newdef.getName(), this);
 		// outCurve=store.aquireCurve(newdef.getName()+" lines",this);
 		// outPoints=store.aquirePoints(newdef.getName()+" points",this);
 		calcGeoms();
@@ -377,7 +382,7 @@ public class ASurf extends AbstractClient {
 
 		@Override
 		public void run() {
-//			lock.lock();
+			System.out.println("CalcGeomRunnable: "+getModelName()+" thread: "+ Thread.currentThread().toString());
 			store.showStatus("Calculating geometry \"" + getModelName() + "\"");
 			PgElementSet surfRes = new PgElementSet(3);
 			PgPolygonSet curveRes = new PgPolygonSet(3);
@@ -389,7 +394,8 @@ public class ASurf extends AbstractClient {
 						new String[] { localX.getName(), localY.getName(), localZ.getName() }, calc.getParams());
 				if (coeffs.length == 1 && coeffs[0].length == 1 && coeffs[0][0].length == 1)
 					throw new AsurfException("Equation is a constant");
-				
+//				String exs = ec.toExpressionString(coeffs);
+//				System.out.println(exs);
 				PlotMode plotMode;
 				if (cb_skeleton.getState()) {
 					plotMode = PlotMode.Skeleton;
@@ -440,6 +446,7 @@ public class ASurf extends AbstractClient {
 					useIntSetting(n, "triangulate", i-> boxclev.setTriangulate(i));
 					useIntSetting(n, "littlefacet", i-> boxclev.setLittleFacets(i!=0));
 					useIntSetting(n, "cleanmesh", i-> boxclev.setCleanmesh(i));
+					useIntSetting(n, "rotdev", i-> boxclev.setRotderiv(i));
 					useIntSetting(n, "tagbad", i-> boxclev.setTagbad(i));
 					useIntSetting(n, "tagsing", i-> boxclev.setTagSing(i));
 					useIntSetting(n, "blowup", i-> boxclev.setBlowup(i));
@@ -455,17 +462,38 @@ public class ASurf extends AbstractClient {
 					edgemul = getIntSetting(n, "edgeresmul",edgemul);
 				}
 
+				double xl= localX.getMin();
+				double xh= localX.getMax();
+				double yl= localY.getMin();
+				double yh= localY.getMax();
+				double zl= localZ.getMin();
+				double zh= localZ.getMax();
+				
+				Region_info region;
+				if(!trimmed_domain) {
+					region = new Region_info(xl,xh,yl,yh,zl,zh);
+				} else {
+					                            // x0 + 8(x0+x0)/7
+					region = new Region_info(xl, (8*xh-xl)/7, yl, (8*yh-yl)/7, zl, (8*zh-zl)/7 );		
+				}
+
 //				Node subst = ec.subAll(calc.getPreprocessedEqns());
 //				System.out.print("Substituted form ");
 //				pv.println(subst);
 //				Node expanded = ec.subAllExpand(calc.getPreprocessedEqns());
 //				System.out.print("Expanded form ");
 //				pv.println(expanded);
-//				Node reparsed = calc.getJep().parse(pv.toString(expanded));
-//				Node cleaned = calc.getJep().clean(reparsed);
+//				Node reparsed = jep.parse(pv.toString(expanded));
+//				Node cleaned = jep.clean(reparsed);
 //				System.out.print("Rounded form  ");
 //				pv.println(cleaned);
 				
+//				Node subparam = ec.subParams(cleaned, calc.getParams());
+//				Grobner grob = new Grobner(ASurf.this);
+//				var sols = grob.grobner4(jep, subparam);
+//				for(var sol:sols) {
+//					boxclev.addKnownSing(region, sol.getEle(0), sol.getEle(1), sol.getEle(2));
+//				}
 				int coarse = getCoarse();
 				int fine = coarse * singmul;
 				int face = fine * facemul;
@@ -501,20 +529,6 @@ public class ASurf extends AbstractClient {
 //				useDoubleSetting(n,"curvature3", d -> boxclev.setCurvatureLevel3(d));
 //				useDoubleSetting(n,"curvature4", d -> boxclev.setCurvatureLevel4(d));
 
-				double xl= localX.getMin();
-				double xh= localX.getMax();
-				double yl= localY.getMin();
-				double yh= localY.getMax();
-				double zl= localZ.getMin();
-				double zh= localZ.getMax();
-				
-				Region_info region;
-				if(!trimmed_domain) {
-					region = new Region_info(xl,xh,yl,yh,zl,zh);
-				} else {
-					                            // x0 + 8(x0+x0)/7
-					region = new Region_info(xl, (8*xh-xl)/7, yl, (8*yh-yl)/7, zl, (8*zh-zl)/7 );		
-				}
 				
 //				lock.unlock();
 				boxclev.marmain(coeffs, region, coarse, fine, face, edge);
@@ -632,13 +646,13 @@ public class ASurf extends AbstractClient {
 
 		@Override
 		public void run() {
+			System.out.println("DisplayGeomRunnable: "+getModelName()+" thread: "+ Thread.currentThread().toString());
 
 			if (outSurf == null)
-				outSurf = store.aquireSurface(getModelName(), null);
+				outSurf = store.acquireSurface(getModelName(), ASurf.this);
 			GeomStore.copySrcTgt(surfRes, outSurf);
 
 			try {
-//				int coltype = chSurfColours.getSelectedIndex();
 				String colName = chSurfColours.getSelectedItem();
 				
 				switch(colName) {
@@ -676,7 +690,7 @@ public class ASurf extends AbstractClient {
 			boolean hasCurves = curveRes.getNumVertices() > 0;
 			if (hasCurves) {
 				if (outCurve == null)
-					outCurve = store.aquireCurve(getModelName() + " lines", null);
+					outCurve = store.acquireCurve(getModelName() + " lines", ASurf.this);
 				GeomStore.copySrcTgt(curveRes, outCurve);
 				outCurve.showVertices(cbShowVert.getState());
 				outCurve.showPolygons(cbShowCurves.getState());
@@ -694,7 +708,7 @@ public class ASurf extends AbstractClient {
 			boolean hasPoints = pointsRes.getNumVertices() > 0;
 			if (hasPoints) {
 				if (outPoints == null)
-					outPoints = store.aquirePoints(getModelName() + " points", null);
+					outPoints = store.acquirePoints(getModelName() + " points", ASurf.this);
 				GeomStore.copySrcTgt(pointsRes, outPoints);
 				outPoints.showVertices(cbShowPoints.getState());
 				setGeometryInfo(outPoints);
@@ -760,7 +774,7 @@ public class ASurf extends AbstractClient {
 	}
 
 	@Override
-	public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+	public void loadProjectComponents(ProjectComponents comp) {
 
 	}
 

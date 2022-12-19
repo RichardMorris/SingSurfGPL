@@ -660,8 +660,8 @@ Region_info reg = new Region_info(1.36,2.03,-2.13,-1.4600000000000004,-1.5199999
     @Override
     public void run() {
 //    	SurfDef def = new LabsSeptic();
-//    	SurfDef def = new Kummer1_2_tinyres();
-    	SurfDef def = new BarthDoDecic();
+    	SurfDef def = new Kummer1_2_tinyres();
+//    	SurfDef def = new BarthDoDecic();
 
     	BoxClevA bc = new BoxClevVrml(PlotMode.JustSurface,new File("asurf.wrl"),def.toString());
 //    	BoxClevA bc = new BoxClevObj(PlotMode.JustSurface,new File("asurf.obj"),def.toString());

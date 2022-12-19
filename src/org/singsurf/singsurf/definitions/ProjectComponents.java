@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Set of inputs and ingredients for a project.
+ * Set of name of inputs and ingredients for a project.
  */
 public class ProjectComponents {
 	String name;

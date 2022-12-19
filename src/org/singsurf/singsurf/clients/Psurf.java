@@ -37,7 +37,7 @@ import jv.vecmath.PdVector;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class Psurf extends AbstractClient {
+public class Psurf extends AbstractProject {
 	private static final long serialVersionUID = 1L;
 
 	protected Fractometer m_Clipping;
@@ -116,7 +116,7 @@ public class Psurf extends AbstractClient {
 		displayVars[0].set(localX);
 		displayVars[1].set(localY);
 		refreshParams();
-		outSurf = store.aquireSurface(newdef.getName(), this);
+		outSurf = store.acquireSurface(newdef.getName(), this);
 
 		Option sfopt = def.getOption("showFace");
 		if (sfopt != null)
@@ -433,7 +433,7 @@ public class Psurf extends AbstractClient {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.singsurf.singsurf.clients.AbstractClient#setDisplayProperties()
+	 * @see org.singsurf.singsurf.clients.AbstractProject#setDisplayProperties()
 	 */
 	@Override
 	public void setDisplayProperties() {
@@ -481,7 +481,7 @@ public class Psurf extends AbstractClient {
 	}
 
 	@Override
-	public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+	public void loadProjectComponents(ProjectComponents comp) {
 
 	}
 

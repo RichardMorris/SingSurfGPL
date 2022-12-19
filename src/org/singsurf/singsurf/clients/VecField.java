@@ -42,7 +42,7 @@ import jv.project.PgGeometryIf;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class VecField extends AbstractOperatorClient {
+public class VecField extends AbstractOperatorProject {
 	/** 
 	 * 
 	 */
@@ -474,7 +474,7 @@ public class VecField extends AbstractOperatorClient {
 			return;
 		}
 		PgGeometryIf input = store.getGeom(name);
-		PgGeometryIf output = store.aquireGeometry(getPreferredOutputName(name), input, this);
+		PgGeometryIf output = store.acquireGeometry(getPreferredOutputName(name), input, this);
 		GeomPair p = new GeomPair(input, output);
 		setCheckboxesFromGeomety(p.getOutput());
 		activePairs.put(name, p);
@@ -522,7 +522,7 @@ public class VecField extends AbstractOperatorClient {
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 	}
 
 	@Override

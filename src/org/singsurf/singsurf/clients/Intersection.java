@@ -35,7 +35,7 @@ import jv.project.PgGeometryIf;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class Intersection extends AbstractOperatorClient {
+public class Intersection extends AbstractOperatorProject {
 	/**
 	 * 
 	 */
@@ -222,11 +222,11 @@ public class Intersection extends AbstractOperatorClient {
 		PgGeometryIf input = store.getGeom(name);
 		PgGeometryIf output = null;
 		if (input instanceof PgElementSet)
-			output = store.aquireCurve(getPreferredOutputName(name), this);
+			output = store.acquireCurve(getPreferredOutputName(name), this);
 		else if (input instanceof PgPolygonSet)
-			output = store.aquirePoints(getPreferredOutputName(name), this);
+			output = store.acquirePoints(getPreferredOutputName(name), this);
 		else if (input instanceof PgPointSet)
-			output = store.aquirePoints(getPreferredOutputName(name), this);
+			output = store.acquirePoints(getPreferredOutputName(name), this);
 		GeomPair p = new GeomPair(input, output);
 //		this.setCheckboxesFromGeomety(p.getOutput());
 		setDisplayProperties(p.getOutput());
@@ -263,7 +263,7 @@ public class Intersection extends AbstractOperatorClient {
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 	}
 
 }

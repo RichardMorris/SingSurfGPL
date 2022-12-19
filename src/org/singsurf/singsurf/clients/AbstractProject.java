@@ -31,7 +31,6 @@ import org.nfunk.jep.ASTVarNode;
 import org.nfunk.jep.Node;
 import org.singsurf.singsurf.Fractometer;
 import org.singsurf.singsurf.LParamList;
-import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.PuIntChoice;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.PuVariable;
@@ -42,8 +41,8 @@ import org.singsurf.singsurf.definitions.DefinitionReader;
 import org.singsurf.singsurf.definitions.Option;
 import org.singsurf.singsurf.definitions.Parameter;
 import org.singsurf.singsurf.definitions.ProjectComponents;
-import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.geometries.ElementSetMaterial;
+import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.geometries.PointSetMaterial;
 import org.singsurf.singsurf.geometries.PolygonSetMaterial;
 
@@ -66,7 +65,7 @@ import jv.rsrc.PsGeometryInfo;
  * @author Richard Morris
  */
 
-public abstract class AbstractClient extends PjProject implements ItemListener, ActionListener {
+public abstract class AbstractProject extends PjProject implements ItemListener, ActionListener {
 	private static final long serialVersionUID = 1L;
 	static final boolean PRINT_TIME = false;
 	static final boolean PRINT_DEBUG = false;
@@ -170,7 +169,7 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 	/** Whether to do a fit display after constructing geoms. **/
 	// public static boolean doFitDisplay = false;
 
-	private AbstractClient() {
+	private AbstractProject() {
 		super("LSMP surface Client");
 	}
 
@@ -181,7 +180,7 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 	 * @param projName name of project
 	 */
 
-	public AbstractClient(GeomStore store, String projName) {
+	public AbstractProject(GeomStore store, String projName) {
 		super(projName);
 		if (PRINT_DEBUG)
 			System.out.println("PjLC constructor");
@@ -242,7 +241,7 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 		// m_line_geom = new PgPolygonSet(3);
 		// m_point_geom = new PgPointSet(3);
 
-		if (getClass() == AbstractClient.class)
+		if (getClass() == AbstractProject.class)
 			init();
 		if (PRINT_DEBUG)
 			System.out.println("PjLC constructor done");
@@ -408,7 +407,7 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 
 	@Override
 	public boolean addGeometry(PgGeometryIf geom) {
-		PsDebug.message("AbstractClient.addGeometry(): new geometry added.");
+		PsDebug.message("AbstractProject.addGeometry(): new geometry added.");
 		return super.addGeometry(geom);
 	}
 
@@ -562,6 +561,7 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 		} else if (geom instanceof PgPolygonSet) {
 			((PgPolygonSet) geom).showPolygons(cbShowCurves.getState());
 			((PgPolygonSet) geom).showVertices(cbShowVert.getState());
+			
 			setColour((PgPolygonSet) geom, chCurveColours.getSelectedItem());
 
 		} else if (geom instanceof PgPointSet) {
@@ -579,6 +579,7 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 	 */
 	protected void refreshParams() {
 		newParams.reset();
+		store.clearGlobalParameters(this);
 		int size = calc.getNParam();
 		for (int i = 0; i < size; ++i) {
 			
@@ -662,12 +663,15 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 
 	public abstract ProjectComponents getProjectComponents();
 
-	public abstract void loadProjectComponents(ProjectComponents comp, PaSingSurf ss);
+	public abstract void loadProjectComponents(ProjectComponents comp);
 
 	/** Called when the displayed equation is changed */
 	public void equationChanged(String text) {
 		System.out.println("equationChanged");
 		calc.setEquation(text);
+		if(!calc.isGood()) {
+			System.out.println(calc.getMsg());
+		}
 		refreshParams();
 		rebuildClient();
 		store.geomDefinitionChanged(this, calc);
@@ -690,6 +694,22 @@ public abstract class AbstractClient extends PjProject implements ItemListener, 
 		return true;
 	}
 
+	boolean completed;
+	
+	protected void startCalculation() {
+		completed = false;
+	}
+	protected void finishCalculation() {
+		completed = true;
+	}
+	
+	public boolean isCompleted() {
+		return completed;
+	}
+	/**
+	 * Subclasses should call {@link #startCalculation()} before calculation and
+	 * {@link #finishCalculation()} when all geometries are calculated. 
+	 */
 	public abstract void calcGeoms();
 
 	public Calculator getCalculator() {

@@ -25,19 +25,18 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.SwingUtilities;
 
-import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.definitions.ProjectComponents;
+import org.singsurf.singsurf.geometries.GeomListener;
 import org.singsurf.singsurf.geometries.GeomPair;
 import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.geometries.PointSetMaterial;
-import org.singsurf.singsurf.geometries.SSGeomListener;
 
 import jv.geom.PgElementSet;
 import jv.geom.PgPointSet;
 import jv.geom.PgPolygonSet;
 import jv.project.PgGeometryIf;
 
-public abstract class AbstractOperatorClient extends AbstractClient implements SSGeomListener {
+public abstract class AbstractOperatorProject extends AbstractProject implements GeomListener {
 	private static final long serialVersionUID = 1L;
 	/** A choice of available inputs */
 	protected Choice ch_inputSurf;
@@ -55,7 +54,7 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 	protected Button removeInputGeomButton = new Button("Remove input and geom");
 	protected Button removeInputDepButton = new Button("Remove input and geom and dependant");
 
-	public AbstractOperatorClient(GeomStore store, String projName) {
+	public AbstractOperatorProject(GeomStore store, String projName) {
 		super(store, projName);
 	}
 
@@ -155,8 +154,12 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 	}
 
 	public void calcGeom(GeomPair p) {
+		if(p.getInput() == null || p.getOutput() == null) {
+			System.out.println("pair is null");
+			return;
+		}
 		System.out.println("calcGeom: "+p.getInput().getName() +" -> " + p.getOutput().getName());
-
+		
 		if (!calc.isGood()) {
 			showStatus(calc.getMsg());
 			return;
@@ -317,10 +320,10 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 	}
 
 	@Override
-	public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+	public void loadProjectComponents(ProjectComponents comp) {
 		for (String s : comp.getInputs()) {
 			setCheckboxes(comp,s);
-			this.newActiveInput(s);
+			newActiveInput(s);
 			
 		}
 	}
@@ -342,10 +345,10 @@ public abstract class AbstractOperatorClient extends AbstractClient implements S
 		if(this instanceof GeneralisedBiOperator) {
 			GeneralisedBiOperator go = (GeneralisedBiOperator) this;
 			sb.append("\"ingridient1\": ");
-			sb.append(go.getIngredient1().getDefinition().getJSON());
+			sb.append(go.getFirstIngredient().getDefinition().getJSON());
 			sb.append(",\n");
 			sb.append("\"ingridient2\": ");
-			sb.append(go.getIngredient2().getDefinition().getJSON());
+			sb.append(go.getSecondIngredient().getDefinition().getJSON());
 			sb.append(",\n");
 		}
 		sb.append("\"input\": ");

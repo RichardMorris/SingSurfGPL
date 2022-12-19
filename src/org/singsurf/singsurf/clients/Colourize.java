@@ -27,7 +27,7 @@ import jv.project.PgGeometryIf;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class Colourize extends AbstractOperatorClient {
+public class Colourize extends AbstractOperatorProject {
 	/** 		
 	 * 
 	 */
@@ -159,7 +159,7 @@ public class Colourize extends AbstractOperatorClient {
 			return;
 		}
 		PgGeometryIf input = store.getGeom(name);
-		PgGeometryIf output = store.aquireGeometry(getPreferredOutputName(name), input, this);
+		PgGeometryIf output = store.acquireGeometry(getPreferredOutputName(name), input, this);
 		GeomPair p = new GeomPair(input, output);
 		activePairs.put(name, p);
 		activeInputNames.add(name);
@@ -196,7 +196,7 @@ public class Colourize extends AbstractOperatorClient {
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 	}
 
 }

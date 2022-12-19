@@ -1,5 +1,7 @@
 package org.singsurf.singsurf.operators;
 
+
+
 import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgElementSet;
@@ -113,17 +115,17 @@ public class VolCalcTerminal extends AbstractTerminal {
 		double Cy = 1.0/12 * area * ny * (ay*ay + by*by + cy*cy + ay*by + by*cy + cy*ay);
 		double Cz = 1.0/12 * area * nz * (az*az + bz*bz + cz*cz + az*bz + bz*cz + cz*az);
 		
-		double fA = 0.5 * ax * ax * nx;
-		double fB = 0.5 * bx * bx * nx;
-		double fC = 0.5 * cx * cx * nx;
-		double total = 1./3 * area * (fA + fB + fC);
+//		double fA = 0.5 * ax * ax * nx;
+//		double fB = 0.5 * bx * bx * nx;
+//		double fC = 0.5 * cx * cx * nx;
+//		double total = 1./3 * area * (fA + fB + fC);
 //		System.out.printf("N (%5.2f,%5.2f,%5.2f), C (%6.3f,%6.3f,%6.3f) area %6.3f alt %6.3f%n",
 //				nx,ny,nz,Cx,Cy,Cz,area,total);
 		volinfo.x += Cx;
 		volinfo.y += Cy;
 		volinfo.z += Cz;
 	
-		double det = PdVector.det(A, B, C)/6;
+//		double det = PdVector.det(A, B, C)/6;
 		double v2 = A.dot(PdVector.crossNew(B, C))/6;
 		volinfo.vol2 += v2;
 	}

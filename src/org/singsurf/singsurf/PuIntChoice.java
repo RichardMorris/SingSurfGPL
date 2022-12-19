@@ -9,7 +9,7 @@ import java.awt.Choice;
 import java.awt.Component;
 import java.awt.Label;
 
-import org.singsurf.singsurf.clients.AbstractClient;
+import org.singsurf.singsurf.clients.AbstractProject;
 
 import jv.object.PsObject;
 
@@ -28,7 +28,7 @@ public class PuIntChoice extends PsObject {
     PsObject parent;
     int ref = -1;
 
-	public PuIntChoice(AbstractClient client, String str, int val,int[] values) {
+	public PuIntChoice(AbstractProject client, String str, int val,int[] values) {
 		parent = client;
 		label = new Label(str);
 		choice = new Choice();
@@ -39,7 +39,7 @@ public class PuIntChoice extends PsObject {
 		choice.addItemListener(client);
 	}
 
-//	public PuIntOption(AbstractClient client, String str, int val, int min) {
+//	public PuIntOption(AbstractProject client, String str, int val, int min) {
 //		this(client,str,val);
 ////		control.setMinVal(min);
 //	}

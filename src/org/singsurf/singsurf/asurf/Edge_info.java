@@ -185,6 +185,7 @@ public class Edge_info {
 		return toString(true);
 	}
 	
+	
 	/**
 	 * Print edge
 	 * @param showHeader 
@@ -228,4 +229,40 @@ public class Edge_info {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + denom;
+		result = prime * result + ((sol == null) ? 0 : sol.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + xl;
+		result = prime * result + yl;
+		result = prime * result + zl;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Edge_info other = (Edge_info) obj;
+		if (denom != other.denom)
+			return false;
+		if (type != other.type)
+			return false;
+		if (xl != other.xl)
+			return false;
+		if (yl != other.yl)
+			return false;
+		if (zl != other.zl)
+			return false;
+		return true;
+	}
+
+	
 }

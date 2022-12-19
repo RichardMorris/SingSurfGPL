@@ -126,7 +126,7 @@ public class RidgeCalculator extends Calculator {
 
     }
 
-    public Calculator getIngredient1() {
+    public Calculator getFirstIngredient() {
         return ingredient1;
     }
 
@@ -155,7 +155,7 @@ public class RidgeCalculator extends Calculator {
         }
     }
 
-    public void setIngredient1(Calculator ingredient) {
+    public void setFirstIngredient(Calculator ingredient) {
         this.ingredient1 = ingredient;
         reset();
         build();

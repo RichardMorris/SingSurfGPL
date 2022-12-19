@@ -1,31 +1,34 @@
 package org.singsurf.singsurf.asurf;
 
-import static org.singsurf.singsurf.asurf.Key3D.FACE_BB;
-import static org.singsurf.singsurf.asurf.Key3D.FACE_DD;
-import static org.singsurf.singsurf.asurf.Key3D.FACE_FF;
-import static org.singsurf.singsurf.asurf.Key3D.FACE_LL;
-import static org.singsurf.singsurf.asurf.Key3D.FACE_RR;
-import static org.singsurf.singsurf.asurf.Key3D.FACE_UU;
-
 import java.util.List;
 
 import org.singsurf.singsurf.acurve.AsurfException;
 import org.singsurf.singsurf.acurve.Bern2D;
 import org.singsurf.singsurf.asurf.Converger.Solve2Dresult;
 import org.singsurf.singsurf.asurf.Converger.Solve2DresultWithSig;
+import org.singsurf.singsurf.asurf.Sheaf2D.QuadSheaf;
 
 public class FaceSolver {
 
 	static class DerivContext {
 		Face_info face;
 		boolean DerivFlag;
-		Bern2D dx, dy, dz;
-		public DerivContext(Face_info face, Bern2D dx, Bern2D dy, Bern2D dz) {
+		Sheaf2D s;
+		//Bern2D dx, dy, dz;
+		public DerivContext(Face_info face, Bern2D aa, Bern2D dx, Bern2D dy, Bern2D dz) {
 			super();
 			this.face = face;
-			this.dx = dx;
-			this.dy = dy;
-			this.dz = dz;
+			this.s = new Sheaf2D(aa,dx,dy,dz);
+		}
+		
+		public DerivContext(Face_info face, Sheaf2D s2) {
+			this.face = face;
+			this.s = s2;
+		}
+
+		public Sheaf2D getSheaf(Bern2D aa) {
+			Sheaf2D ss = s.makeSheaf(aa, s.dx, s.dy, s.dz);
+			return ss;
 		}
 	}
 
@@ -83,40 +86,34 @@ public class FaceSolver {
 		this.ctx = ctx;
 	}
 
-	@SuppressWarnings("unused")
-	private void calc_2nd_derivs(Sol_info sol, Bern2D dx, Bern2D dy, Bern2D dz, Bern2D d2) throws AsurfException {
-		Bern2D dxx = null, dxy = null, dxz = null, dyy = null, dyz = null, dzz = null;
-
-		BoxClevA.log.printf("ERR: Calc 2nd derivs\n");
-		if (sol.type == FACE_LL || sol.type == FACE_RR) { /* s=y, t = z */
-			dxx = d2;
-			dxy = dx.diffX(); /* dyx */
-			dxz = dx.diffY(); /* dzx */
-			dyy = dy.diffX();
-			dyz = dy.diffY(); /* dzy */
-			dzz = dz.diffY();
-		} else if (sol.type == FACE_FF || sol.type == FACE_BB) { /* s=x, t = z */
-			dxx = dx.diffX();
-			dxy = dy.diffX();
-			dxz = dz.diffX(); /* dz dx */
-			dyy = d2;
-			dyz = dy.diffY(); /* dz dy */
-			dzz = dz.diffY();
-		} else if (sol.type == FACE_UU || sol.type == FACE_DD) {
-			dxx = dx.diffX();
-			dxy = dy.diffX(); /* dydx */
-			dxz = dz.diffX(); /* dzdx */
-			dyy = dy.diffY();
-			dyz = dz.diffY(); /* dzdy */
-			dzz = d2;
-		}
-//		sol.dxx = dxx.allOneSign();
-//		sol.dxy = dxy.allOneSign();
-//		sol.dxz = dxz.allOneSign();
-//		sol.dyy = dyy.allOneSign();
-//		sol.dyz = dyz.allOneSign();
-//		sol.dzz = dzz.allOneSign();
-	}
+//	@SuppressWarnings("unused")
+//	private void calc_2nd_derivs(Sol_info sol, Bern2D dx, Bern2D dy, Bern2D dz, Bern2D d2) throws AsurfException {
+//		Bern2D dxx = null, dxy = null, dxz = null, dyy = null, dyz = null, dzz = null;
+//
+//		BoxClevA.log.printf("ERR: Calc 2nd derivs\n");
+//		if (sol.type == FACE_LL || sol.type == FACE_RR) { /* s=y, t = z */
+//			dxx = d2;
+//			dxy = dx.diffX(); /* dyx */
+//			dxz = dx.diffY(); /* dzx */
+//			dyy = dy.diffX();
+//			dyz = dy.diffY(); /* dzy */
+//			dzz = dz.diffY();
+//		} else if (sol.type == FACE_FF || sol.type == FACE_BB) { /* s=x, t = z */
+//			dxx = dx.diffX();
+//			dxy = dy.diffX();
+//			dxz = dz.diffX(); /* dz dx */
+//			dyy = d2;
+//			dyz = dy.diffY(); /* dz dy */
+//			dzz = dz.diffY();
+//		} else if (sol.type == FACE_UU || sol.type == FACE_DD) {
+//			dxx = dx.diffX();
+//			dxy = dy.diffX(); /* dydx */
+//			dxz = dz.diffX(); /* dzdx */
+//			dyy = dy.diffY();
+//			dyz = dz.diffY(); /* dzdy */
+//			dzz = d2;
+//		}
+//	}
 
 	
 	static class CalcCrossRes {
@@ -247,9 +244,15 @@ public class FaceSolver {
 		return new FacePos(fc.face, pos_x, pos_y);
 	}
 
-	void link_face(Face_info big_face, Face_info face, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, Bern2D d2,
-			boolean internal) throws AsurfException {
+	public void link_face(Face_info big_face, Face_info face, Sheaf2D s, boolean internal) 
+			throws AsurfException {
+		Bern2D bb = s.aa;
+		Bern2D dx = s.dx;
+		Bern2D dy = s.dy;
+		Bern2D dz = s.dz;
+		
 		int f1, f2, f3, count;
+		
 //		Sol_info sols[] = new Sol_info[5];
 		if (bb.allOneSign() != 0)
 			return;
@@ -284,6 +287,11 @@ public class FaceSolver {
 			if (sol0.match_derivs(sol1) 
 					&& sol0.match_derivs(f1, f2, f3)) {
 				face.include_link(sol0, sol1);
+				
+				calcRotatedDerivs(face,s);
+//				calcRotatedDerivs(face,dx,dz);
+//				calcRotatedDerivs(face,dy,dz);
+				
 				return;
 			}
 			break;
@@ -326,37 +334,42 @@ public class FaceSolver {
 
 			if (face.denom < boxclev.LINK_FACE_LEVEL) {
 				// String s = big_face.toString();
-				ReduceFace(big_face, face, bb, dx, dy, dz, d2, internal, f1, f2, f3);
+				ReduceFace(big_face, face, s, internal, f1, f2, f3);
 			} else {
+				
+//				calcRotatedDerivs(face,dx,dy);
+//				calcRotatedDerivs(face,dx,dz);
+//				calcRotatedDerivs(face,dy,dz);
+				
 				switch (count) {
 				case 0: {
 //					if (face.denom < boxclev.LINK_EDGE_LEVEL) {
 //						ReduceFace(big_face, face, bb, dx, dy, dz, d2, internal, f1, f2, f3);
 //					} else {
-						link_face0sols(face, sols, bb, dx, dy, dz, d2, f1, f2, f3);
+						link_face0sols(face, sols, s, f1, f2, f3);
 //					}
 					break;
 				}
 				case 2:
-					link_face2sols(face, sols, bb, dx, dy, dz, d2, f1, f2, f3);
+					link_face2sols(face, sols, s, f1, f2, f3);
 					break;
 				case 3:
-					link_face3sols(face, sols, bb, dx, dy, dz, d2, f1, f2, f3);
+					link_face3sols(face, sols, s, f1, f2, f3);
 					break;
 				case 4:
-					link_face4sols(face, sols, bb, dx, dy, dz, d2, f1, f2, f3);
+					link_face4sols(face, sols, s, f1, f2, f3);
 					break;
 				default:
-					link_facemanysols(face, sols, bb, dx, dy, dz, d2, f1, f2, f3);
+					link_facemanysols(face, sols, s, f1, f2, f3);
 					break;
 				}
 			}
 		// fini_link_face:
 	}
 
-	private void link_face0sols(Face_info face, List<Sol_info> sols, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, Bern2D d2, int f1,
+	private void link_face0sols(Face_info face, List<Sol_info> sols, Sheaf2D s, int f1,
 			int f2, int f3) throws AsurfException {
-		DerivContext dc = new DerivContext(face,dx,dy,dz);
+		DerivContext dc = new DerivContext(face,s);
 
 		Face_info x_face = null, y_face = null, z_face = null;
 		if(f1!=0 || f2!=0 || f3 !=0 ) return;
@@ -370,6 +383,9 @@ public class FaceSolver {
 			BoxClevA.log.print(face);
 		}
 				
+		final Bern2D dx = s.dx;
+		final Bern2D dy = s.dy;
+		final Bern2D dz = s.dz;
 		switch (face.type) {
 		case FACE_LL:
 		case FACE_RR:
@@ -382,7 +398,9 @@ public class FaceSolver {
 			dyt = dst;
 			dzs = dst;
 			dzt = dtt;
-			dxx = d2 !=null ? d2 : Bern2D.zeroBern2D; dxy = dxs; dxz = dxt;
+			dxx = s instanceof SheafSecondDeriv ? ((SheafSecondDeriv) s).d2 : Bern2D.zeroBern2D; 
+			dxy = dxs; 
+			dxz = dxt;
 			dyy = dss; dyz = dst; dzz = dtt;
 			break;
 		case FACE_FF:
@@ -397,7 +415,8 @@ public class FaceSolver {
 			dzs = dst;
 			dzt = dtt;
 			dxx = dss; dxy = dys; dxz = dtt;
-			dyy = d2 !=null ? d2 : Bern2D.zeroBern2D; dyz = dyt; dzz = dtt;
+			dyy = s instanceof SheafSecondDeriv ? ((SheafSecondDeriv) s).d2 : Bern2D.zeroBern2D;
+			dyz = dyt; dzz = dtt;
 			
 			break;
 		case FACE_UU:
@@ -412,7 +431,8 @@ public class FaceSolver {
 			dzs = dz.diffX();
 			dzt = dz.diffY();
 			dxx = dss; dxy = dst; dxz = dzs;
-			dyy = dtt; dyz = dzt; dzz = d2 != null ? d2 : Bern2D.zeroBern2D;
+			dyy = dtt; dyz = dzt; 
+			dzz = s instanceof SheafSecondDeriv ? ((SheafSecondDeriv) s).d2 : Bern2D.zeroBern2D;
 			break;
 		default:
 			throw new AsurfException("Bad face type");
@@ -424,7 +444,7 @@ public class FaceSolver {
 		if(y_face.count_sol()<2) return;
 		z_face = calcDerivFace(face, dz, dxz,dyz,dzz);
 		if(z_face.count_sol()<2) return;
-		
+				
 		// Determinant of the 2D Hessian of the face
 		det = Bern2D.symetricDet2D(dss, dst, dtt);
 		if (det == null) {
@@ -444,7 +464,7 @@ public class FaceSolver {
 		if (sign < 0)
 			return;
 
-		Solve2DresultWithSig conv = boxgen.converger.converge_node_just_three_deriv(new FacePos(face,0.5,0.5), bb, dx, dy, dz, 0, 0, 0);
+		Solve2DresultWithSig conv = boxgen.converger.converge_node_just_three_deriv(new FacePos(face,0.5,0.5), s, 0, 0, 0);
 
 
 		dc.DerivFlag = true;
@@ -468,7 +488,7 @@ public class FaceSolver {
 //			}
 //			return;
 //		}
-		Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, dx, dy, dz, d2);
+		Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, s);
 
 		fillSolWith2Dres(nodesol, conv);
 		if (!conv.good) {
@@ -488,7 +508,51 @@ public class FaceSolver {
 		}
 	}
 
-	private void link_face2sols(Face_info face, List<Sol_info> sols, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, Bern2D d2, int f1,
+//	private void calcRotatedDerivs(Face_info face, Bern2D dx, Bern2D dy) throws AsurfException {
+//		if(dx.getClass()!=Bern2D.class || dy.getClass()!=Bern2D.class)
+//			return;
+//		
+//		Bern2D du = Bern2D.addBern2D(dx, dy);
+//		Bern2D dv = Bern2D.subtractBern2D(dx, dy);
+//		Bern2D dudx = du.diffX();
+//		Bern2D dudy = du.diffY();
+//		Bern2D dvdx = dv.diffX();
+//		Bern2D dvdy = dv.diffY();
+//		
+//		Face_info p_face = new Face_info(face);
+//		boxclev.topology.create_new_edges(p_face);
+//		Sheaf2D su = new Sheaf2D(du,dudx)
+//		boxgen.find_edge(p_face.x_low, du, dudx, dudy, Face_info.Type.X_LOW);
+//		boxgen.find_edge(p_face.x_high, du, dudx, dudy, Face_info.Type.X_HIGH);
+//		boxgen.find_edge(p_face.y_low, du, dudx, dudy, Face_info.Type.Y_LOW);
+//		boxgen.find_edge(p_face.y_high, du, dudx, dudy, Face_info.Type.Y_HIGH);
+//
+//		Face_info q_face = new Face_info(face);
+//		boxclev.topology.create_new_edges(q_face);
+//		boxgen.find_edge(q_face.x_low, dv, dvdx, dvdy, Face_info.Type.X_LOW);
+//		boxgen.find_edge(q_face.x_high, dv, dvdx, dvdy, Face_info.Type.X_HIGH);
+//		boxgen.find_edge(q_face.y_low, dv, dvdx, dvdy, Face_info.Type.Y_LOW);
+//		boxgen.find_edge(q_face.y_high, dv, dvdx, dvdy, Face_info.Type.Y_HIGH);
+//
+//		List<Sol_info> list = new ArrayList<>();
+//		p_face.x_low.add_sols_to_list(list);
+//		p_face.x_high.add_sols_to_list(list);
+//		p_face.y_low.add_sols_to_list(list);
+//		p_face.y_high.add_sols_to_list(list);
+//
+//		q_face.x_low.add_sols_to_list(list);
+//		q_face.x_high.add_sols_to_list(list);
+//		q_face.y_low.add_sols_to_list(list);
+//		q_face.y_high.add_sols_to_list(list);
+//		
+//		list.forEach(sol ->  {
+//			System.out.println(sol.toString(boxclev.globalRegion));
+//			boxclev.plotter.plot_point(sol);
+//		}
+//		);
+//}
+
+	private void link_face2sols(Face_info face, List<Sol_info> sols, Sheaf2D s, int f1,
 			int f2, int f3) throws AsurfException {
 		Face_context fc = new Face_context(face,sols);
 		int dxSign, dySign, dzSign;
@@ -527,8 +591,8 @@ public class FaceSolver {
 				|| sol1.getDx() == 0 || sol1.getDy() == 0 || sol1.getDz() == 0) {
 			Solve2DresultWithSig res2;
 
-			Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
-			res2 = boxgen.converger.converge_node(fp, bb, dx, dy, dz, f1, f2, f3);
+			Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, s);
+			res2 = boxgen.converger.converge_node(fp, s, f1, f2, f3);
 			fillSolWith2Dres(nodesol, res2);
 			if (!res2.good) {
 				if (this.failCountN++ == 0) {
@@ -548,18 +612,18 @@ public class FaceSolver {
 		}
 
 		if (zeroCount == 2) {
-			link_face2sols_2_deriv(face, sols, bb, dx, dy, dz, d2, f1, f2, f3, fc, dxSign, dySign, dzSign);
+			link_face2sols_2_deriv(face, sols, s, f1, f2, f3, fc, dxSign, dySign, dzSign);
 			return;
 		}
 
 		// zeroCount == 1
 		if (f1 != dxSign || f2 != dySign || f3 != dzSign) {
-			Sol_info nodesol = MakeNode(face, fp.x, fp.y, dxSign, dySign, dzSign, dx, dy, dz, d2);
-			Solve2DresultWithSig res2 = boxgen.converger.converge_node(fp, bb, dx, dy, dz, dxSign, dySign, dzSign);
+			Sol_info nodesol = MakeNode(face, fp.x, fp.y, dxSign, dySign, dzSign, s);
+			Solve2DresultWithSig res2 = boxgen.converger.converge_node(fp, s, dxSign, dySign, dzSign);
 			fillSolWith2Dres(nodesol, res2);
 			if (!res2.good) {
 				nodesol.setDerivs(f1,f2,f3); // Assumption about linking may be incorrect
-				Solve2DresultWithSig res3 = boxgen.converger.converge_node(fp, bb, dx, dy, dz, f1, f2, f3);
+				Solve2DresultWithSig res3 = boxgen.converger.converge_node(fp, s, f1, f2, f3);
 
 				if (!res3.good) {
 					nodesol.conv_failed = true;
@@ -582,8 +646,8 @@ public class FaceSolver {
 
 		{
 		// The normal case where one deriv vanishes
-		Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
-		Solve2DresultWithSig res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, f1, f2, f3);
+		Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, s);
+		Solve2DresultWithSig res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, s, f1, f2, f3);
 		fillSolWith2Dres(nodesol, res2);
 		if (!res2.good) { 
 			if (failCountJ++ == 0) {
@@ -597,33 +661,32 @@ public class FaceSolver {
 		}
 	}
 
-	private void link_face2sols_2_deriv(Face_info face, List<Sol_info> sols, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz,
-			Bern2D d2, int f1, int f2, int f3, Face_context fc, int dxSign, int dySign, int dzSign)
+	private void link_face2sols_2_deriv(Face_info face, List<Sol_info> sols, Sheaf2D s, int f1, int f2, int f3, Face_context fc, int dxSign, int dySign, int dzSign)
 			throws AsurfException {
 		Solve2DresultWithSig res1 = null, res2 = null, resBoth = null; 
 		double vec1[], vec2[], dist1, dist2, dist3, dist4;
 		FacePos fp = calcMidPoint(fc);
-		Sol_info nodeA = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
-		Sol_info nodeB = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
-		Sol_info nodeC = MakeNode(face, fp.x, fp.y, dxSign, dySign, dzSign, dx, dy, dz, d2);
+		Sol_info nodeA = MakeNode(face, fp.x, fp.y, f1, f2, f3, s);
+		Sol_info nodeB = MakeNode(face, fp.x, fp.y, f1, f2, f3, s);
+		Sol_info nodeC = MakeNode(face, fp.x, fp.y, dxSign, dySign, dzSign, s);
 		final Sol_info sol0 = sols.get(0);
 		final Sol_info sol1 = sols.get(1);
 		vec1 = face.calc_pos_on_face(sol0);
 		vec2 = face.calc_pos_on_face(sol1);
 		if (dxSign == 0 && dySign == 0) {
-			resBoth = boxgen.converger.converge_node_two_deriv(fp, bb, dx, dy, dz, 0, 0, dzSign);
-			res1 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 0, 1, 1);
-			res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 1, 0, 1);
+			resBoth = boxgen.converger.converge_node_two_deriv(fp, s, 0, 0, dzSign);
+			res1 = boxgen.converger.converge_node_exactly_one_deriv(fp, s, 0, 1, 1);
+			res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, s, 1, 0, 1);
 		}
 		if (dxSign == 0 && dzSign == 0) {
-			resBoth = boxgen.converger.converge_node_two_deriv(fp, bb, dx, dy, dz, 0, dySign, 0);
-			res1 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 0, 1, 1);
-			res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 1, 1, 0);
+			resBoth = boxgen.converger.converge_node_two_deriv(fp, s, 0, dySign, 0);
+			res1 = boxgen.converger.converge_node_exactly_one_deriv(fp, s, 0, 1, 1);
+			res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, s, 1, 1, 0);
 		}
 		if (dySign == 0 && dzSign == 0) {
-			resBoth = boxgen.converger.converge_node_two_deriv(fp, bb, dx, dy, dz, dxSign, 0, 0);
-			res1 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 1, 0, 1);
-			res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 1, 1, 0);
+			resBoth = boxgen.converger.converge_node_two_deriv(fp, s, dxSign, 0, 0);
+			res1 = boxgen.converger.converge_node_exactly_one_deriv(fp, s, 1, 0, 1);
+			res2 = boxgen.converger.converge_node_exactly_one_deriv(fp, s, 1, 1, 0);
 		}
 		if (resBoth.good) {
 			fillSolWith2Dres(nodeC, resBoth); 
@@ -634,7 +697,7 @@ public class FaceSolver {
 		}
 
 		if (!res1.good || !res2.good) {
-			link_face2sols_conv_failed(face, sols, bb, dx, dy, dz, d2, f1, f2, f3, fc);
+			link_face2sols_conv_failed(face, sols, s, f1, f2, f3, fc);
 			return;
 		}
 
@@ -723,8 +786,8 @@ public class FaceSolver {
 				BoxClevA.log.println(nodeA);
 				BoxClevA.log.println(nodeB);
 			}
-			nodeB = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
-			Solve2DresultWithSig res4 = boxgen.converger.converge_node(fp, bb, dx, dy, dz, f1, f2, f3);
+			nodeB = MakeNode(face, fp.x, fp.y, f1, f2, f3, s);
+			Solve2DresultWithSig res4 = boxgen.converger.converge_node(fp, s, f1, f2, f3);
 			if (!res4.good) {
 				if (failCountH++ == 0) {
 					BoxClevA.log.printf("ERR: link_face2sols: Wierd distances %f %f %f %f\n", dist1, dist2, dist3, dist4);
@@ -744,8 +807,8 @@ public class FaceSolver {
 		return;
 	}
 
-	private void link_face2sols_conv_failed(Face_info face, List<Sol_info> sols, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz,
-			Bern2D d2, int f1, int f2, int f3, Face_context fc) throws AsurfException {
+	private void link_face2sols_conv_failed(Face_info face, List<Sol_info> sols, Sheaf2D s, 
+			int f1, int f2, int f3, Face_context fc) throws AsurfException {
 		if (failCountO++ == 0) {
 			BoxClevA.log.printf("ERR: link_face2sols: converge failed! %d %d %d\n", f1, f2, f3);
 //			BoxClevA.log.println(sols.get(0).toStringNorm(boxclev));
@@ -766,7 +829,7 @@ public class FaceSolver {
 		Sol_info nodesol = null;
 		if (sols.get(0).getDx() != sols.get(1).getDx()) {
 			interp(fc, sols.get(0), sols.get(1), pos, bit_swaps);
-			nodesol = MakeNode(face, fp.x, fp.y, 0, dy1, dz1, dx, dy, dz, d2);
+			nodesol = MakeNode(face, fp.x, fp.y, 0, dy1, dz1, s);
 			nodesol.conv_failed = true;
 			face.add_node(nodesol);
 			face.include_link(last_sol, nodesol);
@@ -776,7 +839,7 @@ public class FaceSolver {
 		}
 		if (sols.get(0).getDy() != sols.get(1).getDy()) {
 			interp(fc, sols.get(0), sols.get(1), pos, bit_swaps);
-			nodesol = MakeNode(face, fp.x, fp.y, dx1, 0, dz1, dx, dy, dz, d2);
+			nodesol = MakeNode(face, fp.x, fp.y, dx1, 0, dz1, s);
 			nodesol.conv_failed = true;
 			face.add_node(nodesol);
 			face.include_link(last_sol, nodesol);
@@ -786,7 +849,7 @@ public class FaceSolver {
 		}
 		if (sols.get(0).getDz() != sols.get(1).getDz()) {
 			interp(fc, sols.get(0), sols.get(1), pos, bit_swaps);
-			nodesol = MakeNode(face, fp.x, fp.y, dx1, dy1, 0, dx, dy, dz, d2);
+			nodesol = MakeNode(face, fp.x, fp.y, dx1, dy1, 0, s);
 			nodesol.conv_failed = true;
 			face.add_node(nodesol);
 			face.include_link(last_sol, nodesol);
@@ -798,10 +861,11 @@ public class FaceSolver {
 		return;
 	}
 
+
 	/**
 	 * @param bb
 	 */
-	private void link_face3sols(Face_info face, List<Sol_info> sols, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, Bern2D d2, int f1,
+	private void link_face3sols(Face_info face, List<Sol_info> sols, Sheaf2D s, int f1,
 			int f2, int f3) throws AsurfException {
 		Face_context fc = new Face_context(face,sols);
 //		fc.face = face;
@@ -812,8 +876,8 @@ public class FaceSolver {
 		 * if( pos_x != pos_x || pos_y != pos_y )
 		 * BoxClevA.log.println("ERR: pos_x %f pos_y %f\n",pos_x,pos_y);
 		 */
-		Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
-		Solve2DresultWithSig res2 = boxgen.converger.converge_node(fp, bb, dx, dy, dz, f1, f2, f3);
+		Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, s);
+		Solve2DresultWithSig res2 = boxgen.converger.converge_node(fp, s, f1, f2, f3);
 		fillSolWith2Dres(nodesol, res2);
 		if (!res2.good) {
 			if (failCountK++ == 0) {
@@ -836,7 +900,7 @@ public class FaceSolver {
 
 	}
 
-	private void link_face4sols(Face_info face, List<Sol_info> sols, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, Bern2D d2, int f1,
+	private void link_face4sols(Face_info face, List<Sol_info> sols, Sheaf2D s, int f1,
 			int f2, int f3) throws AsurfException {
 		Face_info x_face = null, y_face = null, z_face = null;
 		double vec[], pos_x = 0.5, pos_y = 0.5;
@@ -896,8 +960,8 @@ public class FaceSolver {
 			int f1a = solA.getDx() == solB.getDx() ? solA.getDx() : 0;
 			int f2a = solA.getDy() == solB.getDy() ? solA.getDy() : 0;
 			int f3a = solA.getDz() == solB.getDz() ? solA.getDz() : 0;
-			Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1a, f2a, f3a, dx, dy, dz, d2);
-			Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb, dx, dy, dz,
+			Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1a, f2a, f3a, s);
+			Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s,
 					f1a, f2a, f3a);
 			this.fillSolWith2Dres(nodesol, res2);
 			if (!res2.good) {
@@ -935,8 +999,8 @@ public class FaceSolver {
 			int f2a = solA.getDy() == solB.getDy() ? solA.getDy() : 0;
 			int f3a = solA.getDz() == solB.getDz() ? solA.getDz() : 0;
 
-			Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1a, f2a, f3a, dx, dy, dz, d2);
-			Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb, dx, dy, dz,
+			Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1a, f2a, f3a, s);
+			Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s,
 					f1a, f2a, f3a);
 			this.fillSolWith2Dres(nodesol, res2);
 			if (res2.good) {
@@ -955,6 +1019,9 @@ public class FaceSolver {
 			return;
 		}
 
+		final Bern2D dx = s.dx;
+		final Bern2D dy = s.dy;
+		final Bern2D dz = s.dz;
 		switch (face.type) {
 		case FACE_LL:
 		case FACE_RR:
@@ -1010,14 +1077,14 @@ public class FaceSolver {
 			BoxClevA.log.print(face);
 		}
 		if (sign > 0) {
-			link_face4solsPos(face, sols, bb, dx, dy, dz, d2, f1, f2, f3);
+			link_face4solsPos(face, sols, s, f1, f2, f3);
 			return;
 		}
 		if (sign == 0) {
 			if (PRINT_LINKFACE04) {
 				BoxClevA.log.printf("ERR: Zero det\n");
 				BoxClevA.log.print(face);
-				BoxClevA.log.print(bb);
+				BoxClevA.log.print(s.aa);
 				BoxClevA.log.print(dx);
 				BoxClevA.log.print(dy);
 				BoxClevA.log.print(dz);
@@ -1028,7 +1095,7 @@ public class FaceSolver {
 			}
 		}
 
-		DerivContext dc = new DerivContext(face,dx,dy,dz);
+		DerivContext dc = new DerivContext(face,s);
 		Sol_info nodesol;
 		if (sols.get(0).match_derivs(sols.get(1)) && sols.get(2).match_derivs(sols.get(3)) && !sols.get(0).match_derivs(sols.get(2))) {
 			dc.DerivFlag = true;
@@ -1041,8 +1108,8 @@ public class FaceSolver {
 				face.include_link(sols.get(2), sols.get(3));
 				return; // goto fini_link_face;
 			}
-			nodesol = MakeNode(face, pos_x, pos_y, sig_x, sig_y, sig_z, dx, dy, dz, d2);
-			res1 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb, dx, dy, dz, sig_x, sig_y,
+			nodesol = MakeNode(face, pos_x, pos_y, sig_x, sig_y, sig_z, s);
+			res1 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s, sig_x, sig_y,
 					sig_z);
 			this.fillSolWith2Dres(nodesol, res1);
 
@@ -1061,8 +1128,8 @@ public class FaceSolver {
 				face.include_link(sols.get(1), sols.get(3));
 				return;
 			}
-			nodesol = MakeNode(face, pos_x, pos_y, sig_x, sig_y, sig_z, dx, dy, dz, d2);
-			res1 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb, dx, dy, dz, sig_x, sig_y,
+			nodesol = MakeNode(face, pos_x, pos_y, sig_x, sig_y, sig_z, s);
+			res1 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s, sig_x, sig_y,
 					sig_z);
 			this.fillSolWith2Dres(nodesol, res1);
 			if (!res1.good) {
@@ -1080,8 +1147,8 @@ public class FaceSolver {
 				face.include_link(sols.get(1), sols.get(2));
 				return;
 			}
-			nodesol = MakeNode(face, pos_x, pos_y, sig_x, sig_y, sig_z, dx, dy, dz, d2);
-			res1 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb, dx, dy, dz, sig_x, sig_y,
+			nodesol = MakeNode(face, pos_x, pos_y, sig_x, sig_y, sig_z, s);
+			res1 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s, sig_x, sig_y,
 					sig_z);
 			this.fillSolWith2Dres(nodesol, res1);
 			if (!res1.good) {
@@ -1090,15 +1157,15 @@ public class FaceSolver {
 				return; // goto fini_link_face;
 			}
 		} else {
-			nodesol = MakeNode(face, pos_x, pos_y, sig_x, sig_y, sig_z, dx, dy, dz, d2);
-			res1 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb, dx, dy, dz, sig_x, sig_y,
+			nodesol = MakeNode(face, pos_x, pos_y, sig_x, sig_y, sig_z, s);
+			res1 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s, sig_x, sig_y,
 					sig_z);
 			this.fillSolWith2Dres(nodesol, res1);
 			if (!res1.good) {
 				nodesol.conv_failed = true;
 				Face_context fc = new Face_context(face,sols);
 
-				link_face4sols_conv_failed(face, sols, fc, bb, dx, dy, dz, sig_x, sig_y, sig_z);
+				link_face4sols_conv_failed(face, sols, fc, s, sig_x, sig_y, sig_z);
 				if (failCountM++ == 0) {
 					BoxClevA.log.println("ERR: link_face2: default conv failed M");
 					BoxClevA.log.println(nodesol);
@@ -1120,8 +1187,7 @@ public class FaceSolver {
 		}
 	}
 
-	private void link_face4sols_conv_failed(Face_info face, List<Sol_info> sols, Face_context fc, Bern2D bb, Bern2D dx,
-			Bern2D dy, Bern2D dz, int sig_x, int sig_y, int sig_z) throws AsurfException {
+	private void link_face4sols_conv_failed(Face_info face, List<Sol_info> sols, Face_context fc, Sheaf2D s, int sig_x, int sig_y, int sig_z) throws AsurfException {
 		boolean oldPC = Converger.PRINT_CONVERGE;
 		Converger.PRINT_CONVERGE = PRINT_FACE4SOL_FAILED;
 		int zero_count = (sig_x == 0 ? 1 : 0) + (sig_y == 0 ? 1 : 0) + (sig_z == 0 ? 1 : 0);
@@ -1136,42 +1202,42 @@ public class FaceSolver {
 		if (sig_x == 0 && sig_y == 0) {
 			if (PRINT_FACE4SOL_FAILED)
 				BoxClevA.log.println("Conv XY");
-			res_xy = boxgen.converger.converge_node_two_deriv(fp, bb, dx, dy, dz, 0, 0, 1);
+			res_xy = boxgen.converger.converge_node_two_deriv(fp, s, 0, 0, 1);
 			sol_xy = makeNode(face, res_xy);
 		}
 
 		if (sig_x == 0 && sig_z == 0) {
 			if (PRINT_FACE4SOL_FAILED)
 				BoxClevA.log.println("Conv XZ");
-			res_xz = boxgen.converger.converge_node_two_deriv(fp, bb, dx, dy, dz, 0, 1, 0);
+			res_xz = boxgen.converger.converge_node_two_deriv(fp, s, 0, 1, 0);
 			sol_xz = makeNode(face, res_xz);
 		}
 
 		if (sig_y == 0 && sig_z == 0) {
 			if (PRINT_FACE4SOL_FAILED)
 				BoxClevA.log.println("Conv YZ");
-			res_yz = boxgen.converger.converge_node_two_deriv(fp, bb, dx, dy, dz, 1, 0, 0);
+			res_yz = boxgen.converger.converge_node_two_deriv(fp, s, 1, 0, 0);
 			sol_yz = makeNode(face, res_yz);
 		}
 
 		if (sig_x == 0) {
 			if (PRINT_FACE4SOL_FAILED)
 				BoxClevA.log.println("Conv X");
-			res_x = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 0, 1, 1);
+			res_x = boxgen.converger.converge_node_exactly_one_deriv(fp, s, 0, 1, 1);
 			sol_x = makeNode(face, res_x);
 		}
 
 		if (sig_y == 0) {
 			if (PRINT_FACE4SOL_FAILED)
 				BoxClevA.log.println("Conv Y");
-			res_y = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 1, 0, 1);
+			res_y = boxgen.converger.converge_node_exactly_one_deriv(fp, s, 1, 0, 1);
 			sol_y = makeNode(face, res_y);
 		}
 
 		if (sig_z == 0) {
 			if (PRINT_FACE4SOL_FAILED)
 				BoxClevA.log.println("Conv Z");
-			res_z = boxgen.converger.converge_node_exactly_one_deriv(fp, bb, dx, dy, dz, 1, 1, 0);
+			res_z = boxgen.converger.converge_node_exactly_one_deriv(fp, s, 1, 1, 0);
 			sol_z = makeNode(face, res_z);
 		}
 		if (PRINT_FACE4SOL_FAILED)
@@ -1212,7 +1278,7 @@ public class FaceSolver {
 			}
 		}
 		if (best_res == base_res) { // if nothing worked just try and find a point on surface
-			best_res = boxgen.converger.converge_node_zero_deriv(fp, bb, dx, dy, dz);
+			best_res = boxgen.converger.converge_node_zero_deriv(fp, s);
 			best_sol = makeNode(face, best_res);
 		}
 
@@ -1223,8 +1289,7 @@ public class FaceSolver {
 		face.include_link(best_sol, sols.get(3));
 	}
 
-	private void link_face4solsPos(Face_info face, List<Sol_info> sols, Bern2D bb2, Bern2D dx, Bern2D dy, Bern2D dz,
-			Bern2D d2, int f1, int f2, int f3) throws AsurfException {
+	private void link_face4solsPos(Face_info face, List<Sol_info> sols, Sheaf2D s, int f1, int f2, int f3) throws AsurfException {
 
 		double vec[] = new double[2], pos_x = 0.0, pos_y = 0.0;
 		int Aind = -1, Bind = -1, Cind = -1, Dind = -1;
@@ -1285,9 +1350,8 @@ public class FaceSolver {
 			int sgny = solC.getDy() == solD.getDy() ? solC.getDy() : 0;
 			int sgnz = solC.getDz() == solD.getDz() ? solC.getDz() : 0;
 
-			Sol_info nodesol = MakeNode(face, pos_x, pos_y, sgnx, sgny, sgnz, dx, dy, dz, d2);
-			Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb2, dx, dy,
-					dz, sgnx, sgny, sgnz);
+			Sol_info nodesol = MakeNode(face, pos_x, pos_y, sgnx, sgny, sgnz, s);
+			Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s, sgnx, sgny, sgnz);
 			fillSolWith2Dres(nodesol, res2);
 			if (!res2.good) {
 				if (failCountC++ == 0) {
@@ -1358,9 +1422,8 @@ public class FaceSolver {
 				vec = face.calc_pos_on_face(sols.get(Cind));
 				pos_x += vec[0];
 				pos_y += vec[1];
-				Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, dx, dy, dz, d2);
-				Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb2, dx,
-						dy, dz, f1, f2, f3);
+				Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, s);
+				Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s, f1, f2, f3);
 				fillSolWith2Dres(nodesol, res2);
 				if (!res2.good) {
 					if (failCountD++ == 0) {
@@ -1387,9 +1450,8 @@ public class FaceSolver {
 				pos_x += vec[0];
 				pos_y += vec[1];
 
-				nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, dx, dy, dz, d2);
-				Solve2DresultWithSig res4 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb2, dx,
-						dy, dz, f1, f2, f3);
+				nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, s);
+				Solve2DresultWithSig res4 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s, f1, f2, f3);
 				fillSolWith2Dres(nodesol, res4);
 				if (!res4.good) {
 					if (failCountE++ == 0) {
@@ -1423,9 +1485,8 @@ public class FaceSolver {
 				vec = face.calc_pos_on_face(sols.get(Bind));
 				pos_x += vec[0];
 				pos_y += vec[1];
-				Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, dx, dy, dz, d2);
-				Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb2, dx,
-						dy, dz, f1, f2, f3);
+				Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, s);
+				Solve2DresultWithSig res2 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s, f1, f2, f3);
 				fillSolWith2Dres(nodesol, res2);
 				if (!res2.good) {
 					if (failCountF++ == 0) {
@@ -1451,9 +1512,8 @@ public class FaceSolver {
 				vec = face.calc_pos_on_face(sols.get(Dind));
 				pos_x += vec[0];
 				pos_y += vec[1];
-				nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, dx, dy, dz, d2);
-				Solve2DresultWithSig res4 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), bb2, dx,
-						dy, dz, f1, f2, f3);
+				nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, s);
+				Solve2DresultWithSig res4 = boxgen.converger.converge_node(new FacePos(face, pos_x, pos_y), s, f1, f2, f3);
 				fillSolWith2Dres(nodesol, res4);
 				if (!res4.good) {
 					if (failCountG++ == 0) {
@@ -1483,8 +1543,8 @@ public class FaceSolver {
 		Face_context fc = new Face_context(face,sols);
 		FacePos fp = calcMidPoint(fc);
 		{
-		Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, dx, dy, dz, d2);
-		Solve2DresultWithSig cres = boxgen.converger.converge_node_zero_deriv(fp, bb2, dx, dy, dz);
+		Sol_info nodesol = MakeNode(face, pos_x, pos_y, f1, f2, f3, s);
+		Solve2DresultWithSig cres = boxgen.converger.converge_node_zero_deriv(fp, s);
 		fillSolWith2Dres(nodesol, cres);
 		face.add_node(nodesol);
 		face.include_link(sols.get(0), nodesol);
@@ -1497,15 +1557,14 @@ public class FaceSolver {
 	/**
 	 * @param bb2
 	 */
-	private void link_facemanysols(Face_info face, List<Sol_info> sols, Bern2D bb2, Bern2D dx, Bern2D dy, Bern2D dz,
-			Bern2D d2, int f1, int f2, int f3) throws AsurfException {
+	private void link_facemanysols(Face_info face, List<Sol_info> sols, Sheaf2D s, int f1, int f2, int f3) throws AsurfException {
 
 		Face_context fc = new Face_context(face,sols);
 
 		FacePos fp = calcMidPoint(fc);
-		Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, dx, dy, dz, d2);
-		Solve2DresultWithSig res2 = boxgen.converger.converge_node(fp, bb2, dx, dy, dz, f1, f2, f3);
-		this.fillSolWith2Dres(nodesol, res2);
+		Sol_info nodesol = MakeNode(face, fp.x, fp.y, f1, f2, f3, s);
+		Solve2DresultWithSig res2 = boxgen.converger.converge_node(fp, s, f1, f2, f3);
+		fillSolWith2Dres(nodesol, res2);
 		if (!res2.good) {
 			if (failCountL++ == 0) {
 				BoxClevA.log.println("ERR: link_face2: default conv failed L");
@@ -1533,58 +1592,20 @@ public class FaceSolver {
 		return (temp);
 	}
 
-	private Sol_info MakeNode(Face_info face, double pos_x, double pos_y, int f1, int f2, int f3, Bern2D dx, Bern2D dy,
-			Bern2D dz, Bern2D d2) throws AsurfException {
+	private Sol_info MakeNode(Face_info face, double pos_x, double pos_y, int f1, int f2, int f3, Sheaf2D s) throws AsurfException {
 		Sol_info temp;
 
 		temp = new Sol_info(face.type, face.xl, face.yl, face.zl, face.denom, pos_x, pos_y);
 		temp.setDerivs(f1, f2, f3);
-		if (Boxclev.USE_2ND_DERIV) {
-			calc_2nd_derivs(temp, dx, dy, dz, d2);
-		}
+//		if (Boxclev.USE_2ND_DERIV) {
+//			calc_2nd_derivs(temp, dx, dy, dz, d2);
+//		}
 		return (temp);
 	}
 
-	private void ReduceFace(Face_info big_face, Face_info face, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, Bern2D d2,
-			boolean internal, int f1, int f2, int f3) throws AsurfException {
-		Bern2D.QuadBern b1;
-		Bern2D.QuadBern dx1;
-		Bern2D.QuadBern dy1;
-		Bern2D.QuadBern dz1;
-		Bern2D.QuadBern dd2 = null;
+	private void ReduceFace(Face_info big_face, Face_info face, Sheaf2D s, boolean internal, int f1, int f2, int f3) throws AsurfException {
 
-		b1 = bb.reduce();
-		if (Boxclev.USE_2ND_DERIV) {
-			dd2 = d2.reduce();
-		}
-		if (f1 > 0)
-			dx1 = Bern2D.posBern2D.reduce();
-		else if (f1 < 0)
-			dx1 = Bern2D.negBern2D.reduce();
-		else if (face.type == FACE_LL || face.type == FACE_RR)
-			dx1 = dx.reduce();
-		else
-			dx1 = b1.quadDiff2Dx();
-
-		if (f2 > 0)
-			dy1 = Bern2D.posBern2D.reduce();
-		else if (f2 < 0)
-			dy1 = Bern2D.negBern2D.reduce();
-		else if (face.type == FACE_FF || face.type == FACE_BB)
-			dy1 = dy.reduce();
-		else if (face.type == FACE_LL || face.type == FACE_RR)
-			dy1 = b1.quadDiff2Dx();
-		else
-			dy1 = b1.quadDiff2Dy();
-
-		if (f3 > 0)
-			dz1 = Bern2D.posBern2D.reduce();
-		else if (f3 < 0)
-			dz1 = Bern2D.negBern2D.reduce();
-		else if (face.type == FACE_UU || face.type == FACE_DD)
-			dz1 = dz.reduce();
-		else
-			dz1 = b1.quadDiff2Dy();
+		QuadSheaf qs = s.reduce(face, f1, f2, f3);
 
 		Face_info[] faces = face.make_sub_faces();
 		face.lb = faces[0];
@@ -1593,30 +1614,20 @@ public class FaceSolver {
 		face.rt = faces[3];
 		boxclev.topology.split_face(face, face.lb, face.rb, face.lt, face.rt);
 
-		boxgen.find_edge(face.lb.x_high, b1.lb, dx1.lb, dy1.lb, dz1.lb, Face_info.X_HIGH);
-		boxgen.find_edge(face.lb.y_high, b1.lb, dx1.lb, dy1.lb, dz1.lb, Face_info.Y_HIGH);
-		boxgen.find_edge(face.rt.x_low, b1.rt, dx1.rt, dy1.rt, dz1.rt, Face_info.X_LOW);
-		boxgen.find_edge(face.rt.y_low, b1.rt, dx1.rt, dy1.rt, dz1.rt, Face_info.Y_LOW);
+		boxgen.find_edge(face.lb.x_high, qs.lb, Face_info.Type.X_HIGH);
+		boxgen.find_edge(face.lb.y_high, qs.lb, Face_info.Type.Y_HIGH);
+		boxgen.find_edge(face.rt.x_low, qs.rt, Face_info.Type.X_LOW);
+		boxgen.find_edge(face.rt.y_low, qs.rt, Face_info.Type.Y_LOW);
 
-		if (!Boxclev.USE_2ND_DERIV) {
-			link_face(big_face, face.lb, b1.lb, dx1.lb, dy1.lb, dz1.lb, null, internal);
-			face.lb.status = BoxClevA.FOUND_EVERYTHING;
-			link_face(big_face, face.rb, b1.rb, dx1.rb, dy1.rb, dz1.rb, null, internal);
-			face.rb.status = BoxClevA.FOUND_EVERYTHING;
-			link_face(big_face, face.lt, b1.lt, dx1.lt, dy1.lt, dz1.lt, null, internal);
-			face.lt.status = BoxClevA.FOUND_EVERYTHING;
-			link_face(big_face, face.rt, b1.rt, dx1.rt, dy1.rt, dz1.rt, null, internal);
-			face.rt.status = BoxClevA.FOUND_EVERYTHING;
-		} else {
-			link_face(big_face, face.lb, b1.lb, dx1.lb, dy1.lb, dz1.lb, dd2.lb, internal);
-			face.lb.status = BoxClevA.FOUND_EVERYTHING;
-			link_face(big_face, face.rb, b1.rb, dx1.rb, dy1.rb, dz1.rb, dd2.rb, internal);
-			face.rb.status = BoxClevA.FOUND_EVERYTHING;
-			link_face(big_face, face.lt, b1.lt, dx1.lt, dy1.lt, dz1.lt, dd2.lt, internal);
-			face.lt.status = BoxClevA.FOUND_EVERYTHING;
-			link_face(big_face, face.rt, b1.rt, dx1.rt, dy1.rt, dz1.rt, dd2.rt, internal);
-			face.rt.status = BoxClevA.FOUND_EVERYTHING;
-		}
+		link_face(big_face, face.lb, qs.lb, internal);
+		face.lb.status = BoxClevA.FOUND_EVERYTHING;
+		link_face(big_face, face.rb, qs.rb, internal);
+		face.rb.status = BoxClevA.FOUND_EVERYTHING;
+		link_face(big_face, face.lt, qs.lt, internal);
+		face.lt.status = BoxClevA.FOUND_EVERYTHING;
+		link_face(big_face, face.rt, qs.rt, internal);
+		face.rt.status = BoxClevA.FOUND_EVERYTHING;
+		
 		/* Now need to combine links from sub face to big face */
 		combine_links(face);
 	}
@@ -1627,15 +1638,16 @@ public class FaceSolver {
 				&& (f3 != 0 || (A.getDz() == 1 && B.getDz() == -1) || (A.getDz() == -1 && B.getDz() == 1));
 	}
 
-	private Face_info calcDerivFace(DerivContext dc, Bern2D bb) throws AsurfException {
+	private Face_info calcDerivFace(DerivContext dc, Bern2D aa) throws AsurfException {
 		Face_info q_face;
 
 		q_face = new Face_info(dc.face.type, dc.face.xl, dc.face.yl, dc.face.zl, dc.face.denom);
 		boxclev.topology.create_new_edges(q_face);
-		boxgen.find_edge(q_face.x_low, bb, dc.dx, dc.dy, dc.dz, Face_info.X_LOW);
-		boxgen.find_edge(q_face.x_high, bb, dc.dx, dc.dy, dc.dz, Face_info.X_HIGH);
-		boxgen.find_edge(q_face.y_low, bb, dc.dx, dc.dy, dc.dz, Face_info.Y_LOW);
-		boxgen.find_edge(q_face.y_high, bb, dc.dx, dc.dy, dc.dz, Face_info.Y_HIGH);
+		final Sheaf2D sheaf = dc.getSheaf(aa);
+		boxgen.find_edge(q_face.x_low, sheaf, Face_info.Type.X_LOW);
+		boxgen.find_edge(q_face.x_high, sheaf, Face_info.Type.X_HIGH);
+		boxgen.find_edge(q_face.y_low, sheaf, Face_info.Type.Y_LOW);
+		boxgen.find_edge(q_face.y_high, sheaf, Face_info.Type.Y_HIGH);
 		return q_face;
 	}
 
@@ -1644,12 +1656,47 @@ public class FaceSolver {
 
 		q_face = new Face_info(face.type, face.xl, face.yl, face.zl, face.denom);
 		boxclev.topology.create_new_edges(q_face);
-		boxgen.find_edge(q_face.x_low, bb, dx, dy, dz, Face_info.X_LOW);
-		boxgen.find_edge(q_face.x_high, bb, dx, dy, dz, Face_info.X_HIGH);
-		boxgen.find_edge(q_face.y_low, bb, dx, dy, dz, Face_info.Y_LOW);
-		boxgen.find_edge(q_face.y_high, bb, dx, dy, dz, Face_info.Y_HIGH);
+		Sheaf2D s = new Sheaf2D(bb, dx, dy, dz);
+		boxgen.find_edge(q_face.x_low, s, Face_info.Type.X_LOW);
+		boxgen.find_edge(q_face.x_high, s, Face_info.Type.X_HIGH);
+		boxgen.find_edge(q_face.y_low, s, Face_info.Type.Y_LOW);
+		boxgen.find_edge(q_face.y_high, s, Face_info.Type.Y_HIGH);
 		return q_face;
 	}
+	
+	
+	private void calcRotatedDerivs(Face_info face, Sheaf2D s) throws AsurfException {
+		if(boxclev.rotderiv==0) return;
+		SheafRotatedDerivs r = (SheafRotatedDerivs) s;
+		FacePos fp = new FacePos(face,0.5,0.5);
+		calcRotatedDeriv(face, s, fp, r.xpy);
+		calcRotatedDeriv(face, s, fp, r.xmy);
+		calcRotatedDeriv(face, s, fp, r.xpz);
+		calcRotatedDeriv(face, s, fp, r.xmz);
+		calcRotatedDeriv(face, s, fp, r.ypz);
+		calcRotatedDeriv(face, s, fp, r.ymz);
+	}
+
+	/**
+	 * @param face
+	 * @param s
+	 * @param fp
+	 * @param rot
+	 * @throws AsurfException
+	 */
+	public void calcRotatedDeriv(Face_info face, Sheaf2D s, FacePos fp, final Bern2D rot) throws AsurfException {
+		if(rot.allOneSign()!=0) return;
+		Solve2DresultWithSig sol = boxgen.converger.converge_node_rotated_diff(fp, 
+				s, rot);
+		if(sol!=null) {
+			Sol_info nodesol = MakeNode(face, fp.x, fp.y, 0, 0, 0, s);
+			this.fillSolWith2Dres(nodesol, sol);
+
+			boxclev.plotter.plot_point(nodesol);
+		}
+	}
+
+
 
 	public void printResults() {
 		System.out.printf("FaceSolver Fail counts A %d B %d C %d D %d E %d F %d G %d H %d I %d J %d K %d L %d M %d%n", failCountA,
@@ -1659,5 +1706,6 @@ public class FaceSolver {
 				failCountN, failCountO);
 		
 	}
+
 
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import org.nfunk.jep.function.Binomial;
 import org.singsurf.singsurf.asurf.Face_info;
 
+
 public class Bern2D {
 	public final int xord;
 	public final int yord;
@@ -30,16 +31,21 @@ public class Bern2D {
 
 	/**
 	 * Test if all coefficient are strictly the same sign.
-	 * @return tree if all positive or all negative false otherwise
+	 * @return 0, 1, -1 if coeffs differ in signs, 
 	 */
 	public short allOneSign() {
 		boolean sign = (coeffs[0] < 0);
-		for (int i = 0; i <= xord; ++i)
-			for (int j = 0; j <= yord; ++j) {
-				boolean flag = coeffs[(i * (yord + 1) + j)] < 0;
-				if ((coeffs[(i * (yord + 1) + j)] == 0.0) || ((flag) != sign))
-					return (0);
-			}
+		for(int i=0;i<coeffs.length;++i) {
+			boolean flag = coeffs[i] < 0;
+			if ((coeffs[i] == 0.0) || ((flag) != sign))
+			return (0);
+		}
+//		for (int i = 0; i <= xord; ++i)
+//			for (int j = 0; j <= yord; ++j) {
+//				boolean flag = coeffs[(i * (yord + 1) + j)] < 0;
+//				if ((coeffs[(i * (yord + 1) + j)] == 0.0) || ((flag) != sign))
+//					return (0);
+//			}
 		return (short) (sign?-1:1);
 	}
 
@@ -71,7 +77,10 @@ public class Bern2D {
 
 		for(col=0;col<=xord;col++)
 			for(element=0;element<=yord-1;element++)
-				yderiv.coeffs[(col * (yderiv.yord + 1) + element)]= this.yord*(this.coeffs[(col * (this.yord + 1) + element+1)] - this.coeffs[(col * (this.yord + 1) + element)]);
+				yderiv.coeffs[(col * (yderiv.yord + 1) + element)]
+						= this.yord*(
+								this.coeffs[(col * (this.yord + 1) + element+1)] 
+								- this.coeffs[(col * (this.yord + 1) + element)]);
 		return yderiv;
 	}
 
@@ -217,22 +226,22 @@ public class Bern2D {
 	/**
 	 * @throws AsurfException  
 	 */
-	public Bern1D make_bern1D_of_face(int type) throws AsurfException
+	public Bern1D make_bern1D_of_face(Face_info.Type type) throws AsurfException
 	{
 		Bern1D aa;
 
 		switch(type)
 		{
-		case Face_info.X_LOW:
+		case X_LOW:
 			return left();
 
-		case Face_info.X_HIGH:
+		case X_HIGH:
 			return right();
 
-		case Face_info.Y_LOW:
+		case Y_LOW:
 			return bottom();
 			
-		case Face_info.Y_HIGH:
+		case Y_HIGH:
 			 return top();
 			 
 		default:
@@ -371,7 +380,7 @@ public class Bern2D {
 	}
 	
 
-	static Bern2D multiplyBern2D(Bern2D M,Bern2D N)
+	public static Bern2D multiplyBern2D(Bern2D M,Bern2D N)
 	{
 		Bern2D aa;
 		double val;
@@ -407,7 +416,7 @@ public class Bern2D {
 	}
 
 
-	static Bern2D identityBern2D(int m,int n)
+	public static Bern2D identityBern2D(int m,int n)
 	{
 		Bern2D aa;
 		int i,j;
@@ -420,7 +429,7 @@ public class Bern2D {
 		return(aa);
 	}
 
-	static Bern2D addBern2D(Bern2D M,Bern2D N)
+	public static Bern2D addBern2D(Bern2D M,Bern2D N)
 	{
 		int i,j,xord,yord;
 		Bern2D aa,bb,cc,ll,rr;
@@ -504,7 +513,7 @@ public class Bern2D {
 		return(aa);
 	}
 
-	static Bern2D subtractBern2D(Bern2D M,Bern2D N)
+	public static Bern2D subtractBern2D(Bern2D M,Bern2D N)
 	{
 		int i,j,xord,yord;
 		Bern2D aa,bb,cc,ll,rr;
@@ -627,7 +636,7 @@ public class Bern2D {
 		}
 
 		@Override
-		public Bern1D make_bern1D_of_face(int type) {
+		public Bern1D make_bern1D_of_face(Face_info.Type type) {
 			return Bern1D.posBern1D;
 		}
 
@@ -674,7 +683,7 @@ public class Bern2D {
 		
 		
 		@Override
-		public Bern1D make_bern1D_of_face(int type) {
+		public Bern1D make_bern1D_of_face(Face_info.Type type) {
 			return Bern1D.negBern1D;
 		}
 
@@ -715,7 +724,7 @@ public class Bern2D {
 			
 			
 			@Override
-			public Bern1D make_bern1D_of_face(int type) throws AsurfException {
+			public Bern1D make_bern1D_of_face(Face_info.Type type) throws AsurfException {
 				//throw new AsurfException("zeroBern.make_bern1D_of_face");
 				return Bern1D.zeroBern1D;
 			}

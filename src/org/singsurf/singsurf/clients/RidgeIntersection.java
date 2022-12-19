@@ -95,17 +95,17 @@ public class RidgeIntersection extends Intersection implements GeneralisedBiOper
 		def.setOption("numItts", Integer.parseInt(this.chItts.getSelectedItem()));
 	}
 
-	AbstractClient ingredient1;
-	AbstractClient ingredient2;
+	AbstractProject ingredient1;
+	AbstractProject ingredient2;
 
 	@Override
-	public void setIngredient1(AbstractClient client) {
+	public void setFirstIngredient(AbstractProject client) {
 		this.ingredient1 = client;
-		((RidgeCalculator) calc).setIngredient1(client.getCalculator());
+		((RidgeCalculator) calc).setFirstIngredient(client.getCalculator());
 	}
 
 	@Override
-	public void setIngredient2(AbstractClient client) {
+	public void setSecondIngredient(AbstractProject client) {
 		this.ingredient2 = client;
 		directionCalculator = client.getCalculator();
 		boolean goodIngredients = goodIngredients();
@@ -113,12 +113,12 @@ public class RidgeIntersection extends Intersection implements GeneralisedBiOper
 	}
 
 	@Override
-	public AbstractClient getIngredient1() {
+	public AbstractProject getFirstIngredient() {
 		return ingredient1;
 	}
 
 	@Override
-	public AbstractClient getIngredient2() {
+	public AbstractProject getSecondIngredient() {
 		return ingredient2;
 	}
 
@@ -130,12 +130,12 @@ public class RidgeIntersection extends Intersection implements GeneralisedBiOper
 			String ingrName = ch_ingredient1.getSelectedItem();
 			if (ingrName.equals(NONE))
 				return;
-			setIngredient1(store.getGenerator(ingrName));
+			setFirstIngredient(store.getGenerator(ingrName));
 		} else if (itSel == ch_ingredient2) {
 			String ingrName = ch_ingredient2.getSelectedItem();
 			if (ingrName.equals(NONE))
 				return;
-			setIngredient2(store.getGenerator(ingrName));
+			setSecondIngredient(store.getGenerator(ingrName));
 		} else
 			super.itemStateChanged(e);
 	}
@@ -146,19 +146,19 @@ public class RidgeIntersection extends Intersection implements GeneralisedBiOper
 		if (!calc.isGood())
 			return;
 		if (goodIngredients()
-				&& (((RidgeCalculator) calc).getIngredient1().getDefinition().getName().equals(geomName)
+				&& (((RidgeCalculator) calc).getFirstIngredient().getDefinition().getName().equals(geomName)
 						|| directionCalculator.getDefinition().getName().equals(geomName))) {
 			this.calcGeoms();
 		}
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
-		if (goodIngredients() && ((RidgeCalculator) calc).getIngredient1() == inCalc)
-			this.setIngredient1(client);
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
+		if (goodIngredients() && ((RidgeCalculator) calc).getFirstIngredient() == inCalc)
+			this.setFirstIngredient(client);
 
 		if (goodIngredients() && directionCalculator == inCalc)
-			this.setIngredient2(client);
+			this.setSecondIngredient(client);
 	}
 
 	@Override
@@ -205,31 +205,31 @@ public class RidgeIntersection extends Intersection implements GeneralisedBiOper
 	}
 
 	@Override
-	public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+	public void loadProjectComponents(ProjectComponents comp) {
 		if (comp.getIngredients().size() >= 1) {
 			String name = comp.getIngredients().get(0);
-			this.setIngredient1(ss.getProject(name));
+			this.setFirstIngredient(store.getProject(name));
 			this.ch_ingredient1.select(name);
 
 		}
 		if (comp.getIngredients().size() >= 2) {
 			String name = comp.getIngredients().get(1);
-			this.setIngredient2(ss.getProject(name));
+			this.setSecondIngredient(store.getProject(name));
 			this.ch_ingredient2.select(name);
 		}
-		super.loadProjectComponents(comp, ss);
+		super.loadProjectComponents(comp);
 	}
 
 	public String getIngridient1Name() {
 		if (this.goodIngredients()) {
-			return this.getIngredient1().getName();
+			return this.getFirstIngredient().getName();
 		}
 		return "null";
 	}
 
 	public String getIngridient2Name() {
 		if (this.goodIngredients()) {
-			return this.getIngredient2().getName();
+			return this.getSecondIngredient().getName();
 		}
 		return "null";
 	}

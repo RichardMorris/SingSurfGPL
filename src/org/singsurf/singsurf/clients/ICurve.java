@@ -39,7 +39,7 @@ import jv.project.PgGeometryIf;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class ICurve extends AbstractOperatorClient {
+public class ICurve extends AbstractOperatorProject {
 	private static final String MIDPOINT = "Midpoint";
 	private static final String EULER = "Euler";
 	private static final String HEUN = "Heun";
@@ -288,7 +288,7 @@ public class ICurve extends AbstractOperatorClient {
 			return;
 		}
 		PgGeometryIf input = store.getGeom(name);
-		PgGeometryIf output = store.aquireCurve(getPreferredOutputName(name), this);
+		PgGeometryIf output = store.acquireCurve(getPreferredOutputName(name), this);
 		GeomPair p = new GeomPair(input, output);
 		activePairs.put(name, p);
 		activeInputNames.add(name);
@@ -334,7 +334,7 @@ public class ICurve extends AbstractOperatorClient {
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 	}
 
 	@Override

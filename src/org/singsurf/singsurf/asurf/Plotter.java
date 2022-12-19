@@ -35,5 +35,9 @@ public interface Plotter {
 
 	void printResults();
 
+	void plot_line(Sol_info sol1, Sol_info sol2);
+
+	void plot_point(Sol_info sol);
+
 
 }

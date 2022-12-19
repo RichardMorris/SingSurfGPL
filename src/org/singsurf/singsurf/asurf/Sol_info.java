@@ -218,7 +218,7 @@ public final class Sol_info {
 	}
 
 	/**
-	 * Require {@link #calc_pos_actual(BoxClevA)} has been called before
+	 * Require {@link #calc_pos_actual(Region_info, Bern3DContext)} has been called before
 	 * @return
 	 */
 	public String toStringNorm() {

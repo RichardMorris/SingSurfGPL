@@ -41,7 +41,7 @@ public class CalculatorSetup {
 		def.add(new DefVariable("x",DefType.ingrVar,-1,1,10));
 		def.setOpType(DefType.pcurve);
 		RidgeCalculator pc = new RidgeCalculator(def, 1);
-		pc.setIngredient1(c1);
+		pc.setFirstIngredient(c1);
 		pc.build();
 		assertTrue(pc.getMsg(),pc.isGood());
 		fail("Expect this to fail as constructor is wrong, need better mock");

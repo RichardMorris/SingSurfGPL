@@ -59,7 +59,7 @@ public class GenICurve extends ICurve implements GeneralisedOperator {
 	/** Whether to project onto the given surface. */
 	protected Checkbox cbProject = new Checkbox("Project onto surface", false);
 
-	AbstractClient ingredient;
+	AbstractProject ingredient;
 
 	protected Choice ch_start = new Choice();
 
@@ -122,7 +122,7 @@ public class GenICurve extends ICurve implements GeneralisedOperator {
 
 	
 	@Override
-	public void setIngredient(AbstractClient ingr) {
+	public void setIngredient(AbstractProject ingr) {
 		ingredient = ingr;
 
 		((ChainedCalculator) calc).setIngredient(ingr.getCalculator());
@@ -134,12 +134,12 @@ public class GenICurve extends ICurve implements GeneralisedOperator {
 	}
 
 	@Override
-	public AbstractClient getIngredient() {
+	public AbstractProject getIngredient() {
 		return ingredient;
 	}
 
 	@Override
-	public String getIngridientName() {
+	public String getIngredientName() {
 		if (calc != null) {
 			ChainedCalculator cc = (ChainedCalculator) calc;
 			if (cc != null) {
@@ -173,13 +173,13 @@ public class GenICurve extends ICurve implements GeneralisedOperator {
 		super.geometryHasChanged(geomName);
 		if (!calc.isGood())
 			return;
-		if (goodIngredient() && getIngridientName().equals(geomName)) {
+		if (goodIngredient() && getIngredientName().equals(geomName)) {
 			this.calcGeoms();
 		}
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 		if (((ChainedCalculator) calc).getIngredient() == inCalc) {
 			this.setIngredient(client);
 		}
@@ -199,7 +199,7 @@ public class GenICurve extends ICurve implements GeneralisedOperator {
 	@Override
 	public String getPreferredOutputName(String name) {
 
-		return getName() + "(" + getIngridientName() + "," + name + ")";
+		return getName() + "(" + getIngredientName() + "," + name + ")";
 	}
 
 	@Override
@@ -210,13 +210,13 @@ public class GenICurve extends ICurve implements GeneralisedOperator {
 	}
 
 	@Override
-	public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+	public void loadProjectComponents(ProjectComponents comp) {
 		if (comp.getIngredients().size() >= 1) {
 			String name = comp.getIngredients().get(0);
-			this.setIngredient(ss.getProject(name));
+			this.setIngredient(store.getProject(name));
 			this.ch_ingredient.select(name);
 		}
-		super.loadProjectComponents(comp, ss);
+		super.loadProjectComponents(comp);
 	}
 
 	@Override

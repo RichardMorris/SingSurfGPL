@@ -4,10 +4,9 @@ Created 17 Sep 2006 - Richard Morris
 package org.singsurf.singsurf.clients;
 
 public interface GeneralisedBiOperator {
-	public void setIngredient1(AbstractClient client);
-	public void setIngredient2(AbstractClient client);
+	public void setFirstIngredient(AbstractProject client);
+	public void setSecondIngredient(AbstractProject client);
 	public boolean goodIngredients();
-	public AbstractClient getIngredient1();
-	public AbstractClient getIngredient2();
-	
+	public AbstractProject getFirstIngredient();
+	public AbstractProject getSecondIngredient();	
 }

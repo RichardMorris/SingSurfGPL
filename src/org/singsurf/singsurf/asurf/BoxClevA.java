@@ -52,6 +52,7 @@ public abstract class BoxClevA implements BoxCleverBean {
 	public boolean littleFacets = false;
 	public int triangulate=1;
 	public int cleanmesh=-1; // off by default
+	public int rotderiv=0; // off by default
 	public int tagbad=0;
 	public int tagSing=0;
 	public int blowup=0;
@@ -172,7 +173,7 @@ public abstract class BoxClevA implements BoxCleverBean {
 		if(known_sings!=null) {
 			sb.append(String.format("num_known_sings=%d;%n",num_known_sings));
 			for(int i=0;i<known_sings.length;++i)
-				sb.append(known_sings[i]);
+				sb.append(known_sings[i]+"\n");
 		}
 		return sb.toString();
 	}
@@ -623,5 +624,22 @@ public abstract class BoxClevA implements BoxCleverBean {
 		degZ=n;
 	}
 
+	public void setRotderiv(int i) {
+		this.rotderiv=i;
+	}
 
+	public Sol_info addKnownSing(Region_info region,double x,double y,double z) {
+		double[] xrel = region.relative_position(x,y,z);
+		Sol_info sol = new Sol_info(Key3D.BOX,0,0,0,1, xrel[0],xrel[1],xrel[2]);
+		Sol_info[] old = known_sings;
+		int len = old!=null ? old.length : 0;
+		known_sings = new Sol_info[len+1];
+		known_sings[len] = sol;
+		if(old!=null) {
+			System.arraycopy(old, 0, known_sings, 0, len);
+		}
+		num_known_sings++;
+		return sol;
+		
+	}
 }

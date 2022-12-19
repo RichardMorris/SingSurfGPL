@@ -37,7 +37,7 @@ import jv.project.PgGeometryIf;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class Mapping extends AbstractOperatorClient {
+public class Mapping extends AbstractOperatorProject {
 	/** 
 	 * 
 	 */
@@ -288,7 +288,12 @@ public class Mapping extends AbstractOperatorClient {
 			return;
 		}
 		PgGeometryIf input = store.getGeom(name);
-		PgGeometryIf output = store.aquireGeometry(getPreferredOutputName(name), input, this);
+		if(input==null) {
+			showStatus("Mapping no input "+name);
+			return;
+		}
+		
+		PgGeometryIf output = store.acquireGeometry(getPreferredOutputName(name), input, this);
 		GeomPair p = new GeomPair(input, output);
 		PointSetMaterial mat = PointSetMaterial.getMaterial(input);
 		mat.apply(output);
@@ -445,7 +450,7 @@ public class Mapping extends AbstractOperatorClient {
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 	}
 
 	@Override

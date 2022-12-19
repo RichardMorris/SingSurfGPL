@@ -3,7 +3,10 @@ package org.singsurf.singsurf.clients;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Label;
+
+import javax.swing.JScrollPane;
 
 import org.singsurf.singsurf.LParamList;
 
@@ -51,7 +54,7 @@ public class Globals_IP extends PjProject_IP {
 		setLayout(new BorderLayout());
 		
 		PsTabPanel tabPanel = new PsTabPanel();
-		add(tabPanel); // add tabbed panel like any other panel
+		add(tabPanel,BorderLayout.CENTER); // add tabbed panel like any other panel
 
 		final PsPanel mainPanel = getMainPanel();
 		mainPanel.setFont(globals.basicFont);
@@ -63,12 +66,33 @@ public class Globals_IP extends PjProject_IP {
 		final LParamList paramPanel = globals.newParams;
 		paramPanel.setFont(globals.basicFont);
 		tabPanel.addPanel("Global Variables",paramPanel);
+		
+		add(getSouthPanel(),BorderLayout.SOUTH);
 	}
 
 	protected PsPanel getMainPanel() {
 		PsPanel p1 = new PsPanel();
 		p1.add(new Label("SingSurf"));
+		p1.setLayout(new BorderLayout());
+		JScrollPane scroll = new JScrollPane(globals.taDef);
+		p1.add(scroll, BorderLayout.CENTER);
+		
+		PsPanel p2 = new PsPanel(new BorderLayout());
+		p2.add(globals.m_go,BorderLayout.NORTH);
+		
+		JScrollPane scroll2 = new JScrollPane(globals.results);
+		p2.add(scroll2, BorderLayout.CENTER);		
+		p1.add(p2, BorderLayout.SOUTH);
 		return p1;
+	}
+
+	protected PsPanel getSouthPanel() {
+		PsPanel p2 = new PsPanel(new BorderLayout());
+		p2.add(globals.m_go,BorderLayout.NORTH);
+		
+		JScrollPane scroll2 = new JScrollPane(globals.results);
+		p2.add(scroll2, BorderLayout.CENTER);		
+		return p2;
 	}
 	
 	protected PsPanel getGeomPanel() {

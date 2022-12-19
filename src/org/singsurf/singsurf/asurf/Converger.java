@@ -1,5 +1,8 @@
 package org.singsurf.singsurf.asurf;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //import org.eclipse.jdt.annotation.NonNull;
 import org.singsurf.singsurf.acurve.AsurfException;
 import org.singsurf.singsurf.acurve.Bern1D;
@@ -318,9 +321,18 @@ public class Converger {
 		
 	}
 	
-	public Solve1DResult converge_edge(Edge_info edge, Bern1D bb, Bern1D dx) {
+	public Solve1DResult converge_edge(Bern1D bb, Bern1D dx) {
 		double best_pos = 0.5;
 		double best_val = bb.evaluate(best_pos);
+		Bern1D dx2;
+		try {
+			 dx2 = bb.diff();
+			 dx = dx2;
+		} catch (AsurfException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			
+		}
 		double dx_val;
 		double delta;
 		double cur_pos = 0.5;
@@ -337,7 +349,73 @@ public class Converger {
 			}
 			if(cur_val==0) break;
 		}
+		if(best_pos==0.5) {
+			// Conver didn't work try sub division
+			return binary_subdivision(bb,best_pos,best_val);
+		}
 		return new Solve1DResult(best_pos,best_val);
+	}
+
+	private Solve1DResult binary_subdivision(Bern1D bb, double mp, double m) {
+		double l = bb.evaluate(0.0);
+		double h = bb.evaluate(1.0);
+		double lp = 0.0;
+		double hp = 1.0;
+		for(int i=0;i<10;++i) {
+			if(l>0) {
+				if(m>0) {
+					if(h>0) { 
+						break;
+					} else {
+						// + + -
+						l = h;
+						h = m;
+						lp = hp;
+						hp = mp;
+					}
+				} else {
+					if(h>0) {
+						// + - +
+						h = l;
+						l = m;
+						hp = lp;
+						lp = mp;
+					} else {
+						// + - -
+						h = l;
+						l = m;
+						hp = lp;
+						lp = mp;
+					}
+				}
+			} else {
+				if(m>0) {
+					if(h>0) { 
+						// - + +
+						h = m;
+						hp = mp;
+					} else {
+						// - + -
+						l = h;
+						h = m;
+						lp = hp;
+						hp = mp;
+					}
+				} else {
+					if(h>0) {
+						// - - +
+						l = m;
+						lp = mp;
+					} else {
+						// - - -
+						break;
+					}
+				}
+			}
+			mp = 0.5 * (lp + hp);
+			m = bb.evaluate(mp);
+		}
+		return new Solve1DResult(mp,m);
 	}
 
 	private Solve2Dresult exact_solve(double start_x, double start_y, Bern2D bb, Bern2D bb_x, Bern2D bb_y, Bern2D gg, Bern2D gg_x, Bern2D gg_y) {
@@ -384,28 +462,29 @@ public class Converger {
 		return lastgood;
 	}
 
-	public Solve2DresultWithSig converge_node(FacePos pos, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, int signDx, int signDy, int signDz)
+	public Solve2DresultWithSig converge_node(FacePos pos, Sheaf2D s, int signDx, int signDy, int signDz)
 			throws AsurfException {
 
 		int n_zero_deriv = (signDx == 0 ? 1 : 0) + (signDy == 0 ? 1 : 0) + (signDz == 0 ? 1 : 0);
 		switch(n_zero_deriv) {
 		case 1:
-			return converge_node_exactly_one_deriv(pos, bb, dx, dy, dz, signDx, signDy, signDz);
+			return converge_node_exactly_one_deriv(pos, s, signDx, signDy, signDz);
 		case 2:
-			return converge_node_two_deriv(pos, bb, dx, dy, dz, signDx, signDy, signDz);
+			return converge_node_two_deriv(pos, s, signDx, signDy, signDz);
 		case 3:
-			return converge_node_three_deriv(pos, bb, dx, dy, dz, signDx, signDy, signDz);
+			return converge_node_three_deriv(pos, s, signDx, signDy, signDz);
 		default:
 			if(failCountB++==0) {
 				BoxClevA.log.println("Wrong number of zero derivs");
 				BoxClevA.log.println(pos);
 			}
-			return converge_node_zero_deriv(pos,bb,dx,dy,dz);
+			return converge_node_zero_deriv(pos,s);
 		}
 	}
 
 	
-	private Solve2DresultWithSig converge_node_exactly_one_deriv(FacePos pos, Bern2D f, Bern2D fx, Bern2D fy, Bern2D g, Bern2D gx, Bern2D gy,
+	private Solve2DresultWithSig converge_node_exactly_one_deriv(FacePos pos, 
+			Bern2D f, Bern2D fx, Bern2D fy, Bern2D g, Bern2D gx, Bern2D gy,
 			Bern2D dx, Bern2D dy, Bern2D dz) throws AsurfException {
 				
 		Solve2Dresult la_conv = exact_solve(pos.x, pos.y, f, fx, fy, g, gx, gy);
@@ -493,32 +572,65 @@ public class Converger {
 		return new BernPair(f_x,f_y);
 	}
 	
-	Solve2DresultWithSig converge_node_exactly_one_deriv(FacePos pos, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, int signDx,
-			int signDy, int signDz) throws AsurfException {
+	Solve2DresultWithSig converge_node_rotated_diff(FacePos pos, Sheaf2D s, Bern2D g) throws AsurfException {
+		Bern2D dgdx = g.diffX();
+		Bern2D dgdy = g.diffY();
+		BernPair bp = getBernsOfFace(pos,s.aa,s.dx,s.dy,s.dz);
+		
+		Solve2Dresult tgt_conv = itterate_node_one_deriv(pos.x, pos.y, 
+				s.aa, bp.f_x, bp.f_y, 
+				g, dgdx, dgdy);
 
-		BernPair bp = getBernsOfFace(pos,bb,dx,dy,dz);
+		if(tgt_conv.good) {
+
+					int valx = s.dx.evalbern2Dsign(tgt_conv.x, tgt_conv.y);
+					int valy = s.dy.evalbern2Dsign(tgt_conv.x, tgt_conv.y);
+					int valz = s.dz.evalbern2Dsign(tgt_conv.x, tgt_conv.y);
+					return new Solve2DresultWithSig(tgt_conv,valx,valy,valz);
+		}
+		
+		Solve2Dresult la_conv = exact_solve(pos.x, pos.y, s.aa, bp.f_x, bp.f_y, 
+				g, dgdx, dgdy);
+		if(la_conv.good) {
+
+			int valx = s.dx.evalbern2Dsign(la_conv.x, la_conv.y);
+			int valy = s.dy.evalbern2Dsign(la_conv.x, la_conv.y);
+			int valz = s.dz.evalbern2Dsign(la_conv.x, la_conv.y);
+			return new Solve2DresultWithSig(la_conv,valx,valy,valz);
+}
+
+		return null;
+	}
+	
+	Solve2DresultWithSig converge_node_exactly_one_deriv(FacePos pos, Sheaf2D s, 
+			int signDx, int signDy, int signDz) throws AsurfException {
+
+		BernPair bp = getBernsOfFace(pos,s.aa,s.dx,s.dy,s.dz);
 
 		if (signDx == 0) {
-			Bern2D dx_x = dx.diffX();
-			Bern2D dx_y = dx.diffY();
+			Bern2D dx_x = s.dx.diffX();
+			Bern2D dx_y = s.dx.diffY();
 
-			return converge_node_exactly_one_deriv(pos,bb,bp.f_x,bp.f_y,dx,dx_x,dx_y, Bern2D.zeroBern2D, dy, dz);
+			return converge_node_exactly_one_deriv(pos, 
+					s.aa,bp.f_x,bp.f_y,
+					s.dx,dx_x,dx_y, 
+					Bern2D.zeroBern2D, s.dy, s.dz);
 		}
 		if (signDy == 0) {
-			Bern2D dy_x = dy.diffX();
-			Bern2D dy_y = dy.diffY();
-			return converge_node_exactly_one_deriv(pos,bb,bp.f_x,bp.f_y,dy,dy_x,dy_y, dx,Bern2D.zeroBern2D, dz);
+			Bern2D dy_x = s.dy.diffX();
+			Bern2D dy_y = s.dy.diffY();
+			return converge_node_exactly_one_deriv(pos,s.aa,bp.f_x,bp.f_y,s.dy,dy_x,dy_y, s.dx,Bern2D.zeroBern2D, s.dz);
 		}
 		if (signDz == 0) {
-			Bern2D dz_x = dz.diffX(); 
-			Bern2D dz_y = dz.diffY();
-			return converge_node_exactly_one_deriv(pos,bb,bp.f_x,bp.f_y,dz,dz_x,dz_y, dx, dy, Bern2D.zeroBern2D);
+			Bern2D dz_x = s.dz.diffX(); 
+			Bern2D dz_y = s.dz.diffY();
+			return converge_node_exactly_one_deriv(pos,s.aa,bp.f_x,bp.f_y,s.dz,dz_x,dz_y, s.dx, s.dy, Bern2D.zeroBern2D);
 		}
 
 		if(failCountA++==0) {
 			BoxClevA.log.println("converge_node_exactly_one_deriv: No signs are zero");
 		}
-		Solve2Dresult res = this.itterate_node_zero_deriv(pos, bb, dx, dy, dz);
+		Solve2Dresult res = itterate_node_zero_deriv(pos, s);
 		Solve2DresultWithSig ressig = new Solve2DresultWithSig(res,signDx,signDy,signDy);
 		return ressig;
 	}
@@ -633,7 +745,7 @@ public class Converger {
 			if (PRINT_CONVERGE) {
 				BoxClevA.log.printf("sol %6.3f %6.3f %9.6f dx %9.6f%n", x, y, fval, gval);
 			}
-			if (Math.abs(gval) < GOOD_SOL_TOL * GOOD_SOL_TOL)
+			if (Math.abs(lastgood.f_val) > GOOD_SOL_TOL && Math.abs(gval) < GOOD_SOL_TOL * GOOD_SOL_TOL)
 				break;
 		}
 
@@ -912,7 +1024,7 @@ public class Converger {
 		return lastgood;
 	}
 
-	private Solve2DresultWithSig converge_node_three_deriv(FacePos pos, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, int signDx,
+	private Solve2DresultWithSig converge_node_three_deriv(FacePos pos, Sheaf2D s, int signDx,
 			int signDy, int signDz) throws AsurfException {
 
 		Bern2D f_x;
@@ -920,65 +1032,65 @@ public class Converger {
 		switch (pos.face.type) {
 		case FACE_LL:
 		case FACE_RR:
-			f_x = dy;
-			f_y = dz;
+			f_x = s.dy;
+			f_y = s.dz;
 			break;
 
 		case FACE_FF:
 		case FACE_BB:
-			f_x = dx;
-			f_y = dz;
+			f_x = s.dx;
+			f_y = s.dz;
 			break;
 
 		case FACE_DD:
 		case FACE_UU:
-			f_x = dx;
-			f_y = dy;
+			f_x = s.dx;
+			f_y = s.dy;
 			break;
 
 		default:
 			throw new AsurfException("Bad sol type " + pos.face);
 		}
 		if (f_x instanceof Bern2D.NegBern2D || f_x instanceof Bern2D.PosBern2D || f_x instanceof Bern2D.ZeroBern2D) {
-			f_x = bb.diffX();
+			f_x = s.aa.diffX();
 		}
 		if (f_y instanceof Bern2D.NegBern2D || f_y instanceof Bern2D.PosBern2D || f_y instanceof Bern2D.ZeroBern2D) {
-			f_y = bb.diffY();
+			f_y = s.aa.diffY();
 		}
 
 		Solve2Dresult tgt_conv = null;
 
-		Bern2D dx_x = dx.diffX();
-		Bern2D dx_y = dx.diffY();
-		Bern2D dy_x = dy.diffX();
-		Bern2D dy_y = dy.diffY();
-		Bern2D dz_x = dz.diffX();
-		Bern2D dz_y = dz.diffY();
+		Bern2D dx_x = s.dx.diffX();
+		Bern2D dx_y = s.dx.diffY();
+		Bern2D dy_x = s.dy.diffX();
+		Bern2D dy_y = s.dy.diffY();
+		Bern2D dz_x = s.dz.diffX();
+		Bern2D dz_y = s.dz.diffY();
 
-		tgt_conv = itterate_node_three_deriv(pos.x,pos.y, bb, f_x, f_y, dx, dx_x, dx_y, dy, dy_x, dy_y, dz, dz_x, dz_y);
+		tgt_conv = itterate_node_three_deriv(pos.x,pos.y, s.aa, f_x, f_y, s.dx, dx_x, dx_y, s.dy, dy_x, dy_y, s.dz, dz_x, dz_y);
 		if(tgt_conv.good)
 				return new Solve2DresultWithSig(tgt_conv,0,0,0);
 		
 		// Failed three deriv try 2 deriv
 		Solve2DresultWithSig best_res=null;
 		{
-		Solve2Dresult res_xy = this.itterate_node_two_deriv(pos.x, pos.y, bb, f_x, f_y, dx, dx_x, dx_y, dy, dy_x, dy_y);
+		Solve2Dresult res_xy = this.itterate_node_two_deriv(pos.x, pos.y, s.aa, f_x, f_y, s.dx, dx_x, dx_y, s.dy, dy_x, dy_y);
 		if(res_xy.good ) {
-			double val = dz.evalbern2D(res_xy.x, res_xy.y);
+			double val = s.dz.evalbern2D(res_xy.x, res_xy.y);
 			best_res = new Solve2DresultWithSig(res_xy,0,0,val>0?1:(val<0?-1:0));
 		}
 	}
 		{
-		Solve2Dresult res_xz = this.itterate_node_two_deriv(pos.x, pos.y, bb, f_x, f_y, dx, dx_x, dx_y, dz, dz_x, dz_y);
+		Solve2Dresult res_xz = this.itterate_node_two_deriv(pos.x, pos.y, s.aa, f_x, f_y, s.dx, dx_x, dx_y, s.dz, dz_x, dz_y);
 		if(res_xz.good && ( best_res == null || Math.abs(res_xz.f_val) < Math.abs(best_res.f_val) )) {
-			int val = dy.evalbern2Dsign(res_xz.x, res_xz.y);
+			int val = s.dy.evalbern2Dsign(res_xz.x, res_xz.y);
 			best_res = new Solve2DresultWithSig(res_xz,0,val,0);
 		}
 	}
 		{
-		Solve2Dresult res_yz = this.itterate_node_two_deriv(pos.x, pos.y, bb, f_x, f_y, dy, dy_x, dy_y, dz, dz_x, dz_y);
+		Solve2Dresult res_yz = this.itterate_node_two_deriv(pos.x, pos.y, s.aa, f_x, f_y, s.dy, dy_x, dy_y, s.dz, dz_x, dz_y);
 		if(res_yz.good && ( best_res == null || Math.abs(res_yz.f_val) < Math.abs(best_res.f_val) )) {
-			int val = dx.evalbern2Dsign(res_yz.x, res_yz.y);
+			int val = s.dx.evalbern2Dsign(res_yz.x, res_yz.y);
 			best_res = new Solve2DresultWithSig(res_yz,val,0,0);
 		}
 		}
@@ -987,27 +1099,27 @@ public class Converger {
 
 		// Try 1 deriv
 		{
-			Solve2Dresult res_x = this.itterate_node_one_deriv(pos.x, pos.y, bb, f_x, f_y, dx, dx_x, dx_y);
+			Solve2Dresult res_x = this.itterate_node_one_deriv(pos.x, pos.y, s.aa, f_x, f_y, s.dx, dx_x, dx_y);
 			if(res_x.good ) {
-				int valy = dy.evalbern2Dsign(res_x.x, res_x.y);
-				int valz = dz.evalbern2Dsign(res_x.x, res_x.y);
+				int valy = s.dy.evalbern2Dsign(res_x.x, res_x.y);
+				int valz = s.dz.evalbern2Dsign(res_x.x, res_x.y);
 				best_res = new Solve2DresultWithSig(res_x,0, valy, valz);
 			}
 	}
 			{
-		Solve2Dresult res_y = this.itterate_node_one_deriv(pos.x, pos.y, bb, f_x, f_y, dy, dy_x, dy_y);
+		Solve2Dresult res_y = this.itterate_node_one_deriv(pos.x, pos.y, s.aa, f_x, f_y, s.dy, dy_x, dy_y);
 
 			if(res_y.good && ( best_res == null || Math.abs(res_y.f_val) < Math.abs(best_res.f_val) )) {
-				int valx = dx.evalbern2Dsign(res_y.x, res_y.y);
-				int valz = dz.evalbern2Dsign(res_y.x, res_y.y);
+				int valx = s.dx.evalbern2Dsign(res_y.x, res_y.y);
+				int valz = s.dz.evalbern2Dsign(res_y.x, res_y.y);
 				best_res = new Solve2DresultWithSig(res_y, valx, 0, valz);
 			}
 	}
 			{
-		Solve2Dresult res_z = this.itterate_node_one_deriv(pos.x, pos.y, bb, f_x, f_y, dz, dz_x, dz_y);
+		Solve2Dresult res_z = this.itterate_node_one_deriv(pos.x, pos.y, s.aa, f_x, f_y, s.dz, dz_x, dz_y);
 			if(res_z.good && ( best_res == null || Math.abs(res_z.f_val) < Math.abs(best_res.f_val) )) {
-				int valx = dx.evalbern2Dsign(res_z.x, res_z.y);
-				int valy = dy.evalbern2Dsign(res_z.x, res_z.y);
+				int valx = s.dx.evalbern2Dsign(res_z.x, res_z.y);
+				int valy = s.dy.evalbern2Dsign(res_z.x, res_z.y);
 				best_res = new Solve2DresultWithSig(res_z, valx, valy, 0);
 		}
 	}
@@ -1015,10 +1127,10 @@ public class Converger {
 			return best_res;
 		
 		{
-			Solve2Dresult res0 = itterate_node_zero_deriv(pos,bb,dx,dy,dz);
-			int valx = dx.evalbern2Dsign(res0.x, res0.y);
-			int valy = dy.evalbern2Dsign(res0.x, res0.y);
-			int valz = dz.evalbern2Dsign(res0.x, res0.y);
+			Solve2Dresult res0 = itterate_node_zero_deriv(pos,s);
+			int valx = s.dx.evalbern2Dsign(res0.x, res0.y);
+			int valy = s.dy.evalbern2Dsign(res0.x, res0.y);
+			int valz = s.dz.evalbern2Dsign(res0.x, res0.y);
 			// nothing works use the best of a bad bunch
 			best_res = new Solve2DresultWithSig(res0, valx, valy,  valz);
 		}
@@ -1051,9 +1163,12 @@ public class Converger {
 	}
 
 	
-	Solve2DresultWithSig converge_node_just_three_deriv(FacePos pos, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, int signDx,
+	Solve2DresultWithSig converge_node_just_three_deriv(FacePos pos, Sheaf2D s, int signDx,
 			int signDy, int signDz) throws AsurfException {
-
+		Bern2D bb = s.aa;
+		Bern2D dx = s.dx;
+		Bern2D dy = s.dy;
+		Bern2D dz = s.dz;
 		Bern2D f_x;
 		Bern2D f_y;
 		switch (pos.face.type) {
@@ -1242,9 +1357,13 @@ public class Converger {
 		return lastgood;
 	}
 
-	Solve2DresultWithSig converge_node_two_deriv(FacePos pos, Bern2D bb, Bern2D dx, Bern2D dy, Bern2D dz, int signDx,
+	Solve2DresultWithSig converge_node_two_deriv(FacePos pos, Sheaf2D s, int signDx,
 			int signDy, int signDz) throws AsurfException {
-
+		Bern2D bb = s.aa;
+		Bern2D dx = s.dx;
+		Bern2D dy = s.dy;
+		Bern2D dz = s.dz;
+		
 		BernPair bp = getBernsOfFace(pos,bb,dx,dy,dz);
 
 		if (signDx == 0 && signDy == 0) {
@@ -1296,7 +1415,6 @@ public class Converger {
 	/**
 	 * Used with second derivative where no info about signs
 	 * 
-	 * @param sol
 	 * @param bb
 	 * @param dx
 	 * @param dy  may be null
@@ -1471,7 +1589,6 @@ public class Converger {
 	
 	
 	/**
-	 * @param sol
 	 * @param bb
 	 * @param dx
 	 * @param dy
@@ -1882,33 +1999,33 @@ public class Converger {
 		return itterate_node_zero_deriv(x,y,f,f_x,f_y);
 	}
 	
-	private Solve2Dresult itterate_node_zero_deriv(FacePos pos, Bern2D f, Bern2D dx, Bern2D dy, Bern2D dz) throws AsurfException {
+	private Solve2Dresult itterate_node_zero_deriv(FacePos pos, Sheaf2D s) throws AsurfException {
 
 		double x = pos.x, y = pos.y;
 		Bern2D f_x,f_y;
 		switch (pos.face.type) {
 		case FACE_LL:
 		case FACE_RR:
-			f_x = dy;
-			f_y = dz;
+			f_x = s.dy;
+			f_y = s.dz;
 			break;
 
 		case FACE_FF:
 		case FACE_BB:
-			f_x = dx;
-			f_y = dz;
+			f_x = s.dx;
+			f_y = s.dz;
 			break;
 
 		case FACE_DD:
 		case FACE_UU:
-			f_x = dx;
-			f_y = dy;
+			f_x = s.dx;
+			f_y = s.dy;
 			break;
 
 		default:
 			throw new AsurfException("Bad sol type " + pos.face);
 		}
-		return itterate_node_zero_deriv(x,y,f,f_x,f_y);
+		return itterate_node_zero_deriv(x,y,s.aa,f_x,f_y);
 	}
 
 	
@@ -1964,17 +2081,40 @@ public class Converger {
 
 	}
 
-	public Solve2DresultWithSig converge_node_zero_deriv(FacePos fp, Bern2D bb,Bern2D dx,Bern2D dy,Bern2D dz) throws AsurfException {
-		Solve2Dresult result =  itterate_node_zero_deriv(fp,bb);
-		int valx = dx.evalbern2Dsign(result.x, result.y);
-		int valy = dy.evalbern2Dsign(result.x, result.y);
-		int valz = dz.evalbern2Dsign(result.x, result.y);
+	public Solve2DresultWithSig converge_node_zero_deriv(FacePos fp, Sheaf2D s) throws AsurfException {
+		Solve2Dresult result =  itterate_node_zero_deriv(fp,s.aa);
+		int valx = s.dx.evalbern2Dsign(result.x, result.y);
+		int valy = s.dy.evalbern2Dsign(result.x, result.y);
+		int valz = s.dz.evalbern2Dsign(result.x, result.y);
 		return new Solve2DresultWithSig(result,valx,valy,valz);
 	}
 
 	public void printResults() {
 		System.out.format("Converger: fail A %d B %d C %d D %d E %d%n",
 				failCountA,failCountB,failCountC,failCountD,failCountE);
+	}
+
+	public List<Double> allSols(Bern1D bern,double min,double max) throws AsurfException {
+		Bern1D dx = bern.diff();
+		return allSols(bern,dx,new ArrayList<Double>(),min,max,0);
+	}
+	
+	List<Double> allSols(Bern1D bern,Bern1D dx,List<Double> sols,double min,double max,int depth) {
+		if(bern.getSign()!=0)
+			return sols;
+		if(dx.getSign()==0 && depth<20) {
+			var br = bern.reduce();
+			var dr = dx.reduce();
+			double mid = (min+max)/2.0;
+			allSols(br.l,dr.l,sols,min,mid,depth+1);
+			allSols(br.r,dr.r,sols,mid,max,depth+1);
+			return sols;
+		}
+		
+		Solve1DResult res = converge_edge(bern, dx);
+		double pos = min + res.root * (max - min);
+		sols.add(pos);
+		return sols;
 	}
 
 }

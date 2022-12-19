@@ -3,13 +3,21 @@ package org.singsurf.singsurf.clients;
 import java.awt.Checkbox;
 import java.awt.CheckboxGroup;
 import java.awt.Color;
+import java.awt.FileDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -21,7 +29,6 @@ import org.nfunk.jep.Node;
 import org.nfunk.jep.ParseException;
 import org.singsurf.singsurf.Fractometer;
 import org.singsurf.singsurf.LParamList;
-import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.PuIntChoice;
 import org.singsurf.singsurf.PuParameter;
 import org.singsurf.singsurf.PuVariable;
@@ -38,11 +45,10 @@ import org.singsurf.singsurf.definitions.Parameter;
 import org.singsurf.singsurf.definitions.ProjectComponents;
 import org.singsurf.singsurf.geometries.GeomStore;
 import org.singsurf.singsurf.jep.EquationPolynomialConverter;
+import org.singsurf.singsurf.jepwrapper.EvaluationException;
 import org.singsurf.singsurf.operators.SimpleClip;
 import org.singsurf.singsurf.operators.SphereIntersectionClip;
 import org.singsurf.singsurf.operators.Split4D;
-
-import org.singsurf.singsurf.jepwrapper.EvaluationException;
 
 import jv.geom.PgElementSet;
 import jv.object.PsDebug;
@@ -50,10 +56,11 @@ import jv.project.PgGeometryIf;
 import jv.vecmath.PdMatrix;
 import jv.vecmath.PdVector;
 
-public class P3 extends AbstractClient {
+public class P3 extends AbstractProject {
 	private static final long serialVersionUID = 1L;
 	
 	JButton Bxwp,Bxwm,Bywp,Bywm,Bzwp,Bzwm,Breset;
+	JButton	BsaveMatrix, BloadMatrix;
 	protected PgElementSet inXYZ,inXYW,inXZW,inYZW;
 	protected PgElementSet outXYZ,outXYW,outXZW,outYZW;
 	
@@ -94,9 +101,9 @@ public class P3 extends AbstractClient {
 	PdMatrix RR,Rxwp,Rxwm,Rywp,Rywm,Rzwp,Rzwm;
 	double angInc = Math.PI / 20; 
 	
-	private double x0;
-	private double y0;
-	private double z0;
+	private double x0 = 1.0;
+	private double y0 = 1.0;
+	private double z0 = 1.0;
 	private double w0 = 1.0;
 
 	Split4D splitter = new Split4D();
@@ -134,7 +141,7 @@ public class P3 extends AbstractClient {
 		this.cbShowCurves.setState(false);
 		this.cbShowVert.setState(false);
 		this.cbShowPoints.setState(false);
-		this.cbShowBoundary.setState(true);
+		this.cbShowBoundary.setState(false);
 
 		cbg_coarse = new CheckboxGroup();
 		cb_c_4 = new Checkbox("4", cbg_coarse, false);
@@ -206,23 +213,116 @@ public class P3 extends AbstractClient {
 		Breset = new JButton("Reset rotation");
 		Breset.addActionListener(this);
 
+		BloadMatrix = new JButton("Load matrix");
+		BsaveMatrix = new JButton("Save matrix");
+		BloadMatrix.addActionListener(e -> {
+			loadMatrix(RR);
+			((P3_IP) m_IP).updateRotMatDisp(RR);
+			rotateSliceProject();		
+		} );
+		BsaveMatrix.addActionListener(e -> {
+			saveMatrix(RR);
+		} );
+		
 		loadDefinition(def1);
 
 	}
 
+	private void saveMatrix(PdMatrix mat) {
+		FileDialog fd = new FileDialog(m_frame, "Save matrix ", FileDialog.SAVE);
+		fd.setVisible(true);
+		if(fd.getDirectory() == null || fd.getFile() == null) {
+			System.out.println("File dialog canceled");
+			return;
+		}
+		Path path = FileSystems.getDefault().getPath(fd.getDirectory(), fd.getFile());
+
+		try (BufferedWriter writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
+		    writer.write(String.format("%9.6f, ",mat.getEntry(0, 0)));
+		    writer.write(String.format("%9.6f, ",mat.getEntry(0, 1)));
+		    writer.write(String.format("%9.6f, ",mat.getEntry(0, 2)));
+		    writer.write(String.format("%9.6f%n",mat.getEntry(0, 3)));
+
+		    writer.write(String.format("%9.6f, ",mat.getEntry(1, 0)));
+		    writer.write(String.format("%9.6f, ",mat.getEntry(1, 1)));
+		    writer.write(String.format("%9.6f, ",mat.getEntry(1, 2)));
+		    writer.write(String.format("%9.6f%n",mat.getEntry(1, 3)));
+		    
+		    writer.write(String.format("%9.6f, ",mat.getEntry(2, 0)));
+		    writer.write(String.format("%9.6f, ",mat.getEntry(2, 1)));
+		    writer.write(String.format("%9.6f, ",mat.getEntry(2, 2)));
+		    writer.write(String.format("%9.6f%n",mat.getEntry(2, 3)));
+
+		    writer.write(String.format("%9.6f, ",mat.getEntry(3, 0)));
+		    writer.write(String.format("%9.6f, ",mat.getEntry(3, 1)));
+		    writer.write(String.format("%9.6f, ",mat.getEntry(3, 2)));
+		    writer.write(String.format("%9.6f%n",mat.getEntry(3, 3)));
+
+		} catch (IOException x) {
+		    System.err.format("IOException: %s%n", x);
+		}		
+		System.out.println("Saved rotation matrix to "+path);
+		store.showStatus("Saved rotation matrix to "+path);
+
+	}
+
+	private void loadMatrix(PdMatrix mat) {
+		FileDialog fd = new FileDialog(m_frame, "Load matrix ", FileDialog.LOAD);
+		fd.setVisible(true);
+		if(fd.getDirectory() == null || fd.getFile() == null) {
+			System.out.println("File dialog canceled");
+			return;
+		}
+		Path path = FileSystems.getDefault().getPath(fd.getDirectory(), fd.getFile());
+		//Locale.ENGLISH.
+		try (Scanner scan = new Scanner(Files.newBufferedReader(path, StandardCharsets.UTF_8))) {
+			
+			scan.useDelimiter("[^-\\.\\d]+");
+			mat.setEntry(0, 0, scan.nextDouble());
+			mat.setEntry(0, 1, scan.nextDouble());
+			mat.setEntry(0, 2, scan.nextDouble());
+			mat.setEntry(0, 3, scan.nextDouble());
+
+			mat.setEntry(1, 0, scan.nextDouble());
+			mat.setEntry(1, 1, scan.nextDouble());
+			mat.setEntry(1, 2, scan.nextDouble());
+			mat.setEntry(1, 3, scan.nextDouble());
+
+			mat.setEntry(2, 0, scan.nextDouble());
+			mat.setEntry(2, 1, scan.nextDouble());
+			mat.setEntry(2, 2, scan.nextDouble());
+			mat.setEntry(2, 3, scan.nextDouble());
+
+			mat.setEntry(3, 0, scan.nextDouble());
+			mat.setEntry(3, 1, scan.nextDouble());
+			mat.setEntry(3, 2, scan.nextDouble());
+			mat.setEntry(3, 3, scan.nextDouble());
+
+			
+		} catch (IOException x) {
+		    System.err.format("IOException: %s%n", x);
+		} catch (Exception x) {
+			System.err.format("Exception: %s%n", x);
+		}		
+		System.out.println("Loaded rotation matrix from "+path);
+		store.showStatus("Loaded rotation matrix from "+path);
+	}
+	
 	/**
 	 * Main method for change in rotation.
 	 */
 	void rotateSliceProject() {
 	
 		if (outXYZ == null)
-			outXYZ = store.aquireSurface(getModelName()+" XYZ", null);
+			outXYZ = store.acquireSurface(getModelName()+" XYZ", this);
 		if (outXYW == null)
-			outXYW = store.aquireSurface(getModelName()+" XYW", null);
+			outXYW = store.acquireSurface(getModelName()+" XYW", this);
 		if (outXZW == null)
-			outXZW = store.aquireSurface(getModelName()+" XZW", null);
+			outXZW = store.acquireSurface(getModelName()+" XZW", this);
 		if (outYZW == null)
-			outYZW = store.aquireSurface(getModelName()+" YZW", null);
+			outYZW = store.acquireSurface(getModelName()+" YZW", this);
+
+		((P3_IP) m_IP).updateRotMatDisp(RR);
 
 		System.out.println("\n4D rotation matrix\n");
 		System.out.printf("[[%6.3f %6.3f %6.3f %6.3f],%n",RR.getEntry(0, 0),RR.getEntry(0, 1),RR.getEntry(0, 2),RR.getEntry(0, 3) );
@@ -389,7 +489,7 @@ public class P3 extends AbstractClient {
 	}
 
 	@Override
-	public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+	public void loadProjectComponents(ProjectComponents comp) {
 		// TODO Auto-generated method stub
 
 	}
@@ -772,6 +872,7 @@ public class P3 extends AbstractClient {
 
 	private void resetIncrementMatrix() {
 		RR.setIdentity();
+		((P3_IP) m_IP).updateRotMatDisp(RR);
 	}
 
 	@Override

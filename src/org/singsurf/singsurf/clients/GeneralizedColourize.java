@@ -8,7 +8,6 @@ import java.awt.ItemSelectable;
 import java.awt.event.ItemEvent;
 import java.util.SortedSet;
 
-import org.singsurf.singsurf.PaSingSurf;
 import org.singsurf.singsurf.calculators.Calculator;
 import org.singsurf.singsurf.calculators.ChainedCalculator;
 import org.singsurf.singsurf.definitions.Definition;
@@ -20,6 +19,8 @@ public class GeneralizedColourize extends Colourize implements GeneralisedOperat
 
 	/** A choice of available inputs */
 	protected Choice ch_ingredient = new Choice();
+
+	AbstractProject ingredient;
 
 	public GeneralizedColourize(GeomStore store, Definition def) {
 		super(store, def);
@@ -51,16 +52,13 @@ public class GeneralizedColourize extends Colourize implements GeneralisedOperat
 		getDefinitionOptions(def);
 	}
 
-
-	AbstractClient ingredient;
-
 	@Override
-	public AbstractClient getIngredient() {
+	public AbstractProject getIngredient() {
 		return ingredient;
 	}
 
 	@Override
-	public void setIngredient(AbstractClient ingr) {
+	public void setIngredient(AbstractProject ingr) {
 		ingredient = ingr;
 
 		((ChainedCalculator) calc).setIngredient(ingr.getCalculator());
@@ -84,13 +82,13 @@ public class GeneralizedColourize extends Colourize implements GeneralisedOperat
 		super.geometryHasChanged(geomName);
 		if (!calc.isGood())
 			return;
-		if (goodIngredient() && getIngridientName().equals(geomName)) {
+		if (goodIngredient() && getIngredientName().equals(geomName)) {
 			this.calcGeoms();
 		}
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 		if (goodIngredient() && ((ChainedCalculator) calc).getIngredient() == inCalc)
 			this.setIngredient(client);
 	}
@@ -114,11 +112,11 @@ public class GeneralizedColourize extends Colourize implements GeneralisedOperat
 	@Override
 	public String getPreferredOutputName(String name) {
 
-		return getName() + "(" + getIngridientName() + "," + name + ")";
+		return getName() + "(" + getIngredientName() + "," + name + ")";
 	}
 
 	@Override
-	public String getIngridientName() {
+	public String getIngredientName() {
 		if (calc != null) {
 			ChainedCalculator cc = (ChainedCalculator) calc;
 			if (cc != null) {
@@ -143,13 +141,13 @@ public class GeneralizedColourize extends Colourize implements GeneralisedOperat
 	}
 
 	@Override
-	public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+	public void loadProjectComponents(ProjectComponents comp) {
 		if (comp.getIngredients().size() >= 1) {
 			String name = comp.getIngredients().get(0);
-			this.setIngredient(ss.getProject(name));
-			this.ch_ingredient.select(name);
+			setIngredient(store.getProject(name));
+			ch_ingredient.select(name);
 		}
-		super.loadProjectComponents(comp, ss);
+		super.loadProjectComponents(comp);
 	}
 
 }

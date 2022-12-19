@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.singsurf.singsurf.clients.AbstractClient;
+import org.singsurf.singsurf.clients.AbstractProject;
 import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.DefinitionReader;
@@ -88,15 +88,15 @@ public class ProjectFactory {
 		return null;
 	}
 	
-	private AbstractClient createProject(ProjectType type,Definition def) {
+	private AbstractProject createProject(ProjectType type,Definition def) {
 
 		Constructor<?> cons;
-		AbstractClient newsurf = null;
+		AbstractProject newproj = null;
 		try {
 			cons = type.clientClass.getConstructor(new Class[] { GeomStore.class, Definition.class });
-			newsurf = (AbstractClient) cons.newInstance(new Object[] { store, def });
+			newproj = (AbstractProject) cons.newInstance(new Object[] { store, def });
+			return newproj;
 			
-			return newsurf;
 		} catch (Exception e) {
 			System.err.println(e.getCause().toString());
 			for (StackTraceElement ste : e.getCause().getStackTrace()) {
@@ -114,7 +114,7 @@ public class ProjectFactory {
 	 * @param defType
 	 * @return
 	 */
-	public AbstractClient createProject(DefType defType) {
+	public AbstractProject createProject(DefType defType) {
 		ProjectType type = this.getProjectType(defType);
 		Definition def = DefinitionReader.createLsmpDef(type.defaultDef);
 		return createProject(type,def);
@@ -124,15 +124,15 @@ public class ProjectFactory {
 	 * @param defType
 	 * @return
 	 */
-	public AbstractClient createProjectOld(DefType defType) {
+	public AbstractProject createProjectOld(DefType defType) {
 		ProjectType type = this.getProjectType(defType);
 		String projName = model.getUniqueName(type.shortName );
 
 		Constructor<?> cons;
-		AbstractClient newsurf = null;
+		AbstractProject newsurf = null;
 		try {
 			cons = type.clientClass.getConstructor(new Class[] { GeomStore.class, String.class });
-			newsurf = (AbstractClient) cons.newInstance(new Object[] { store, projName });
+			newsurf = (AbstractProject) cons.newInstance(new Object[] { store, projName });
 			return newsurf;
 		} catch (Exception e) {
 			Throwable cause = e.getCause();
@@ -164,13 +164,13 @@ public class ProjectFactory {
 	 * @param def
 	 * @return
 	 */
-	public AbstractClient createProject(Definition def) {
-		ProjectType projType = this.getProjectType(def.getType());
+	public AbstractProject createProject(Definition def) {
+		ProjectType projType = getProjectType(def.getType());
 		Definition uniqueDef = def.duplicate();
 		String projName = model.getUniqueName(def.getName() );
 		uniqueDef.setName(projName);
 		
-		AbstractClient client = this.createProject(projType, uniqueDef);
+		AbstractProject client = createProject(projType, uniqueDef);
 
 		return client;
 	}

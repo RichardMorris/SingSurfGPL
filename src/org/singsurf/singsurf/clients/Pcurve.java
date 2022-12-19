@@ -34,7 +34,7 @@ import jv.vecmath.PiVector;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class Pcurve extends AbstractClient {
+public class Pcurve extends AbstractProject {
 	private static final long serialVersionUID = 6873398333105602351L;
 
 	Definition def;
@@ -88,7 +88,7 @@ public class Pcurve extends AbstractClient {
 		localX = calc.getDefVariable(0);
 		displayVars[0].set(localX);
 		refreshParams();
-		outCurve = store.aquireCurve(newdef.getName(), this);
+		outCurve = store.acquireCurve(newdef.getName(), this);
 
 		Option svopt = def.getOption("showVert");
 		if (svopt != null)
@@ -238,7 +238,7 @@ public class Pcurve extends AbstractClient {
 	}
 
 	@Override
-	public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+	public void loadProjectComponents(ProjectComponents comps) {
 
 	}
 

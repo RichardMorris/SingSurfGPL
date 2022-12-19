@@ -39,7 +39,7 @@ public class Region_info implements RegionBean {
 	  	xmin,xmax,ymin,ymax,zmin,zmax);
 	}
 	
-	double[] relative_position(double[] actual) {
+	double[] relative_position(double... actual) {
 		double relative[] = new double[3];
 		relative[0] = (actual[0]-xmin)/xwid;
 		relative[1] = (actual[1]-ymin)/ywid;

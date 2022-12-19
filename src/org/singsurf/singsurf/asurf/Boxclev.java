@@ -20,14 +20,15 @@ public abstract class Boxclev extends BoxClevA {
 	static final boolean PRINT_GEN_BOXES = false;
 	static final boolean CHECK_INTERUPTS = true;
 	static final boolean USE_2ND_DERIV = false;
+	static final boolean USE_ROT_DERIV = true;
 
 	public Boxclev(String description) {
 		super(description);
 	}
 
 	/**
-	 * Entry point, the constructor and {@link #setResolutions(int, int, int, int)
-	 * must be called first.}
+	 * Main entry point, the constructor 
+	 * must be called first.
 	 * 
 	 * @throws AsurfException
 	 **/
@@ -45,12 +46,14 @@ public abstract class Boxclev extends BoxClevA {
 		unsafeRegion = region;
 		Converger.GOOD_SOL_TOL = this.convtol;
 
-		System.out.println(getOptionsString());
 		
 		b3context = new Bern3DContext(aa);
 		AA = aa;
 		b3context.BB = b3context.makeBern3D(aa, region);
 		unsafeBern = b3context.BB;
+
+		System.out.println(getOptionsString());
+
 		b3context.Dx = b3context.BB.diffX();
 		b3context.Dy = b3context.BB.diffY();
 		b3context.Dz = b3context.BB.diffZ();
@@ -79,6 +82,11 @@ public abstract class Boxclev extends BoxClevA {
 		triangulator.init(new Bern3DContext(b3context));
 		knitter.init(this);
 		plotter.init(new Bern3DContext(b3context));
+		if(known_sings!=null) {
+			for(var s:known_sings) {
+				plotter.plot_point(s);
+			}
+		}
 		starttime = System.currentTimeMillis();
 		
 		lasttime = starttime;
@@ -113,7 +121,7 @@ public abstract class Boxclev extends BoxClevA {
 	}
 
 	/**
-	 * @return
+	 * Prints a summary of memory usage.
 	 */
 	public void print_mem() {
 		Runtime rt = Runtime.getRuntime();
@@ -159,9 +167,6 @@ public abstract class Boxclev extends BoxClevA {
 
 	Map<Box_info,Double> progress = new HashMap<>();
 
-	/**
-	 * @param string
-	 */
 	protected void report_progress(Box_info box, double percent) {
 		if(box!=null)
 			progress.put(box, percent);

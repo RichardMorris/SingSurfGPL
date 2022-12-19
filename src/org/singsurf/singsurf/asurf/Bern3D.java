@@ -2,6 +2,8 @@ package org.singsurf.singsurf.asurf;
 
 import java.util.Arrays;
 
+import org.singsurf.singsurf.acurve.AsurfException;
+import org.singsurf.singsurf.acurve.Bern1D;
 import org.singsurf.singsurf.acurve.Bern2D;
 
 public class Bern3D {
@@ -35,6 +37,11 @@ public class Bern3D {
     	coeff[pos] = val;
     }
 
+	public final double getCoeff(int i, int j, int k) {
+    	int pos = (i * (yord + 1) + j) * (zord + 1) + k;
+    	return coeff[pos];
+    }
+	
     /**
      * Test if all coefficient are strictly the same sign.
      * 
@@ -266,4 +273,244 @@ public class Bern3D {
 	}
 	return (aa);
     }
+
+	/**
+	 * Add two Bern3D's.
+	 * First elevates each so they are of the same degrees.
+	 * @param u
+	 * @param v
+	 * @return Bernstein representing u+v
+	 * @throws AsurfException hopefully never
+	 */
+	public static Bern3D addBern3D(Bern3D u, Bern3D v) throws AsurfException {
+		if(u.xord < v.xord) {
+			u = u.elevateX(v.xord);
+		} else if(u.xord > v.xord) {
+			v = v.elevateX(u.xord);
+		}
+		if(u.yord < v.yord) {
+			u = u.elevateY(v.yord);
+		} else if(u.yord > v.yord) {
+			v = v.elevateY(u.yord);
+		}
+		if(u.zord < v.zord) {
+			u = u.elevateZ(v.zord);
+		} else if(u.zord > v.zord) {
+			v = v.elevateZ(u.zord);
+		}
+
+		Bern3D res = new Bern3D(u);
+		for(int i=0;i<res.coeff.length;++i) {
+			res.coeff[i] += v.coeff[i];
+		}
+		return res;
+	}
+
+	/**
+	 * Subtracts two Bern3D's.
+	 * First elevates each so they are of the same degrees.
+	 * @param u
+	 * @param v
+	 * @return Bernstein representing u-v
+	 * @throws AsurfException hopefully never
+	 */
+	public static Bern3D subtractBern3D(Bern3D u, Bern3D v) throws AsurfException {
+		if(u.xord < v.xord) {
+			u = u.elevateX(v.xord);
+		} else if(u.xord > v.xord) {
+			v = v.elevateX(u.xord);
+		}
+		if(u.yord < v.yord) {
+			u = u.elevateY(v.yord);
+		} else if(u.yord > v.yord) {
+			v = v.elevateY(u.yord);
+		}
+		if(u.zord < v.zord) {
+			u = u.elevateZ(v.zord);
+		} else if(u.zord > v.zord) {
+			v = v.elevateZ(u.zord);
+		}
+
+		Bern3D res = new Bern3D(u);
+		for(int i=0;i<res.coeff.length;++i) {
+			res.coeff[i] -= v.coeff[i];
+		}
+		return res;
+	}
+	
+
+	/**
+	 * 
+	 * @param degx
+	 * @return
+	 * @throws AsurfException
+	 */
+	public Bern3D elevateX(int degx) throws AsurfException {
+		if(degx==xord) return this;
+		Bern3D res = new Bern3D(degx,yord,zord);
+		for(int j=0;j<=yord;++j) {
+			for(int k=0;k<=zord;++k) {
+				Bern1D orig = new Bern1D(xord);
+				for(int i=0; i<=xord;++i) {
+					orig.coeff[i] = getCoeff(i,j,k);
+				}
+				Bern1D raised = orig.elevateTo(degx);
+				for(int i=0; i<=degx;++i) {
+					res.setCoeff(i, j, k, raised.coeff[i]);
+				}
+				
+			}
+		}
+		return res;
+	}
+
+	public Bern3D elevateY(int degy) throws AsurfException {
+		if(degy==yord) return this;
+		Bern3D res = new Bern3D(xord,degy,zord);
+		for(int i=0; i<=xord;++i) {
+			for(int k=0;k<=zord;++k) {
+				Bern1D orig = new Bern1D(yord);
+				for(int j=0;j<=yord;++j) {
+					orig.coeff[j] = getCoeff(i,j,k);
+				}
+				Bern1D raised = orig.elevateTo(degy);
+				for(int j=0; j<=degy;++j) {
+					res.setCoeff(i, j, k, raised.coeff[j]);
+				}
+				
+			}
+		}
+		return res;
+	}
+
+	public Bern3D elevateZ(int degz) throws AsurfException {
+		if(degz==zord) return this;
+		Bern3D res = new Bern3D(xord,yord,degz);
+		for(int i=0; i<=xord;++i) {
+			for(int j=0;j<=yord;++j) {
+				Bern1D orig = new Bern1D(zord);
+				for(int k=0;k<=zord;++k) {
+					orig.coeff[k] = getCoeff(i,j,k);
+				}
+				Bern1D raised = orig.elevateTo(degz);
+				for(int k=0; k<=degz;++k) {
+					res.setCoeff(i, j, k, raised.coeff[k]);
+				}			
+			}
+		}
+		return res;
+	}
+
+	//             u
+	//         ----------
+	//         |\        |\ 
+	//         | \  b    | \
+	//         |  \      |  \
+	//  l      |   -----------    r
+	//         |   |     |   |
+	//         |   |     |   | 
+	//         ----|-----\   |
+	//          \  |      \  |
+	//           \ |       \ |
+	//            \|     f  \|
+	//             0----------
+	//                 d
+
+	public Bern1D make_bern1D_of_box(Key3D key) {
+		switch(key) {
+		case EDGE_FD: {
+			Bern1D resX = new Bern1D(xord);
+			for(int x=0;x<=xord;++x) {
+				resX.coeff[x] = getCoeff(x,0,0);
+			}
+			return resX;
+		}
+		case EDGE_FU: {
+			Bern1D resX = new Bern1D(xord);
+			for(int x=0;x<=xord;++x) {
+				resX.coeff[x] = getCoeff(x,0,zord);
+			}
+			return resX;
+		}
+		case EDGE_BD: {
+			Bern1D resX = new Bern1D(xord);
+			for(int x=0;x<=xord;++x) {
+				resX.coeff[x] = getCoeff(x,yord,0);
+			}
+			return resX;
+		}
+		case EDGE_BU: {
+			Bern1D resX = new Bern1D(xord);
+			for(int x=0;x<=xord;++x) {
+				resX.coeff[x] = getCoeff(x,yord,zord);
+			}
+			return resX;
+		}
+		
+		
+		
+		case EDGE_LD: {
+			Bern1D resY = new Bern1D(yord);
+			for(int y=0;y<=yord;++y) {
+				resY.coeff[y] = getCoeff(0,y,0);
+			}
+			return resY;
+		}
+		case EDGE_LU: {
+			Bern1D resY = new Bern1D(yord);
+			for(int y=0;y<=yord;++y) {
+				resY.coeff[y] = getCoeff(0,y,zord);
+			}
+			return resY;
+		}
+		case EDGE_RD: {
+			Bern1D resY = new Bern1D(yord);
+			for(int y=0;y<=yord;++y) {
+				resY.coeff[y] = getCoeff(xord,y,0);
+			}
+			return resY;
+		}
+		case EDGE_RU: {
+			Bern1D resY = new Bern1D(yord);
+			for(int y=0;y<=yord;++y) {
+				resY.coeff[y] = getCoeff(xord,y,zord);
+			}
+			return resY;
+		}
+		case EDGE_LF: {
+			Bern1D resZ = new Bern1D(zord);
+			for(int z=0;z<=zord;++z) {
+				resZ.coeff[z] = getCoeff(0,0,z);
+			}
+			return resZ;
+		}
+		case EDGE_LB: {
+			Bern1D resZ = new Bern1D(zord);
+			for(int z=0;z<=zord;++z) {
+				resZ.coeff[z] = getCoeff(0,yord,z);
+			}
+			return resZ;
+		}
+		case EDGE_RF: {
+			Bern1D resZ = new Bern1D(zord);
+			for(int z=0;z<=zord;++z) {
+				resZ.coeff[z] = getCoeff(xord,0,z);
+			}
+			return resZ;
+		}
+		case EDGE_RB: {
+			Bern1D resZ = new Bern1D(zord);
+			for(int z=0;z<=zord;++z) {
+				resZ.coeff[z] = getCoeff(xord,yord,z);
+			}
+			return resZ;
+		}
+		
+		default:
+		    BoxClevA.log.printf("bad type %d in make_bern1d_of_box\n", key);
+		    throw new IllegalArgumentException("Make_bern2D_of_box" +key.toString());
+		}
+	}
+
+
 }

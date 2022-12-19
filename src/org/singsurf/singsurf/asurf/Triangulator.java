@@ -273,13 +273,6 @@ public class Triangulator implements TriangulatorI  {
 		return list;
 	}
 	
-	/**
-	 * 
-	 * @param box
-	 * @param existing
-	 * @param onlyGood 
-	 * @return 
-	 */
 	public MetricResult triangulate_facets(List<Facet_info> existing) {
 		
 				MetricResult fullset=null;
@@ -354,12 +347,6 @@ public class Triangulator implements TriangulatorI  {
 				return null;
 	}
 
-	/**
-	 * @param facet
-	 * @param combined
-	 * @param size
-	 * @return
-	 */
 	public MetricResult splitFacetManySols(CyclicList<Sol_info> sols, MetricResult combined) {
 		if(sols.size()<=6) {
 			int indicies[] = new int[sols.size()];

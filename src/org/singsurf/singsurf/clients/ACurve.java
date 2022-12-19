@@ -37,7 +37,7 @@ import org.singsurf.singsurf.jep.EquationPolynomialConverter;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class ACurve extends AbstractClient {
+public class ACurve extends AbstractProject {
     private static final long serialVersionUID = 6873398333105602351L;
 
     Definition def;
@@ -152,7 +152,7 @@ public class ACurve extends AbstractClient {
 	if (colopt != null)
 	    this.chCurveColours.select(colopt.getStringVal());
 
-	outCurve = store.aquireCurve(newdef.getName(), this);
+	outCurve = store.acquireCurve(newdef.getName(), this);
 	calcGeoms();
     }
 
@@ -264,7 +264,7 @@ public class ACurve extends AbstractClient {
     }
 
     @Override
-    public void loadProjectComponents(ProjectComponents comp, PaSingSurf ss) {
+    public void loadProjectComponents(ProjectComponents comp) {
 
     }
 }

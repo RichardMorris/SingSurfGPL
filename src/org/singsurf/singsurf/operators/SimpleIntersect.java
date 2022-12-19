@@ -37,10 +37,15 @@ public abstract class SimpleIntersect extends AbstractIntersect {
 
 	@Override
 	public boolean testIntersection(int a, int b) {
+		try {
 		if(vertexVals[a]==0) return true;
 		if(vertexVals[b]==0) return false;
 		return((vertexVals[a]>0 && vertexVals[b] <0)
 		     ||(vertexVals[a]<0 && vertexVals[b] >0));
+		} catch(ArrayIndexOutOfBoundsException ex) {
+			System.out.println("Out of bounds "+a+" "+b);
+			return false;
+		}
 	}
 
 	/* (non-Javadoc)

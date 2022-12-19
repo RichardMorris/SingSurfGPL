@@ -23,7 +23,7 @@ import jv.project.PgGeometryIf;
 /**
  * @author Rich Morris Created on 30-Mar-2005
  */
-public class VolCalc extends AbstractOperatorClient {
+public class VolCalc extends AbstractOperatorProject {
 	/** 
 	 * 
 	 */
@@ -133,7 +133,7 @@ public class VolCalc extends AbstractOperatorClient {
 	}
 
 	@Override
-	public void geometryDefHasChanged(AbstractClient client, Calculator inCalc) {
+	public void geometryDefHasChanged(AbstractProject client, Calculator inCalc) {
 	}
 
 	@Override

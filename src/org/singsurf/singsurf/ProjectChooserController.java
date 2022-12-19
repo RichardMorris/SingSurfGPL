@@ -1,37 +1,51 @@
 package org.singsurf.singsurf;
 
+import java.awt.Button;
+import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Panel;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.singsurf.singsurf.ProjectChooserModel.ListItem;
-import org.singsurf.singsurf.clients.AbstractClient;
-import org.singsurf.singsurf.clients.AbstractOperatorClient;
+import org.singsurf.singsurf.clients.AbstractOperatorProject;
+import org.singsurf.singsurf.clients.AbstractProject;
 import org.singsurf.singsurf.definitions.DefType;
 import org.singsurf.singsurf.definitions.Definition;
 import org.singsurf.singsurf.definitions.DefinitionReader;
 import org.singsurf.singsurf.definitions.ProjectComponents;
-import org.singsurf.singsurf.geometries.SSGeomListener;
+import org.singsurf.singsurf.definitions.VisibleGeometries;
+import org.singsurf.singsurf.geometries.GeomListener;
 
 import jv.loader.PgJvxLoader;
 import jv.loader.PgObjLoader;
 import jv.project.PgGeometryIf;
 import jv.project.PgJvxSrc;
 import jv.project.PjProject;
+import jv.project.PvDisplayIf;
 import jv.viewer.PvViewer;
 import jvx.loader.PgWrlLoader;
 
-public class ProjectChooserController {
+public class ProjectChooserController implements ActionListener, ItemListener {
 
 	PvViewer m_viewer;
 	SingSurf3D ssp;
 	ProjectChooserModel model;
 	ProjectFactory factory;
-	AbstractClient currentProject;
+	AbstractProject currentProject;
 
 	public ProjectChooserController(SingSurf3D ssp, PvViewer m_viewer, ProjectChooserModel model) {
 		super();
@@ -43,7 +57,7 @@ public class ProjectChooserController {
 
 
 	public void modelItemSelected(ListItem listItem) {
-		AbstractClient proj = listItem.project;
+		AbstractProject proj = listItem.project;
 		if(proj==null)
 			return;
 		this.currentProject = proj;
@@ -57,8 +71,8 @@ public class ProjectChooserController {
 		if (geom != null) {
 			m_viewer.getDisplay().selectGeometry(geom);
 		}
-		if(proj instanceof AbstractOperatorClient) {
-			((AbstractOperatorClient) proj).selectOutputGeometry(listItem.geom);
+		if(proj instanceof AbstractOperatorProject) {
+			((AbstractOperatorProject) proj).selectOutputGeometry(listItem.geom);
 		}
 	}
 
@@ -73,9 +87,19 @@ public class ProjectChooserController {
 		ssp.validate();
 	}
 
-	public void clone(ListItem listItem) {
-		String newName = model.getCloneName(listItem.project.getName());
-		Definition def = listItem.project.getDefinition();
+	public void cloneProject() {
+		AbstractProject proj = currentProject;
+		if(proj!=null)
+			clone(proj);
+		else {
+			ssp.showStatus("No current project selected");
+		}
+	
+	}
+	
+	public void clone(AbstractProject project) {
+		String newName = model.getCloneName(project.getName());
+		Definition def = project.getDefinition();
 		Definition newdef = def.duplicate();
 		newdef.setName(newName);
 		createProject(newdef);
@@ -108,29 +132,19 @@ public class ProjectChooserController {
 		if(item.geom == null) {
 
 			System.out.println("deleteProject "+item.toString());
-			AbstractClient proj = item.project;
+			AbstractProject proj = item.project;
 			ListItem prevItem = model.getNearbyItem(item);
-			if (rmGeom)
-				for (PgGeometryIf geom : proj.getOutputGeoms()) {
-					ssp.store.removeGeometry(geom, rmDep);
-				}
-			if(proj == ssp.store.globals)
-				return;
+			delProjecty(proj, rmGeom, rmDep);
 			PjProject curproj = m_viewer.getCurrentProject();
-			m_viewer.removeProject(proj);
-			model.removeProject(proj);
-			if(proj instanceof SSGeomListener)
-				ssp.store.removeListerner((SSGeomListener) proj);
 			if(curproj == proj || curproj == null) {
 				this.modelItemSelected(prevItem);
 			}
-			proj.dispose();
 		}
 		else {
 			System.out.println("deleteGeometry "+item.toString());
-			AbstractClient proj = item.project;
-			if(proj instanceof AbstractOperatorClient) {
-				((AbstractOperatorClient)proj).removeOutpuGeometry(item.geom,rmDep);
+			AbstractProject proj = item.project;
+			if(proj instanceof AbstractOperatorProject) {
+				((AbstractOperatorProject)proj).removeOutpuGeometry(item.geom,rmDep);
 
 			} else {
 				proj.removeGeometry(item.geom);
@@ -138,15 +152,63 @@ public class ProjectChooserController {
 		}
 	}
 
-	public void loadProjectFromFile(String filename) {
+
+	/**
+	 * @param proj
+	 * @param item
+	 * @param rmGeom
+	 * @param rmDep
+	 */
+	public void delProjecty(AbstractProject proj, boolean rmGeom, boolean rmDep) {
+		if (rmGeom)
+			for (PgGeometryIf geom : proj.getOutputGeoms()) {
+				ssp.store.removeGeometry(geom, rmDep);
+			}
+		if(proj == ssp.store.globals)
+			return;
+		m_viewer.removeProject(proj);
+		model.removeProject(proj);
+		if(proj instanceof GeomListener)
+			ssp.store.removeListerner((GeomListener) proj);
+		proj.dispose();
+	}
+
+	ExecutorService executor = Executors.newCachedThreadPool();
+
+	public void loadScene(String filename) {
+		System.out.println("loadSceneFromFile: "+filename+" thread: "+ Thread.currentThread().toString());
 
 		try {
 			FileReader fr = new FileReader(filename);
 			DefinitionReader ldr = new DefinitionReader(new BufferedReader(fr));
 			ldr.read();
 			fr.close();
+			
+			final VisibleGeometries visGeom = ldr.getVisGeom();
+			if(visGeom!=null) {
+				VisabilityController visCont = new VisabilityController(visGeom,ssp.store);
+                
+                // Create new displays as needed
+                PvDisplayIf[] existingDisplays = ssp.m_viewer.getDisplays();
+                
+                for(String disp:visGeom.getDisplays()) {
+                    boolean found=false;
+                    for(PvDisplayIf d:existingDisplays) {
+                        if(disp.equals(d.getName())) {
+                            found = true;
+                        }
+                    }
+                    if(!found) {
+                        PvDisplayIf newdisp = ssp.m_viewer.newDisplay(disp,true,false);
+                        Frame frame = newdisp.getFrame();
+                        frame.setVisible(true);
+                    }
+                }
+				ssp.store.addGeomListner(visCont);
+			}
 			for (Definition def : ldr.getDefs()) {
 				if(def.getType().equals(DefType.globals)) {
+					ssp.store.globals.loadDefinition(def);
 				} else {
 					createProject(def);
 				}
@@ -154,28 +216,15 @@ public class ProjectChooserController {
 
 			for (ProjectComponents pc : ldr.getProjComp()) {
 				if (!pc.isEmpty()) {
-					AbstractClient client = model.getProject(pc.getName());
+					AbstractProject client = model.getProject(pc.getName());
 					if (client != null) {
-						client.loadProjectComponents(pc, this.ssp);
+						client.loadProjectComponents(pc);
+						ProjectComponentEvaluator evaluator = new ProjectComponentEvaluator(pc,client,ssp.store);
+						executor.execute(evaluator);
 					} else {
 						System.err.println("Null client for project " + pc.getName());
 					}
 				}
-
-			}
-			
-			//TODO repeat loading of project components to correct for not getting the order right
-			//TODO replace with a better method
-			for (ProjectComponents pc : ldr.getProjComp()) {
-				if (!pc.isEmpty()) {
-					AbstractClient client = model.getProject(pc.getName());
-					if (client != null) {
-						client.calcGeoms();
-					} else {
-						System.err.println("Null client for project " + pc.getName());
-					}
-				}
-
 			}
 
 		} catch (IOException e) {
@@ -185,7 +234,7 @@ public class ProjectChooserController {
 	}
 
 	private void createProject(Definition def) {
-		AbstractClient newsurf = factory.createProject(def);
+		AbstractProject newsurf = factory.createProject(def);
 		model.addProject(newsurf);
 		//		newsurf.setEnabledAutoFit(fit.getState());
 		newsurf.init2();
@@ -203,8 +252,8 @@ public class ProjectChooserController {
 	}
 
 	/** Method called when no definition specified. */
-	public AbstractClient loadProject(DefType type) {
-		AbstractClient newsurf = factory.createProject(type);
+	public AbstractProject loadProject(DefType type) {
+		AbstractProject newsurf = factory.createProject(type);
 		model.addProject(newsurf);
 		currentProject = newsurf;
 		//		newsurf.setEnabledAutoFit(fit.getState());
@@ -217,7 +266,7 @@ public class ProjectChooserController {
 		return newsurf;
 	}
 
-	public void changeProjectName(AbstractClient proj, String newName) {
+	public void changeProjectName(AbstractProject proj, String newName) {
 		model.removeProject(proj);
 		m_viewer.removeProject(proj);
 		proj.rename(newName);
@@ -234,8 +283,9 @@ public class ProjectChooserController {
 		try {
 			FileWriter fw = new FileWriter(filename);
 			fw.write("<" + "definitions" + ">\n");
-			for (AbstractClient proj:model.projects) {
+			for (AbstractProject proj:model.projects) {
 				if(proj==null) continue;
+//				proj.visableGeometries(visable);
 				Definition def = proj.getDefinition();
 				proj.setDefinitionOptions(def);
 				fw.write(def.toString());
@@ -244,7 +294,7 @@ public class ProjectChooserController {
 			fw.write("</definitions>\n");
 
 			fw.write("<dependancies>\n");
-			for (AbstractClient proj:model.projects) {
+			for (AbstractProject proj:model.projects) {
 				if(proj==null) continue;
 				ProjectComponents pc = proj.getProjectComponents();
 				if (!pc.isEmpty()) {
@@ -252,6 +302,9 @@ public class ProjectChooserController {
 				}
 			}
 			fw.write("</dependancies>\n");
+			
+			VisibleGeometries vg = new VisibleGeometries(m_viewer);
+			fw.write(vg.toString());
 			fw.close();
 		} catch (IOException e) {
 			ssp.showStatus("Failed to write to " + filename);
@@ -268,9 +321,9 @@ public class ProjectChooserController {
 	}
 
 	public void deleteGeom(ListItem item, boolean rmDep) {
-		AbstractClient proj = item.project;
-		if(proj instanceof AbstractOperatorClient) {
-			((AbstractOperatorClient)proj).removeOutpuGeometry(item.geom,rmDep);
+		AbstractProject proj = item.project;
+		if(proj instanceof AbstractOperatorProject) {
+			((AbstractOperatorProject)proj).removeOutpuGeometry(item.geom,rmDep);
 		}
 		else {
 			proj.removeGeometry(item.geom);
@@ -281,7 +334,7 @@ public class ProjectChooserController {
 
 
 	public void saveProject() {
-		AbstractClient proj = currentProject;
+		AbstractProject proj = currentProject;
 		if(proj!=null)
 			proj.saveDef();
 		else {
@@ -290,7 +343,7 @@ public class ProjectChooserController {
 	}
 
 	public void appendProject() {
-		AbstractClient proj = currentProject;
+		AbstractProject proj = currentProject;
 		if(proj!=null)
 			proj.saveAppendDef(true);
 		else {
@@ -332,5 +385,99 @@ public class ProjectChooserController {
 
 
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String command = e.getActionCommand();
+		int i = model.view.getSelectedIndex();
+		if(i < 0) return;
+		
+		ListItem item = model.items.get(i);
+		
+		if(command.equals("Clone")) {
+			clone(item.project);
+		} else if(command.equals("Save")) {
+			saveProj(item);
+		} else if(command.equals("Append")) {
+			appendProj(item);
+		} else if(command.equals("DelKeep")) {
+			deleteProj(item,false,false);
+		} else if(command.equals("DelRm")) {
+			deleteProj(item,true,false);
+		} else if(command.equals("DelRmDeps")) {
+			deleteProj(item,true,true);
+		} else if(command.equals("DelGeom")) {
+			deleteGeom(item,false);
+		} else if(command.equals("Rename")) {
+			renameProject(item);
+		} else if(command.equals("Show/Hide")) {
+			showHide(item.geom);
+		} else {
+			System.err.println("Unknown action command "+command);
+		}
+	}
+
+	private void renameProject(ListItem item) {
+		System.err.println("changeProjectName");
+
+		 AbstractProject proj = item.project;
+		 
+		ChangeNameDialog d = new ChangeNameDialog(ssp.m_frame, proj.getName());
+		d.setVisible(true);
+		if (d.state) {
+			changeProjectName(proj, d.tf.getText());
+		}
+	}
+	
+    
+	class ChangeNameDialog extends Dialog implements ActionListener {
+		private static final long serialVersionUID = 1L;
+		TextField tf;
+		boolean state = false;
+
+		public ChangeNameDialog(Frame parent, String name) {
+			super(parent, "Change name for project " + name, true);
+			Panel p = new Panel();
+			add(p);
+			tf = new TextField(name, 20);
+			p.add(tf);
+			Button but1 = new Button("OK");
+			Button but2 = new Button("Cancel");
+			p.add(but1);
+			p.add(but2);
+			but1.addActionListener(this);
+			but2.addActionListener(this);
+			tf.addActionListener(this);
+			this.addWindowListener(new WindowAdapter() {
+				@Override
+				public void windowClosing(WindowEvent e) {
+					// ChangeNameDialog.this.setVisible(false);
+					dispose();
+				}
+			});
+			pack();
+		}
+
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			// System.out.println("ActCom "+arg0.getActionCommand());
+			if (arg0.getActionCommand().equals("Cancel"))
+				state = false;
+			else
+				state = true;
+			// this.setVisible(false);
+			dispose();
+		}
+	}
+	
+	@Override
+	public void itemStateChanged(ItemEvent evt) {
+		int i = model.view.getSelectedIndex();
+		if(i < 0) return;
+		ListItem item = model.items.get(i);
+		modelItemSelected(item);
+	}
+
 
 }
